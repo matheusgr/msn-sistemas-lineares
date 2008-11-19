@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Ant XML -->
+
+<project basedir="." default="makejar" name="MSN-Sistemas-Lineares">
+	<property file="build.properties" />
+	
+	<!-- COBERTURA -->
+	<property name="cobertura.dir" value="${projeto.base}/cobertura-1.9" />
+
+	<path id="cobertura.classpath">
+	    <fileset dir="${cobertura.dir}">
+	        <include name="cobertura.jar" />
+	        <include name="lib/**/*.jar" />
+	    </fileset>
+	</path>
+	
+	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+	<!-- /COBERTURA -->
+	
+	<!-- LIMPA -->
+	<target name="limpa">
+		<delete dir="${projeto.class}" />
+		<delete dir="${projeto.class-teste}" />
+		<delete dir="${projeto.class-instr}" />
+		<delete dir="${projeto.docs.api}" />
+		<delete dir="${projeto.docs.reports}" />
+		<delete dir="${projeto.release}" />
+		<delete file="${projeto.base}/cobertura.ser" />
+	</target>
+	<!-- /LIMPA -->
+
+	<!-- PREPARA -->
+	<target name="prepara" depends="limpa">
+		<mkdir dir="${projeto.class}" />
+		<mkdir dir="${projeto.class-teste}" />
+		<mkdir dir="${projeto.docs}" />
+		<mkdir dir="${projeto.docs.api}" />
+		<mkdir dir="${projeto.docs.reports}" />
+		<mkdir dir="${projeto.docs.reports.teste}" />
+		<mkdir dir="${projeto.docs.reports.cobertura}" />
+		<mkdir dir="${projeto.release}" />
+	</target>
+	<!-- /PREPARA -->
+
+	<!-- JAVADOC -->
+	<target name="javadoc" depends="prepara">
+		<javadoc destdir="${projeto.docs.api}" access="public" author="false" version="false" use="true" windowtitle="${compildor.nome}">
+			<fileset dir="src" defaultexcludes="yes">
+				<include name="**/*.java"/>
+			</fileset>
+		</javadoc>
+	</target>
+	<!-- /JAVADOC -->
+	
+	<!-- COMPILA -->
+	<target name="compila" depends="prepara">
+		<javac source="1.5" classpath="${projeto.classpath}" srcdir="${projeto.src}" destdir="${projeto.class}" debug="on" optimize="on">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+	<!-- /COMPILA -->
+
+	<!-- COBERTURA-INSTR -->
+	<target name="cobertura" depends="compila">
+	<cobertura-instrument todir="${projeto.class-instr}">
+	    <ignore regex="org.apache.log4j.*" />
+	    <fileset dir="${projeto.class}">
+	        <include name="**/*.class" />
+	    </fileset>
+	</cobertura-instrument>
+	</target>
+	<!-- /COBERTURA-INSTR -->
+
+	<!-- COMPILA-TESTES -->
+	<target name="compila-testes" depends="cobertura">
+		<javac source="1.5" classpath="${projeto.classpath}" srcdir="${projeto.src-teste}" destdir="${projeto.class-teste}" debug="on" optimize="on">
+			<include name="**/*.java" />
+		</javac>
+	</target>
+	<!-- /COMPILA-TESTES -->
+
+	<!-- COMPILA-ASPECTOS -->
+	<target name="compila-aspectos" depends="compila">
+	    <iajc source="1.5" sourceroots="${projeto.src}" 
+	        classpath="${projeto.classpath}" destdir="${projeto.class}" />
+	</target>
+	<!-- /COMPILA-ASPECTOS -->
+	
+	<!-- JAR -->
+	<target name="makejar" depends="compila-aspectos">
+		<jar destfile="${projeto.jar}">
+			<manifest>
+				<attribute name="Built-By" value="${projeto.name}" />
+				<attribute name="Main-Class" value="${projeto.main}" />
+				<attribute name="Implementation-Version" value="${projeto.version}" />
+				<attribute name="Class-Path" value="projeto.jar" />
+			</manifest>
+			<fileset dir="${projeto.class}">
+				<include name="**/*.class" />
+			</fileset>
+			<fileset dir="${projeto.src}">
+				<include name="**/*.java" />
+			</fileset>
+			<zipfileset src="{cli.jar}" />
+			<zipfileset src="{jep.jar}" />
+			<zipfileset src="{djep.jar}" />
+		</jar>
+	</target>
+	<!-- /JAR -->
+
+	<!-- TESTA -->
+	<target name="testa" depends="compila-testes">
+		<junit fork="yes" printsummary="yes" haltonfailure="no" haltonerror="no">
+
+			<sysproperty key="net.sourceforge.cobertura.datafile"
+				file="${projeto.base}/cobertura.ser" />
+			
+			<classpath location="${projeto.class-instr}" />
+			
+			<classpath path="${projeto.classpath}" />
+
+			<classpath refid="cobertura.classpath" />
+			
+			<formatter type="xml" />
+			<batchtest fork="yes" todir="${projeto.docs.reports}">
+				<fileset dir="${projeto.src-teste}">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<junitreport todir="${projeto.docs.reports.teste}">
+			<fileset dir="${projeto.docs.reports}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${projeto.docs.reports.teste}" />
+		</junitreport>
+		
+		<cobertura-report format="html" destdir="${projeto.docs.reports.cobertura}" >
+		    <fileset dir="${projeto.src}">
+		        <include name="**/*.java" />
+		    </fileset>
+		</cobertura-report>
+		
+	</target>
+	<!-- /TESTA -->
+
+	<!-- RELEASE -->
+	<target name="release" depends="javadoc, makejar, testa">
+		<zip destfile="${projeto.release}/projeto.zip">
+			<zipfileset dir="${projeto.docs}" prefix="docs"/>
+			<zipfileset dir="${projeto.src}" prefix="src" />
+			<zipfileset dir="${projeto.src-teste}" prefix="src-testes" />
+			<zipfileset dir="${projeto.base}/resource-testes" prefix="resources" />
+			<zipfileset file="${projeto.jar}" />
+			<zipfileset file="build.xml" />
+			<zipfileset file="build.properties" />
+		</zip>
+		<checksum file="${projeto.release}/projeto.zip" />
+	</target>
+	<!-- /RELEASE -->
+	
+</project>
