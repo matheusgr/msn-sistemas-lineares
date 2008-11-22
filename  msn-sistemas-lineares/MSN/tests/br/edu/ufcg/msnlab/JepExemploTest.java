@@ -1,4 +1,4 @@
-package br.edu.ufcg.dsc.msn.sistemas;
+package br.edu.ufcg.msnlab;
 
 import junit.framework.TestCase;
 
