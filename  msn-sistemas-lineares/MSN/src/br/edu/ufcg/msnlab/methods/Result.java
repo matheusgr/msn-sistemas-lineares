@@ -3,33 +3,32 @@
  */
 package br.edu.ufcg.msnlab.methods;
 
-import java.util.Map;
+import java.util.List;
 
 /** 
  * 
  * @author Hugo Marques
  * 
  */
-public interface Result<K,T> {
+public interface Result<T> {
 	
 	/**
 	 * TODO
-	 * @return A variável e o valor da mesma de acordo com a solução encontrada.
+	 * @return O valor das soluções encontradas.
 	 */
-	public Map<K,T> getValues();
+	public List<T> getValues();
 	
 	/**
 	 * Adiciona um resultado encontrado para uma incógnita.
-	 * @param variavel incógnita que teve seu valor encontrado.
 	 * @param valor valor double encontrado pelo método para a incógnita.
 	 */
-	public void addResult(String variavel, double valor);
+	public void addResult(double valor);
 	
 	/**
 	 * Retorna o valor encontrado pelo método para determinada incógnita.
-	 * @param variavel Incógnita que contém o valor desejado.
+	 * @param var Posição da variável desejada.
 	 * @return valor double da incógnita.
 	 */
-	public double getResult(String variavel);
+	public double getResult(int var);
 	
 }
