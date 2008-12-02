@@ -24,7 +24,7 @@ public interface Solver<T> {
 	 * @param iteracoesMax Número de iterações máximo que o método vai executar.
 	 * @return Result contendo um mapa de valor(es) (incógnita, valor).
 	 */
-	public List<Result> solve(double[][] coeficientes, double[] estimativas, List<T> termos, double aprox, int iteracoesMax);
+	public List<Result> solve(double[][] coeficientes, double[] estimativas, double[] termos, double aprox, int iteracoesMax);
 	
 	/**
 	 * 
@@ -34,6 +34,6 @@ public interface Solver<T> {
 	 * @param iteracoesMax Número de iterações máximo que o método vai executar.
 	 * @return Result contendo um mapa de valor(es) (incógnita, valor).
 	 */
-	public List<Result> solve(double[][] coeficientes, List<T> termos, double aprox, int iteracoesMax);
+	public List<Result> solve(double[][] coeficientes, double[] termos, double aprox, int iteracoesMax);
 
 }
