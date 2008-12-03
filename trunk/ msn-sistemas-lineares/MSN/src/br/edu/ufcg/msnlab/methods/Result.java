@@ -2,8 +2,8 @@
  * 
  */
 package br.edu.ufcg.msnlab.methods;
-
 import java.util.List;
+
 
 /** 
  * 
@@ -14,21 +14,21 @@ public interface Result<T> {
 	
 	/**
 	 * TODO
-	 * @return O valor das soluções encontradas.
+	 * @return As soluções encontradas.
 	 */
 	public List<T> getValues();
 	
 	/**
 	 * Adiciona um resultado encontrado para uma incógnita.
-	 * @param valor valor double encontrado pelo método para a incógnita.
+	 * @param valor valor encontrado pelo método para a incógnita.
 	 */
-	public void addResult(double valor);
+	public void addResult(Object valor);
 	
 	/**
 	 * Retorna o valor encontrado pelo método para determinada incógnita.
-	 * @param var Posição da variável desejada.
-	 * @return valor double da incógnita.
+	 * @param var Iteração que contém o resultado desejado. 
+	 * @return valor Resultado para a iteração var.
 	 */
-	public double getResult(int var);
+	public Object getResult(int var);
 	
 }
