@@ -5,6 +5,8 @@ package br.edu.ufcg.msnlab.methods;
 
 import java.util.List;
 
+import br.edu.ufcg.msnlab.util.Config;
+
 
 
 /**
@@ -24,7 +26,7 @@ public interface Solver<T> {
 	 * @param iteracoesMax Número de iterações máximo que o método vai executar.
 	 * @return Result contendo um mapa de valor(es) (incógnita, valor).
 	 */
-	public List<Result> solve(double[][] coeficientes, double[] estimativas, double[] termos, double aprox, int iteracoesMax);
+	public List<Result> solve(double[][] coeficientes, double[] estimativas, double[] termos, double aprox, int iteracoesMax, Config config);
 	
 	/**
 	 * 
@@ -34,6 +36,6 @@ public interface Solver<T> {
 	 * @param iteracoesMax Número de iterações máximo que o método vai executar.
 	 * @return Result contendo um mapa de valor(es) (incógnita, valor).
 	 */
-	public List<Result> solve(double[][] coeficientes, double[] termos, double aprox, int iteracoesMax);
+	public List<Result> solve(double[][] coeficientes, double[] termos, double aprox, int iteracoesMax, Config config);
 
 }
