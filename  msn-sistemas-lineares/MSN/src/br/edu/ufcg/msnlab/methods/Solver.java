@@ -3,8 +3,6 @@
  */
 package br.edu.ufcg.msnlab.methods;
 
-import java.util.List;
-
 import br.edu.ufcg.msnlab.util.Config;
 
 
@@ -15,7 +13,7 @@ import br.edu.ufcg.msnlab.util.Config;
  * @author Hugo Marques
  *
  */
-public interface Solver<T> {
+public interface Solver {
 	
 	/**
 	 * 
@@ -27,7 +25,7 @@ public interface Solver<T> {
 	 * @param config Parâmetros de configuração para cada método.
 	 * @return Result uma lista de matrizes, cada matriz representando uma iteracao.
 	 */
-	public Result<Object> solve(double[][] coeficientes, double[] estimativas, double[] termos, double aprox, int iteracoesMax, Config config);
+	public Result solve(double[][] coeficientes, double[] estimativas, double[] termos, double aprox, int iteracoesMax, Config config);
 	
 	/**
 	 * 
@@ -38,6 +36,6 @@ public interface Solver<T> {
 	 * @param config Parâmetros de configuração para cada método.
 	 * @return Result uma lista de matrizes, cada matriz representando uma iteracao.
 	 */
-	public Result<Object> solve(double[][] coeficientes, double[] termos, double aprox, int iteracoesMax, Config config);
+	public Result solve(double[][] coeficientes, double[] termos, double aprox, int iteracoesMax, Config config);
 
 }

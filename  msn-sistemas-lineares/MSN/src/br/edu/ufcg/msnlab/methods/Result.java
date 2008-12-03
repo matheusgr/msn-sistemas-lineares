@@ -10,13 +10,13 @@ import java.util.List;
  * @author Hugo Marques
  * 
  */
-public interface Result<T> {
+public interface Result {
 	
 	/**
 	 * TODO
 	 * @return As soluções encontradas.
 	 */
-	public List<T> getValues();
+	public List getValues();
 	
 	/**
 	 * Adiciona um resultado encontrado para uma incógnita.
