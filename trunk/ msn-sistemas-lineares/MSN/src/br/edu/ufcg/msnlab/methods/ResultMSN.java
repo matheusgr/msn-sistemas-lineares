@@ -8,7 +8,7 @@ import java.util.List;
  * @author Hugo Marques e Théo Alves
  *
  */
-public class ResultMSN implements Result<double[][]> {
+public class ResultMSN implements Result {
 	
 	/**
 	 * Lista de resultados das iterações dos métodos.
