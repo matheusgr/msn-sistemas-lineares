@@ -3,6 +3,7 @@
  */
 package br.edu.ufcg.msnlab.methods;
 
+import br.edu.ufcg.msnlab.exceptions.MSNException;
 import br.edu.ufcg.msnlab.util.Config;
 
 
@@ -25,7 +26,7 @@ public interface Solver {
 	 * @param config Parâmetros de configuração para cada método.
 	 * @return Result uma lista de matrizes, cada matriz representando uma iteracao.
 	 */
-	public Result solve(double[][] coeficientes, double[] estimativas, double[] termos, double aprox, int iteracoesMax, Config config);
+	public Result solve(double[][] coeficientes, double[] estimativas, double[] termos, double aprox, int iteracoesMax, Config config) throws MSNException;
 	
 	/**
 	 * 
@@ -36,6 +37,6 @@ public interface Solver {
 	 * @param config Parâmetros de configuração para cada método.
 	 * @return Result uma lista de matrizes, cada matriz representando uma iteracao.
 	 */
-	public Result solve(double[][] coeficientes, double[] termos, double aprox, int iteracoesMax, Config config);
+	public Result solve(double[][] coeficientes, double[] termos, double aprox, int iteracoesMax, Config config) throws MSNException;;
 
 }
