@@ -11,4 +11,8 @@ public class MSNException extends Exception {
 		super();
 	}
 	
+	public MSNException(String errorMessage){
+		super(errorMessage);
+	}
+	
 }
