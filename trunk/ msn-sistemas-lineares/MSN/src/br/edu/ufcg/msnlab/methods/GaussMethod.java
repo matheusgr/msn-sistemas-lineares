@@ -28,16 +28,24 @@ public class GaussMethod implements Solver {
 		this.results = new ArrayList<double[][]>();
 	}
 
-	@Override
+	/**
+	 * Don't used
+	 */
 	public ResultMSN solve(double[][] coeficientes, double[] estimativas,
 			double[] termos, double aprox, int iteracoesMax, Config config) {
 		// This class won't use this method, because is a direct method and
-		// don't need of a
-		// initial estimative.
+		// don't need of a initial estimative.
 		return null;
 	}
 
-	@Override
+	/**
+	 * Resolve the system represented by the values passed.
+	 * @param coeficients The matrix that contains the coefficients of the system.
+	 * @param terms The independent terms of the system.
+	 * @param aprox The residue of the error in the system.
+	 * @param iteracoesMax The maximum number of iterations.
+	 * @param config The configuration for this method.
+	 */
 	public ResultMSN solve(double[][] coeficients, double[] terms,
 			double aprox, int iteracoesMax, Config config) throws MSNException {
 		this.coefficientsMatrix = coeficients;
@@ -59,6 +67,13 @@ public class GaussMethod implements Solver {
 		return new ResultMSN(this.results);
 	}
 
+	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	/**
+	 * Copy all the terms of one matrix in another one.
+	 * @param matrix The matrix to be copied.
+	 * @return The matrix copy.
+	 */
 	private double[][] copyMatrix(double[][] matrix) {
 		double[][] copy = new double[matrix.length][matrix[0].length];
 		for (int i = 0; i < matrix.length; i++) {
@@ -68,17 +83,13 @@ public class GaussMethod implements Solver {
 		}
 		return copy;
 	}
-
-	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
+	
 	/**
 	 * Construct the increased matrix with the coefficients matrix and the
 	 * independent terms matrix.
 	 * 
-	 * @param coeficients
-	 *            The coefficients matrix.
-	 * @param terms
-	 *            The independent terms matrix.
+	 * @param coeficients The coefficients matrix.
+	 * @param terms The independent terms matrix.
 	 * @return The increased matrix.
 	 */
 	private double[][] increasedMatrix(double[][] coeficients, double[] terms) {
@@ -99,11 +110,9 @@ public class GaussMethod implements Solver {
 	 * Diagonalyze the given increased matrix of the system with the pivoting
 	 * technique.
 	 * 
-	 * @param matrix
-	 *            The increased matrix of the system.
-	 * @param triangSup
-	 *            A boolean value indicating if the superior triangular or
-	 *            inferior triangular will be considered.
+	 * @param matrix The increased matrix of the system.
+	 * @param triangSup A boolean value indicating if the superior triangular or
+	 * inferior triangular will be considered.
 	 */
 	private void diagonalyzeMatrixWithPivoting(double[][] matrix,
 			boolean triangSup) {
@@ -138,11 +147,9 @@ public class GaussMethod implements Solver {
 	 * Diagonalyze the given increased matrix of the system without the pivoting
 	 * technique.
 	 * 
-	 * @param matrix
-	 *            The increased matrix of the system.
-	 * @param triangSup
-	 *            A boolean value indicating if the superior triangular or
-	 *            inferior triangular will be considered.
+	 * @param matrix The increased matrix of the system.
+	 * @param triangSup A boolean value indicating if the superior triangular or
+	 * inferior triangular will be considered.
 	 */
 	private void diagonalyzeMatrixWithoutPivoting(double[][] matrix,
 			boolean triangSup) {
@@ -175,10 +182,8 @@ public class GaussMethod implements Solver {
 	 * Decide which the pivot of the matrix, given the index of element of the
 	 * main diagonal.
 	 * 
-	 * @param matrix
-	 *            The increased matrix of the system to analyze.
-	 * @param index
-	 *            The index matrix[i][i] to guide the pivoting technique.
+	 * @param matrix The increased matrix of the system to analyze.
+	 * @param index The index matrix[i][i] to guide the pivoting technique.
 	 */
 	private void pivotMatrixUpDown(double[][] matrix, int index) {
 		if (index < matrix.length) {
@@ -201,10 +206,8 @@ public class GaussMethod implements Solver {
 	 * Decide which the pivot of the matrix, given the index of element of the
 	 * main diagonal.
 	 * 
-	 * @param matrix
-	 *            The increased matrix of the system to analyze.
-	 * @param index
-	 *            The index matrix[i][i] to guide the pivoting technique.
+	 * @param matrix The increased matrix of the system to analyze.
+	 * @param index The index matrix[i][i] to guide the pivoting technique.
 	 */
 	private void pivotMatrixDownUp(double[][] matrix, int index) {
 		if (index < matrix.length) {
@@ -226,10 +229,10 @@ public class GaussMethod implements Solver {
 	/**
 	 * Realize the back replacement in the matrix.
 	 * 
-	 * @param matrix
-	 *            The increased matrix of the equation system to be
-	 *            back-replaced.
-	 * @param triangSup
+	 * @param matrix The increased matrix of the equation system to be
+	 * back-replaced.
+	 * @param triangSup A boolean value indicating if this matrix will be considered 
+	 * the superior half. 
 	 * @return The results vector.
 	 */
 	private double[][] backReplacement(double[][] matrix, boolean triangSup){
@@ -261,10 +264,8 @@ public class GaussMethod implements Solver {
 	/**
 	 * Try to manipulate the matrix to avoid zeros in the main diagonal.
 	 * 
-	 * @param matrix
-	 *            The increased matrix of the equation system.
-	 * @throws MSNException
-	 *             Thrown if the matrix cannot be diagonalyzed.
+	 * @param matrix The increased matrix of the equation system.
+	 * @throws MSNException Thrown if the matrix cannot be diagonalyzed.
 	 */
 	private void organizeMatrix(double[][] matrix) throws MSNException {
 		int limit = matrix.length * matrix.length;
@@ -414,50 +415,5 @@ public class GaussMethod implements Solver {
 			fitResidue(matrix, vet, residue);
 		}
 
-	}
-
-	// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-	public static void main(String[] args) {
-		// double[][] matrix = readFile();
-		double[][] matrix = read();
-		double[] vet = read2();
-		GaussMethod gaussMethod = new GaussMethod();
-		Config c = new Config();
-		c.set(c.pivoteamento, false);
-		c.set(c.triangularizacao, true);
-		ResultMSN results;
-		try {
-			results = gaussMethod.solve(matrix, vet, 0.001, 100, c);
-		} catch (MSNException e) {
-			System.out.println(e.getMessage());
-		}
-		// gaussMethod.diagonalyzeMatrixWithPivoting(matrix, false);
-		// double[][] matrix2 = readFile();
-		// gaussMethod.diagonalyzeMatrixWithPivoting(matrix2, true);
-	}
-
-	private static double[][] read() {
-		double[][] matrix = new double[2][2];
-		matrix[0][0] = 1;
-		matrix[0][1] = 2;
-//		matrix[0][2] = 12;
-
-		matrix[1][0] = 2;
-		matrix[1][1] = 1;
-//		matrix[1][2] = 5.9;
-								
-//		matrix[2][0] = 3.478;
-//		matrix[2][1] = 3;
-//		matrix[2][2] = 1;
-		return matrix;
-	}
-
-	private static double[] read2() {
-		double[] matrix = new double[2];
-		matrix[0] = 3;
-		matrix[1] = 1;
-//		matrix[2] = 0;
-		return matrix;
 	}
 }
