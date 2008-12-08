@@ -7,6 +7,12 @@ import br.edu.ufcg.msnlab.exceptions.MSNException;
 import br.edu.ufcg.msnlab.util.Config;
 
 
+/**
+ * This class implements the Gauss' elimination with and without pivoting.
+ * @author João Felipe
+ * @author Everton Leandro
+ *
+ */
 public class GaussMethod implements Solver {
 
 	// Attributes of a Gauss Method
