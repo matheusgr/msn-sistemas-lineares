@@ -5,10 +5,8 @@ package br.edu.ufcg.msnlab.methods;
  */
 public class Methods {
 	
-	public static final String EliminacaoGaussComPivoteamento = "GAUSS_COM_PIVOTEAMENTO";
-	public static final String EliminacaoGaussSemPivoteamento = "GAUSS_SEM_PIVOTEAMENTO";
-	public static final String EliminacaoGaussJordanComPivoteamento = "GAUSS_JORDAN_COM_PIVOTEAMENTO";
-	public static final String EliminacaoGaussJordanSemPivoteamento = "GAUSS_JORDAN_SEM_PIVOTEAMENTO";
+	public static final String EliminacaoGauss = "ELIMINACAO_GAUSS";	
+	public static final String EliminacaoGaussJordan = "GAUSS_JORDAN";	
 	public static final String DecomposicaoLU = "DECOMPOSICAO_LU";
 	public static final String DecomposicaoSVD = "DECOMPOSICAO_SVD";
 	public static final String DecomposicaoCholesky = "DECOMPOSICAO_CHOLESKY";
