@@ -1,4 +1,4 @@
-package br.ufcg.edu.msnlab.methods.jacobi;
+package br.edu.ufcg.msnlab.methods.jacobi;
 
 import java.util.List;
 

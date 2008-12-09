@@ -2,9 +2,9 @@ package br.edu.ufcg.msnlab;
 
 import br.edu.ufcg.msnlab.exceptions.MSNException;
 import br.edu.ufcg.msnlab.methods.ResultMSN;
+import br.edu.ufcg.msnlab.methods.jacobi.JacobiSolver;
+import br.edu.ufcg.msnlab.methods.jacobi.JacobiSolverImpl;
 import br.edu.ufcg.msnlab.util.Config;
-import br.ufcg.edu.msnlab.methods.jacobi.JacobiSolver;
-import br.ufcg.edu.msnlab.methods.jacobi.JacobiSolverImpl;
 import junit.framework.TestCase;
 
 public class TestJacobiImpl extends TestCase{
