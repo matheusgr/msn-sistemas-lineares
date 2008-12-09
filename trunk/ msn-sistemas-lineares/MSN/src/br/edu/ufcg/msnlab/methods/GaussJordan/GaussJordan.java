@@ -1,8 +1,11 @@
-package br.edu.ufcg.msnlab.methods;
+package br.edu.ufcg.msnlab.methods.GaussJordan;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import br.edu.ufcg.msnlab.methods.Result;
+import br.edu.ufcg.msnlab.methods.ResultMSN;
+import br.edu.ufcg.msnlab.methods.Solver;
 import br.edu.ufcg.msnlab.util.Config;
 
 /**
@@ -11,7 +14,7 @@ import br.edu.ufcg.msnlab.util.Config;
  * 
  */
 
-class GaussJordan implements Solver {
+public class GaussJordan implements Solver {
 	
 	private double[][] matriz; //matriz usada para os calculos
 	private List<double[][]> resultList; //lista usada pra retornar as matrizes passo-a-passo
