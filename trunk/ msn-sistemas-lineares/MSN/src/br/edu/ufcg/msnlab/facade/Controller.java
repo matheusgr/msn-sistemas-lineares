@@ -27,32 +27,21 @@ public class Controller {
 		if (metodo.equals(Methods.EliminacaoGauss)) {
 			method = new GaussMethod();
 			r = method.solve(coeficientes, termos, aprox, iteracoesMax, config);
-		} else {
-			
-		}if (metodo.equals(Methods.EliminacaoGaussJordan)) {
+		} else if (metodo.equals(Methods.EliminacaoGaussJordan)) {
 			method = new GaussJordan();
 			r = method.solve(coeficientes, termos, aprox, iteracoesMax, config);
-		} else {
-			
-		}if (metodo.equals(Methods.DecomposicaoCholesky)) {
+		} else if (metodo.equals(Methods.DecomposicaoCholesky)) {
 		
-		} else {
+		} else if (metodo.equals(Methods.DecomposicaoLU)) {
 			
-		}if (metodo.equals(Methods.DecomposicaoLU)) {
-			
-		} else {
-			
-		}if (metodo.equals(Methods.DecomposicaoQR)) {
+		} else if (metodo.equals(Methods.DecomposicaoQR)) {
 		
-		} else {
-		}if (metodo.equals(Methods.DecomposicaoSVD)) {
+		} else if (metodo.equals(Methods.DecomposicaoSVD)) {
 		
-		} else {
-		}if (metodo.equals(Methods.GaussJacobi)) {
+		} else if (metodo.equals(Methods.GaussJacobi)) {
 			method = new JacobiSolverImpl();
 			r = method.solve(coeficientes, estimativas, termos, aprox, iteracoesMax, config);
-		} else {
-		}if (metodo.equals(Methods.GaussSeidel)) {
+		} else if (metodo.equals(Methods.GaussSeidel)) {
 		
 		} 
 		return r;
