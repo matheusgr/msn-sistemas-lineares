@@ -1,12 +1,11 @@
 package br.edu.ufcg.msnlab.facade;
 
-import java.util.List;
-
 import br.edu.ufcg.msnlab.exceptions.MSNException;
-import br.edu.ufcg.msnlab.methods.GaussMethod;
 import br.edu.ufcg.msnlab.methods.Methods;
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.Solver;
+import br.edu.ufcg.msnlab.methods.GaussJordan.GaussJordan;
+import br.edu.ufcg.msnlab.methods.GaussMethod.GaussMethod;
 import br.edu.ufcg.msnlab.methods.jacobi.JacobiSolverImpl;
 import br.edu.ufcg.msnlab.util.Checker;
 import br.edu.ufcg.msnlab.util.Config;
@@ -31,7 +30,8 @@ public class Controller {
 		} else {
 			
 		}if (metodo.equals(Methods.EliminacaoGaussJordan)) {
-		
+			method = new GaussJordan();
+			r = method.solve(coeficientes, termos, aprox, iteracoesMax, config);
 		} else {
 			
 		}if (metodo.equals(Methods.DecomposicaoCholesky)) {

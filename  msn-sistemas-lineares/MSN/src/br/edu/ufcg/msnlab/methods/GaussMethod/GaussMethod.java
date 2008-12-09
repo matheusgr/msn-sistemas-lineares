@@ -1,9 +1,11 @@
-package br.edu.ufcg.msnlab.methods;
+package br.edu.ufcg.msnlab.methods.GaussMethod;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.edu.ufcg.msnlab.exceptions.MSNException;
+import br.edu.ufcg.msnlab.methods.ResultMSN;
+import br.edu.ufcg.msnlab.methods.Solver;
 import br.edu.ufcg.msnlab.util.Config;
 
 
