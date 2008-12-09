@@ -7,6 +7,7 @@ import br.edu.ufcg.msnlab.methods.GaussMethod;
 import br.edu.ufcg.msnlab.methods.Methods;
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.Solver;
+import br.edu.ufcg.msnlab.methods.jacobi.JacobiSolverImpl;
 import br.edu.ufcg.msnlab.util.Checker;
 import br.edu.ufcg.msnlab.util.Config;
 import br.edu.ufcg.msnlab.util.ParsedSystem;
@@ -48,7 +49,8 @@ public class Controller {
 		
 		} else {
 		}if (metodo.equals(Methods.GaussJacobi)) {
-		
+			method = new JacobiSolverImpl();
+			r = method.solve(coeficientes, estimativas, termos, aprox, iteracoesMax, config);
 		} else {
 		}if (metodo.equals(Methods.GaussSeidel)) {
 		
