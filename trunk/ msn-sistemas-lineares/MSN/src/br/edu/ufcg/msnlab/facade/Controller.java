@@ -7,6 +7,8 @@ import br.edu.ufcg.msnlab.methods.Solver;
 import br.edu.ufcg.msnlab.methods.GaussJordan.GaussJordan;
 import br.edu.ufcg.msnlab.methods.GaussMethod.GaussMethod;
 import br.edu.ufcg.msnlab.methods.GaussSeidel.GaussSeidelSolverImpl;
+import br.edu.ufcg.msnlab.methods.LU.LU;
+import br.edu.ufcg.msnlab.methods.SVD.SVD;
 import br.edu.ufcg.msnlab.methods.choleskyQR.interfaces.CholeskySolverImpl;
 import br.edu.ufcg.msnlab.methods.choleskyQR.interfaces.QRSolverImpl;
 import br.edu.ufcg.msnlab.methods.jacobi.JacobiSolverImpl;
@@ -37,12 +39,14 @@ public class Controller {
 			method = new CholeskySolverImpl();
 			r = method.solve(coeficientes, termos, aprox, iteracoesMax, config);
 		} else if (metodo.equals(Methods.DecomposicaoLU)) {
-			
+			method = new LU();
+			r = method.solve(coeficientes, termos, aprox, iteracoesMax, config);
 		} else if (metodo.equals(Methods.DecomposicaoQR)) {
 			method = new QRSolverImpl();
 			r = method.solve(coeficientes, termos, aprox, iteracoesMax, config);
 		} else if (metodo.equals(Methods.DecomposicaoSVD)) {
-		
+			method = new SVD();
+			r = method.solve(coeficientes, termos, aprox, iteracoesMax, config);
 		} else if (metodo.equals(Methods.GaussJacobi)) {
 			method = new JacobiSolverImpl();
 			r = method.solve(coeficientes, estimativas, termos, aprox, iteracoesMax, config);

@@ -1,6 +1,5 @@
 package br.edu.ufcg.msnlab.methods.LU;
 
-import util.Matrix;
 
 /**
  * This class implements a matrix.
