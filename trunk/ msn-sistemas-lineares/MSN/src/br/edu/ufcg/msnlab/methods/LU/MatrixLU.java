@@ -1,5 +1,7 @@
 package br.edu.ufcg.msnlab.methods.LU;
 
+import util.Matrix;
+
 /**
  * This class implements a matrix.
  * @author Clerton Ribeiro
@@ -175,4 +177,29 @@ public class MatrixLU {
 		}
 		return matrixRepresentation +="}";
 	}
+	
+	/**
+	 * Multiplies two matrices
+	 * @param A The first matrix
+	 * @param B The second matrix
+	 * @param C The result
+	 * @return A array of C matrix
+	 */
+	public static double[][] multiplicarMatriz (MatrixLU A, MatrixLU B, MatrixLU C) {
+
+		  int m = A.getNumRows();
+		  int n = A.getNumColumns();
+		  int p = B.getNumColumns();
+		  
+			for (int j = p; --j >= 0; ) {
+				for (int i = m; --i >= 0; ) {
+					double s = 0;
+					for (int k = n; --k >= 0; ) {
+						s += A.getElement(i, k) * B.getElement(k, j);
+					}
+					C.setElement(i,j,s + C.getElement(i,j));
+				}
+			}
+			return C.toArray();  
+		  } // fim da função multiplicarMatriz
 }
