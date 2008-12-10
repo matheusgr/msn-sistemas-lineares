@@ -278,8 +278,9 @@ public class LU implements Solver{
 		
 		this.calculateX();
 
-		double[][] mat = fitResidue(this.matrix.toArray(), getResult(), this.aprox);
-		this.results.add(copyMatrix(mat));
+		//double[][] mat = fitResidue(this.matrix.toArray(), getResult(), this.aprox);
+		//this.results.add(copyMatrix(mat));
+		this.results.add(this.x);
 		return new ResultMSN(this.results);
 	}
 }
