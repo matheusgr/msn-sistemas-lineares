@@ -231,7 +231,7 @@ public class LU implements Solver{
 		boolean changed = false;
 		for (int j = 0; j < vetResults.length; j++) {
 			if (Math.abs(vetResults[j]) > residue) {
-				vet[j][1] += vetResults[j];
+				vet[j][0] += vetResults[j];
 				changed = true;
 			}
 		}
