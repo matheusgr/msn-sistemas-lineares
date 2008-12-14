@@ -178,24 +178,21 @@ public class GaussJordan implements Solver {
 				if( k != i ) {
 					trocaLinhas(matriz, i, k, j);
 					resultList.add(imprimeMatriz(matriz));
-					printMatrix(matriz);
 	            }
 
 				//valor da diagonal principal diferente de 1, entao tenta colocar 1 
 	            if( matriz[i][j] != 1 ){
 	            	divideLinhaPorValor(matriz, i, j);
 	            	resultList.add(imprimeMatriz(matriz));
-	            	printMatrix(matriz);
 	            }
 
 	            //zera todos os outros valores da coluna
 	            zeraElemento(matriz, i, j);
-	            printMatrix(matriz);
 	            resultList.add(imprimeMatriz(matriz));
 	            i++;
 	        }
 	        j++;
-	    }	            printMatrix(matriz);
+	    }	        
 
 		return i;
 	}
@@ -292,18 +289,4 @@ public class GaussJordan implements Solver {
 		return resultList;
 	}
 	
-	   public void printMatrix(double[][] A){
-		     int n = A.length - 1;
-		     int m = A[0].length - 1;
-		     for(int i=1; i<=n; i++){
-		         for(int j=1; j<=m; j++) System.out.print(A[i][j] + "  ");
-		         
-		         System.out.println();
-		      }
-		     System.out.println("-------------------");
-		   }
-
-	
-	
-
 }
