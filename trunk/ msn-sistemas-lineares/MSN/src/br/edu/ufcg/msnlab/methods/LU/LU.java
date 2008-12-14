@@ -1,6 +1,7 @@
 package br.edu.ufcg.msnlab.methods.LU;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -189,22 +190,24 @@ public class LU implements Solver{
 	 * @return The final vector-answer, adjusted with the residue.
 	 */
 	private double[] fitResidue(double[][] matrix, double[] vet,double residue) {
-		double[] vetResidue = new double[vet.length];
+		BigDecimal[] vetResidue = new BigDecimal[vet.length];
 		boolean hasResidue = false;
 		for (int i = 0; i < matrix.length; i++) {
-			double currentResult = 0;
+			BigDecimal currentResult = new BigDecimal("0");
 			for (int j = 0; j < matrix.length; j++) {
-				currentResult += matrix[i][j] * vet[j];
+				currentResult = (new BigDecimal(matrix[i][j]).multiply(new BigDecimal(vet[j])).add(currentResult));
 			}
-			vetResidue[i] = Math.abs(b[i]) - Math.abs(currentResult);
-			if(Math.abs(vetResidue[i]) > residue) {
+			vetResidue[i] = new BigDecimal(b[i]).abs().subtract(currentResult.abs());
+			if(vetResidue[i].abs().compareTo(new BigDecimal(residue)) > 0) {
 				hasResidue = true;
 			}
 		}
 		if(hasResidue) {
 			double[] oldB = copyArray(this.b);
 			double[] oldResult = copyArray(this.x);
-			this.b = vetResidue;
+			for(int i=0;i<this.b.length;i++) {
+				this.b[i] = vetResidue[i].doubleValue();
+			}
 			double[] delta = new double[this.x.length];
 			matrixDecomposition();
 			this.calculateY();
@@ -214,10 +217,9 @@ public class LU implements Solver{
 			this.x = copyArray(oldResult);
 			double[] newb = new double[this.b.length];
 			for(int i=0;i<delta.length;i++) {
-				newb[i] = this.b[i]+delta[i];
+				newb[i] = this.x[i]+delta[i];
 			}
-			this.b = copyArray(newb);
-			return fitResidue(matrix, newb, residue);
+			this.x = copyArray(newb);
 		}
 		return vet;
 	}
@@ -255,16 +257,20 @@ public class LU implements Solver{
 
 		this.calculateX();
 
-		//double[] mat = fitResidue(this.matrix,this.x,this.aprox);
-		//this.results.add(copyMatrix(mat));
-		//this.results.add(this.x);
-		//return mat;
 		double[][] resultMatrix = new double[this.x.length][1];
 		for(int i=0;i<resultMatrix.length;i++) {
 			resultMatrix[i][0] = this.x[i];
 		}
 		
 		this.results.add(resultMatrix);
+		
+		double[] mat = fitResidue(this.matrix,this.x,this.aprox);
+		double[][] finalResultMatrix = new double[this.x.length][1];
+		for(int i=0;i<finalResultMatrix.length;i++) {
+			finalResultMatrix[i][0] = mat[i];
+		}
+		
+		this.results.add(finalResultMatrix);
 		
 		return new ResultMSN(this.results);
 	}
