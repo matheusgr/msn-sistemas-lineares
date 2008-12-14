@@ -339,39 +339,41 @@ TBD Cholesky
 
 \subsection{Método de Gauss-Jacobi}
 
-O método de Gauss-Jacobi fundamenta-se a resolver a equação:
+O método de Gauss-Jacobi fundamenta-se em resolver a equação:
 
 \begin{equation*}
 Ax = b
 \end{equation*}
 
-Sabendo que a matriz A pode ser escrita na forma 
-
-\begin{equation*}
-A = D + (L + U)
-\end{equation*}
-
-onde D representa a diagonal, L a matriz estritamente inferior e U a matriz estritamente superior. Substituindo o resultado na equação e isolando a variável x no primeiro membro, temos que:
+Sabendo que a matriz A pode ser escrita na forma $ A = D + (L + U) $ onde $D$ representa a diagonal, $L$ a matriz estritamente inferior e $U$ a matriz estritamente superior. Substituindo o resultado na equação e isolando a variável $x$ no primeiro membro, temos que:
 
 \begin{equation*}
 x^{(k+1)}=D^{-1}[b-(L+U)x^{(k)}]
 \end{equation*}
 
-com k sendo o contador de iterações. Assim sendo, uma abordagem iterativa para a equação acima seria:
+com $k$ sendo o contador de iterações. Assim sendo, uma abordagem iterativa para a equação acima seria:
 
 \begin{equation*}
  x^{(k+1)}_{i}=\dfrac{1}{a_{ii}}(b-\sum_{j \neq i} a_{ij}x^{(k)}_{j})
 \end{equation*}
 
-Com o uso dessa equação os termos da matrix na iteração k+1 são calculados única e exclusivamente com os valors na iteração k. O processo converge quando a matriz é estritamente diagonal dominante, ou seja, o módulo do elemento na diagonal é maior que a soma do módulo de todos os outros elementos (não diagonais) da linha em questão. Mais precisamente:
+Com o uso dessa equação os termos da matrix na iteração $k+1$ são calculados única e exclusivamente com os valors na iteração $k$. O processo converge quando a matriz é estritamente diagonal dominante, ou seja, o módulo do elemento na diagonal é maior que a soma do módulo de todos os outros elementos (não diagonais) da linha em questão. Mais precisamente:
 
 \begin{equation*}
 |a_{ii}| \left\rangle \sum_{j \neq i}|a_ij| \forall i
 \end{equation*}
 
-Há alguns casos onde o método converge não satisfazendo a condição anterior, sendo necessário que os elementos na diagonal principal sejam maiores em magnitude que os outros elementos.
+Há alguns casos onde o método converge sem satisfazer a condição anterior, sendo necessário que os elementos na diagonal principal sejam maiores em magnitude que os outros elementos.
 
 \subsection{Método de Gauss-Seidel}
+
+O método de Gauss-Seidel é uma melhora no método de Gauss-Jacobi, logo se baseia nos mesmos princípios. A principal diferença é que enquanto o método de Gauss-Jacobi usa única e exclusivamete os elementos da matriz da iteraçào anterior, o método de Gauss-Seidel utiliza os elementos já calculados na iteração corrente. Dessa forma a iteração de Gauss-Seidel é definida como sendo:
+
+\begin{equation*}
+ x^{(k+1)}_{i}=\dfrac{1}{a_{ii}}(b-\sum_{j < i} a_{ij}x^{(k+1)}_{j}-\sum_{j > i} a_{ij}x^{(k)}_{j})
+\end{equation*}
+
+Assim como o método de Gauss-Jacobi, o método de Gauss-Seidel também converge para uma matriz A tal que A é estritamente diagonais dominantes. O método também converge para matrizes definidas positivas.
 
 \chapter{Manual do Desenvolvedor}
 \label{desenvolvedor}
