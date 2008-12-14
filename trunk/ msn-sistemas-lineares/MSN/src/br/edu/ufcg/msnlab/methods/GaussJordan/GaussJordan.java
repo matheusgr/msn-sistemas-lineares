@@ -3,6 +3,8 @@ package br.edu.ufcg.msnlab.methods.GaussJordan;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.lsmp.djep.vectorJep.function.Length;
+
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.ResultMSN;
 import br.edu.ufcg.msnlab.methods.Solver;
@@ -96,11 +98,14 @@ public class GaussJordan implements Solver {
 	 * @return Número da linha onde está o maior elemento da coluna.
 	 */
 	private int encontraMaiorElementoDaColuna(int i,int j) {
-		double max = Double.MIN_VALUE;
-		int pos = 0;
+		double max = matriz[i][i];
+		//matriz[1][1]; 
+//			Double.MIN_VALUE;
+		int pos = i;
 		int tamanhoLinha = matriz.length;
 		for (int k = i; k < tamanhoLinha; k++) {
-			if(matriz[k][j] > max){
+			double elementMat = matriz[k][j];
+			if(elementMat > max){
 				max = matriz[k][j];
 				pos = k;
 			}
@@ -173,22 +178,25 @@ public class GaussJordan implements Solver {
 				if( k != i ) {
 					trocaLinhas(matriz, i, k, j);
 					resultList.add(imprimeMatriz(matriz));
-					
+					printMatrix(matriz);
 	            }
 
 				//valor da diagonal principal diferente de 1, entao tenta colocar 1 
 	            if( matriz[i][j] != 1 ){
 	            	divideLinhaPorValor(matriz, i, j);
 	            	resultList.add(imprimeMatriz(matriz));
+	            	printMatrix(matriz);
 	            }
 
 	            //zera todos os outros valores da coluna
 	            zeraElemento(matriz, i, j);
+	            printMatrix(matriz);
 	            resultList.add(imprimeMatriz(matriz));
 	            i++;
 	        }
 	        j++;
-	    }
+	    }	            printMatrix(matriz);
+
 		return i;
 	}
 	
@@ -260,12 +268,42 @@ public class GaussJordan implements Solver {
 		} else {
 			gaussJodanSemPivo(matriz);
 		}
+		double[][] lastResp = resultList.get(resultList.size()-1);
+		resultList.add(parseSolution(lastResp));
+		ResultMSN resp = new ResultMSN(this.resultList);
 		
 		return new ResultMSN(this.resultList);
+	}
+
+	private double[][] parseSolution(double[][] matriz) {
+		double[][] sol = new double[matriz.length][1];
+		double elemento =0;
+		for (int i = 0; i < matriz.length; i++) {
+			int coluna = matriz.length;
+			elemento = matriz[i][coluna];
+			sol[i][0] = elemento;
+		}
+		
+		return sol;
+		
 	}
 
 	public List<double[][]> getResultList() {
 		return resultList;
 	}
+	
+	   public void printMatrix(double[][] A){
+		     int n = A.length - 1;
+		     int m = A[0].length - 1;
+		     for(int i=1; i<=n; i++){
+		         for(int j=1; j<=m; j++) System.out.print(A[i][j] + "  ");
+		         
+		         System.out.println();
+		      }
+		     System.out.println("-------------------");
+		   }
+
+	
+	
 
 }
