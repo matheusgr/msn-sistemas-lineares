@@ -154,7 +154,7 @@ Durante a resolução de tal sistema, três possibilidades de resultados estão 
 \label{tab:sistemas}
 \end{table} 
 
-Num sistema onde $m > n$, ou seja, há mais incógnitas do que equações, possivelmente não é possível determinar uma solução única para o sistema: cada equação representa um vetor no espaço de $m$ dimensões, e a solução única só é possível quando a intereseção de todas as equações forma um ponto no espaço. Note que tal sistema também poderia não ter solução: basta considerar o exemplo de quando dois vetores são paralelos no espaço, assim, não apresentando pontos comuns de interseção.
+Num sistema onde $m > n$, ou seja, há mais incógnitas do que equações, não é possível determinar uma solução única para o sistema: cada equação representa um vetor no espaço de $m$ dimensões, e a solução única só é possível quando a intereseção de todas as equações forma um ponto no espaço. Note que tal sistema também poderia não ter solução: basta considerar o exemplo de quando dois vetores são paralelos no espaço, assim, não apresentando pontos comuns de interseção.
 
 Quando $m < n$, o sistema possivelmente não apresenta soluções. Fazendo um análogo com a interpretação espacial de um sistema de equações lineares, $m$ equações possivelmente apresentará como intereseção um único ponto no espaço. A adição de uma nova equação pode não interceptar este mesmo ponto, fazendo com o que o sistema se torne impossível de ser solucionado. Observe que é possível que a nova equação ainda permita que o sistema tenha uma única solução: basta que este vetor intercepte o mesmo único ponto que os demais vetores no espaço.
 
@@ -193,7 +193,7 @@ Assim, considerando $D$ e $D_{k}$, é possível determinar o tipo de resolução
         \textbf{Tipo} & \textbf{Condição} \\ \hline
         \textbf{Possível e Determinado} & $D \neq 0$ \\ \hline
         \textbf{Possível e Indeterminado} & $D = 0$, $\forall k, D_{k} = 0$ \\ \hline
-        \textbf{Impossível} & $D = 0$, $\exists k | D_{k} = 0$ \\ \hline
+        \textbf{Impossível} & $D = 0$, $\exists k | D_{k} \neq 0$ \\ \hline
         \end{tabular}
 \label{tab:sistemad}
 \end{table} 
@@ -320,7 +320,12 @@ A resolução do método da decomposição LU se baseia na decomposição da mat
 A = L.U
 \end{equation*}
 
-Onde $L$ é uma matriz triagular inferior, ou seja, todos elementos abaixo da diagonal são nulos e $U$ é uma matriz triangular superior, onde todos os elementos acima da diagonal principal são nulos.
+Onde $L$ é uma matriz triagular inferior, ou seja, todos elementos acima da diagonal são nulos e $U$ é uma matriz triangular superior, onde todos os elementos abaixo da diagonal principal são nulos, de forma que:
+
+\begin{equation*}
+A = L.U
+\end{equation*}
+
 
 %TODO
 
@@ -333,6 +338,38 @@ TBD SVD
 TBD Cholesky
 
 \subsection{Método de Gauss-Jacobi}
+
+O método de Gauss-Jacobi fundamenta-se a resolver a equação:
+
+\begin{equation*}
+Ax = b
+\end{equation*}
+
+Sabendo que a matriz A pode ser escrita na forma 
+
+\begin{equation*}
+A = D + (L + U)
+\end{equation*}
+
+onde D representa a diagonal, L a matriz estritamente inferior e U a matriz estritamente superior. Substituindo o resultado na equação e isolando a variável x no primeiro membro, temos que:
+
+\begin{equation*}
+x^{(k+1)}=D^{-1}[b-(L+U)x^{(k)}]
+\end{equation*}
+
+com k sendo o contador de iterações. Assim sendo, uma abordagem iterativa para a equação acima seria:
+
+\begin{equation*}
+ x^{(k+1)}_{i}=\dfrac{1}{a_{ii}}(b-\sum_{j \neq i} a_{ij}x^{(k)}_{j})
+\end{equation*}
+
+Com o uso dessa equação os termos da matrix na iteração k+1 são calculados única e exclusivamente com os valors na iteração k. O processo converge quando a matriz é estritamente diagonal dominante, ou seja, o módulo do elemento na diagonal é maior que a soma do módulo de todos os outros elementos (não diagonais) da linha em questão. Mais precisamente:
+
+\begin{equation*}
+|a_{ii}| \left\rangle \sum_{j \neq i}|a_ij| \forall i
+\end{equation*}
+
+Há alguns casos onde o método converge não satisfazendo a condição anterior, sendo necessário que os elementos na diagonal principal sejam maiores em magnitude que os outros elementos.
 
 \subsection{Método de Gauss-Seidel}
 
