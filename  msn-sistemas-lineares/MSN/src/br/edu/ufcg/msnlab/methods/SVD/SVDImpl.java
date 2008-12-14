@@ -1,72 +1,37 @@
 package br.edu.ufcg.msnlab.methods.SVD;
 
-import Jama.Matrix;
-import Jama.util.Maths;
-import br.edu.ufcg.msnlab.methods.LU.MatrixLU;
-
-   /** Singular Value Decomposition.
-   <P>
-   For an m-by-n matrix A with m >= n, the singular value decomposition is
-   an m-by-n orthogonal matrix U, an n-by-n diagonal matrix S, and
-   an n-by-n orthogonal matrix V so that A = U*S*V'.
-   <P>
-   The singular values, sigma[k] = S[k][k], are ordered so that
-   sigma[0] >= sigma[1] >= ... >= sigma[n-1].
-   <P>
-   The singular value decompostion always exists, so the constructor will
-   never fail.  The matrix condition number and the effective numerical
-   rank can be computed from this decomposition.
+   /** 
+    * Class that implements the SVD Decomposition using Golub-Reinsch method.
+    * Uses LINPACK algorithm.
+    * @author Clerton Ribeiro
+    * @author Adauto Trigueiro
    */
 
-public class SVDImpl implements java.io.Serializable {
+public class SVDImpl {
 
-/* ------------------------
-   Class variables
- * ------------------------ */
+   private double[][] u, v;
 
-   /** Arrays for internal storage of U and V.
-   @serial internal storage of U.
-   @serial internal storage of V.
-   */
-   private double[][] U, V;
-
-   /** Array for internal storage of singular values.
-   @serial internal storage of singular values.
-   */
    private double[] s;
 
-   /** Row and column dimensions.
-   @serial row dimension.
-   @serial column dimension.
-   */
    private int m, n;
-
-/* ------------------------
-   Constructor
- * ------------------------ */
 
    /** Construct the singular value decomposition
    @param A    Rectangular matrix
    @return     Structure to access U, S and V.
    */
 
-   public SVDImpl(MatrixLU Arg) {
+   public SVDImpl (double[][] matrix) {
 
       // Derived from LINPACK code.
       // Initialize.
-      double[][] A = Arg.toArray();
-      m = Arg.getNumRows();
-      n = Arg.getNumColumns()-1;
+      double[][] A = SVD.copyMatrix(matrix);
+      m = matrix.length;
+      n = matrix[0].length;
 
-      /* Apparently the failing cases are only a proper subset of (m<n), 
-	 so let's not throw error.  Correct fix to come later?
-      if (m<n) {
-	  throw new IllegalArgumentException("Jama SVD only works for m >= n"); }
-      */
       int nu = Math.min(m,n);
       s = new double [Math.min(m+1,n)];
-      U = new double [m][nu];
-      V = new double [n][n];
+      u = new double [m][nu];
+      v = new double [n][n];
       double[] e = new double [n];
       double[] work = new double [m];
       boolean wantu = true;
@@ -85,7 +50,7 @@ public class SVDImpl implements java.io.Serializable {
             // Compute 2-norm of k-th column without under/overflow.
             s[k] = 0;
             for (int i = k; i < m; i++) {
-               s[k] = Maths.hypot(s[k],A[i][k]);
+               s[k] = hypot(s[k],A[i][k]);
             }
             if (s[k] != 0.0) {
                if (A[k][k] < 0.0) {
@@ -124,7 +89,7 @@ public class SVDImpl implements java.io.Serializable {
             // multiplication.
 
             for (int i = k; i < m; i++) {
-               U[i][k] = A[i][k];
+               u[i][k] = A[i][k];
             }
          }
          if (k < nrt) {
@@ -134,7 +99,7 @@ public class SVDImpl implements java.io.Serializable {
             // Compute 2-norm without under/overflow.
             e[k] = 0;
             for (int i = k+1; i < n; i++) {
-               e[k] = Maths.hypot(e[k],e[i]);
+               e[k] = hypot(e[k],e[i]);
             }
             if (e[k] != 0.0) {
                if (e[k+1] < 0.0) {
@@ -171,7 +136,7 @@ public class SVDImpl implements java.io.Serializable {
             // back multiplication.
 
                for (int i = k+1; i < n; i++) {
-                  V[i][k] = e[i];
+                  v[i][k] = e[i];
                }
             }
          }
@@ -196,34 +161,34 @@ public class SVDImpl implements java.io.Serializable {
       if (wantu) {
          for (int j = nct; j < nu; j++) {
             for (int i = 0; i < m; i++) {
-               U[i][j] = 0.0;
+               u[i][j] = 0.0;
             }
-            U[j][j] = 1.0;
+            u[j][j] = 1.0;
          }
          for (int k = nct-1; k >= 0; k--) {
             if (s[k] != 0.0) {
                for (int j = k+1; j < nu; j++) {
                   double t = 0;
                   for (int i = k; i < m; i++) {
-                     t += U[i][k]*U[i][j];
+                     t += u[i][k]*u[i][j];
                   }
-                  t = -t/U[k][k];
+                  t = -t/u[k][k];
                   for (int i = k; i < m; i++) {
-                     U[i][j] += t*U[i][k];
+                     u[i][j] += t*u[i][k];
                   }
                }
                for (int i = k; i < m; i++ ) {
-                  U[i][k] = -U[i][k];
+                  u[i][k] = -u[i][k];
                }
-               U[k][k] = 1.0 + U[k][k];
+               u[k][k] = 1.0 + u[k][k];
                for (int i = 0; i < k-1; i++) {
-                  U[i][k] = 0.0;
+                  u[i][k] = 0.0;
                }
             } else {
                for (int i = 0; i < m; i++) {
-                  U[i][k] = 0.0;
+                  u[i][k] = 0.0;
                }
-               U[k][k] = 1.0;
+               u[k][k] = 1.0;
             }
          }
       }
@@ -236,18 +201,18 @@ public class SVDImpl implements java.io.Serializable {
                for (int j = k+1; j < nu; j++) {
                   double t = 0;
                   for (int i = k+1; i < n; i++) {
-                     t += V[i][k]*V[i][j];
+                     t += v[i][k]*v[i][j];
                   }
-                  t = -t/V[k+1][k];
+                  t = -t/v[k+1][k];
                   for (int i = k+1; i < n; i++) {
-                     V[i][j] += t*V[i][k];
+                     v[i][j] += t*v[i][k];
                   }
                }
             }
             for (int i = 0; i < n; i++) {
-               V[i][k] = 0.0;
+               v[i][k] = 0.0;
             }
-            V[k][k] = 1.0;
+            v[k][k] = 1.0;
          }
       }
 
@@ -318,7 +283,7 @@ public class SVDImpl implements java.io.Serializable {
                double f = e[p-2];
                e[p-2] = 0.0;
                for (int j = p-2; j >= k; j--) {
-                  double t = Maths.hypot(s[j],f);
+                  double t = hypot(s[j],f);
                   double cs = s[j]/t;
                   double sn = f/t;
                   s[j] = t;
@@ -328,9 +293,9 @@ public class SVDImpl implements java.io.Serializable {
                   }
                   if (wantv) {
                      for (int i = 0; i < n; i++) {
-                        t = cs*V[i][j] + sn*V[i][p-1];
-                        V[i][p-1] = -sn*V[i][j] + cs*V[i][p-1];
-                        V[i][j] = t;
+                        t = cs*v[i][j] + sn*v[i][p-1];
+                        v[i][p-1] = -sn*v[i][j] + cs*v[i][p-1];
+                        v[i][j] = t;
                      }
                   }
                }
@@ -343,7 +308,7 @@ public class SVDImpl implements java.io.Serializable {
                double f = e[k-1];
                e[k-1] = 0.0;
                for (int j = k; j < p; j++) {
-                  double t = Maths.hypot(s[j],f);
+                  double t = hypot(s[j],f);
                   double cs = s[j]/t;
                   double sn = f/t;
                   s[j] = t;
@@ -351,9 +316,9 @@ public class SVDImpl implements java.io.Serializable {
                   e[j] = cs*e[j];
                   if (wantu) {
                      for (int i = 0; i < m; i++) {
-                        t = cs*U[i][j] + sn*U[i][k-1];
-                        U[i][k-1] = -sn*U[i][j] + cs*U[i][k-1];
-                        U[i][j] = t;
+                        t = cs*u[i][j] + sn*u[i][k-1];
+                        u[i][k-1] = -sn*u[i][j] + cs*u[i][k-1];
+                        u[i][j] = t;
                      }
                   }
                }
@@ -390,7 +355,7 @@ public class SVDImpl implements java.io.Serializable {
                // Chase zeros.
    
                for (int j = k; j < p-1; j++) {
-                  double t = Maths.hypot(f,g);
+                  double t = hypot(f,g);
                   double cs = f/t;
                   double sn = g/t;
                   if (j != k) {
@@ -402,12 +367,12 @@ public class SVDImpl implements java.io.Serializable {
                   s[j+1] = cs*s[j+1];
                   if (wantv) {
                      for (int i = 0; i < n; i++) {
-                        t = cs*V[i][j] + sn*V[i][j+1];
-                        V[i][j+1] = -sn*V[i][j] + cs*V[i][j+1];
-                        V[i][j] = t;
+                        t = cs*v[i][j] + sn*v[i][j+1];
+                        v[i][j+1] = -sn*v[i][j] + cs*v[i][j+1];
+                        v[i][j] = t;
                      }
                   }
-                  t = Maths.hypot(f,g);
+                  t = hypot(f,g);
                   cs = f/t;
                   sn = g/t;
                   s[j] = t;
@@ -417,9 +382,9 @@ public class SVDImpl implements java.io.Serializable {
                   e[j+1] = cs*e[j+1];
                   if (wantu && (j < m-1)) {
                      for (int i = 0; i < m; i++) {
-                        t = cs*U[i][j] + sn*U[i][j+1];
-                        U[i][j+1] = -sn*U[i][j] + cs*U[i][j+1];
-                        U[i][j] = t;
+                        t = cs*u[i][j] + sn*u[i][j+1];
+                        u[i][j+1] = -sn*u[i][j] + cs*u[i][j+1];
+                        u[i][j] = t;
                      }
                   }
                }
@@ -438,7 +403,7 @@ public class SVDImpl implements java.io.Serializable {
                   s[k] = (s[k] < 0.0 ? -s[k] : 0.0);
                   if (wantv) {
                      for (int i = 0; i <= pp; i++) {
-                        V[i][k] = -V[i][k];
+                        v[i][k] = -v[i][k];
                      }
                   }
                }
@@ -454,12 +419,12 @@ public class SVDImpl implements java.io.Serializable {
                   s[k+1] = t;
                   if (wantv && (k < n-1)) {
                      for (int i = 0; i < n; i++) {
-                        t = V[i][k+1]; V[i][k+1] = V[i][k]; V[i][k] = t;
+                        t = v[i][k+1]; v[i][k+1] = v[i][k]; v[i][k] = t;
                      }
                   }
                   if (wantu && (k < m-1)) {
                      for (int i = 0; i < m; i++) {
-                        t = U[i][k+1]; U[i][k+1] = U[i][k]; U[i][k] = t;
+                        t = u[i][k+1]; u[i][k+1] = u[i][k]; u[i][k] = t;
                      }
                   }
                   k++;
@@ -472,24 +437,20 @@ public class SVDImpl implements java.io.Serializable {
       }
    }
 
-/* ------------------------
-   Public Methods
- * ------------------------ */
-
    /** Return the left singular vectors
    @return     U
    */
 
-   public MatrixLU getU () {
-      return new MatrixLU(U,m,Math.min(m+1,n));
+   public double[][] getU () {
+      return u;
    }
 
    /** Return the right singular vectors
    @return     V
    */
 
-   public MatrixLU getV () {
-      return new MatrixLU(V,n,n);
+   public double [][] getV () {
+      return v;
    }
 
    /** Return the one-dimensional array of singular values
@@ -504,16 +465,15 @@ public class SVDImpl implements java.io.Serializable {
    @return     S
    */
 
-   public MatrixLU getS () {
-      MatrixLU X = new MatrixLU(n,n);
-      double[][] S = X.toArray();
+   public double[][] getS () {
+      double[][] S = new double[n][n];
       for (int i = 0; i < n; i++) {
          for (int j = 0; j < n; j++) {
             S[i][j] = 0.0;
          }
          S[i][i] = this.s[i];
       }
-      return X;
+      return S;
    }
 
    /** Two norm
@@ -547,4 +507,26 @@ public class SVDImpl implements java.io.Serializable {
       }
       return r;
    }
+   
+	/**
+	 * sqrt(a^2 + b^2) without under/overflow. 
+	 * @param a The first number
+	 * @param b The second number
+	 * @return sqrt(a^2 + b^2)
+	 */
+   private double hypot(double a, double b) {
+
+	      double r;
+	      if (Math.abs(a) > Math.abs(b)) {
+	         r = b/a;
+	         r = Math.abs(a)*Math.sqrt(1+r*r);
+	      } else if (b != 0) {
+	         r = a/b;
+	         r = Math.abs(b)*Math.sqrt(1+r*r);
+	      } else {
+	         r = 0.0;
+	      }
+	      return r;
+   }
+
 }
