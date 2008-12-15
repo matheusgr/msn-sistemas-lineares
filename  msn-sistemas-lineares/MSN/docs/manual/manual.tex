@@ -314,6 +314,8 @@ Para obter esta matriz, o método inicia triangularizando a matriz e, em seguida
 
 \subsection{Método da Decomposição LU e SVD}
 
+\subsubsection{Decomposição LU}
+
 A resolução do método da decomposição LU se baseia na decomposição da matriz $A$ de $A.x = b$ em duas outras matrizes $L$ e $U$:
 
 \begin{equation*}
@@ -328,10 +330,11 @@ LU.x = b
 
 Dessa forma, a resolução do sistema $A.x = b$ se reduz à resolução de dois sistemas triangulares: $U.x = y$ e $L.y = b$ . As matrizes L e U podem ser obtidas usando o processo de Gauss, onde a matriz U é a matriz resultante do processo e a matris L é composta dos índices usados para multiplicar as linhas no processo e uma diagonal principal unitária.
 
-TBD SVD
+\subsubsection{Decomposição SVD}
 
 \subsection{Método da Decomposição de Cholesky e QR}
 
+\subsubsection{Decomposição de Cholesky}
 Quando a matriz A é simétrica e positiva definida, ou seja $v.A.v > 0 \forall vetor v$, há uma decomposi,ão triangular mais eficiente. A decomposição de Cholesky constrói uma matriz $L$ diagonal inferior tal que $L^{T}$ serve como matriz U, de modo que $L.L^{T} = A$.
 
 Dessa forma a equação da decomposição LU torna-se:
@@ -340,7 +343,18 @@ Dessa forma a equação da decomposição LU torna-se:
 L.L^{T}.x = b
 \end{equation*}
 
-TBD QR
+\subsubsection{Decomposição QR}
+
+A decomposição QR consiste em decompor a matriz $A$ no produto $QR$ onde R é
+uma matriz triangular superior e $Q$ é uma matriz ortogonal, ou seja, $Q.Q^{T}
+= 1$. Substituindo na equaçào $Ax = b$ temos que:
+
+\begin{equation*}
+\begin{gather*}
+Q.R.x = b, ou ainda \\
+R.x = Q^{T}.b\\
+\end{gather*}
+\end{equation*}
 
 \subsection{Método de Gauss-Jacobi}
 
@@ -365,7 +379,7 @@ com $k$ sendo o contador de iterações. Assim sendo, uma abordagem iterativa pa
 Com o uso dessa equação os termos da matrix na iteração $k+1$ são calculados única e exclusivamente com os valors na iteração $k$. O processo converge quando a matriz é estritamente diagonal dominante, ou seja, o módulo do elemento na diagonal é maior que a soma do módulo de todos os outros elementos (não diagonais) da linha em questão. Mais precisamente:
 
 \begin{equation*}
-|a_{ii}| \left\rangle \sum_{j \neq i}|a_{ij}| \forall i
+|a_{ii}| > \sum_{j \neq i}|a_{ij}| \forall i
 \end{equation*}
 
 Há alguns casos onde o método converge sem satisfazer a condição anterior, sendo necessário que os elementos na diagonal principal sejam maiores em magnitude que os outros elementos.
