@@ -45,7 +45,7 @@
 
 	<!-- JAVADOC -->
 	<target name="javadoc" depends="prepare">
-		<javadoc destdir="${project.docs.api}" access="public" author="false" version="false" use="true" windowtitle="${compildor.nome}">
+		<javadoc destdir="${project.docs.api}" access="public" author="false" version="false" use="true" windowtitle="${project.name}">
 			<fileset dir="src" defaultexcludes="yes">
 				<include name="**/*.java"/>
 			</fileset>
@@ -94,10 +94,10 @@
 			</fileset>
 			<fileset dir="${project.src}">
 				<include name="**/*.java" />
+				<include name="**/*.jpg" />
 			</fileset>
-			<zipfileset src="{cli.jar}" />
-			<zipfileset src="{jep.jar}" />
-			<zipfileset src="{djep.jar}" />
+			<zipfileset src="${cli.jar}" />
+			<zipfileset src="${jama.jar}" />
 		</jar>
 	</target>
 	<!-- /JAR -->
