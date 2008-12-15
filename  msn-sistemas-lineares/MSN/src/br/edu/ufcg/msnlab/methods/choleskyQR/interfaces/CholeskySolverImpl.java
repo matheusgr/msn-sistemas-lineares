@@ -93,7 +93,7 @@ public class CholeskySolverImpl implements Solver{
 	      Matrix B = transformaTermonsEmMatriz(termos);
 	      Cholesky Chol = A.chol(); 
 	      Matrix L = Chol.getL();
-	      check(A,L.times(L.transpose()));
+	      //check(A,L.times(L.transpose()));
 	      Matrix X = Chol.solve(B);
 	      Matrix R = B.minus(A.times(X));
 	      
