@@ -15,6 +15,7 @@ import br.edu.ufcg.msnlab.methods.jacobi.JacobiSolverImpl;
 import br.edu.ufcg.msnlab.util.Checker;
 import br.edu.ufcg.msnlab.util.Config;
 import br.edu.ufcg.msnlab.util.ParsedSystem;
+import br.edu.ufcg.msnlab.util.Parser;
 
 public class Controller {
 
@@ -57,9 +58,8 @@ public class Controller {
 		return r;
 	}
 
-	public ParsedSystem parse(String sistemaEq) {
-		//TODO CRIAR PARSER QUE RETORNA UM OBJETO QUE REPRESENTA O SISTEMA DEPOIS DO PARSE.
-		return null;
+	public ParsedSystem parse(String sistemaEq) throws MSNException {
+		return Parser.parse(sistemaEq);		
 	}	
 
 }
