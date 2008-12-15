@@ -47,21 +47,21 @@ public class CholeskySolverImpl implements Solver{
 		return B;
 	}
 
-	 /** Checa a diferenï¿½a entre as Matrizes para nï¿½o perfimitir grandes diferencas **/
+	 /** Checa a diferença entre as Matrizes para não perfimitir grandes diferencas **/
 
 	   private void check(Matrix X, Matrix Y) {
 	      double eps = Math.pow(BASE_DE_TESTE_DEFAULT,EXPOENTE_DE_TESTE_DEFAULT);
 	      if (X.norm1() == 0. & Y.norm1() < 10*eps) return;
 	      if (Y.norm1() == 0. & X.norm1() < 10*eps) return;
 	      if (X.minus(Y).norm1() > 1000*eps*Math.max(X.norm1(),Y.norm1())) {
-	         throw new RuntimeException("A diferenï¿½a entre as matrizes eh muito grande: " +  Double.toString(X.minus(Y).norm1()));
+	         throw new RuntimeException("A diferença entre as matrizes eh muito grande: " +  Double.toString(X.minus(Y).norm1()));
 	      }
 	   }
 	   
 		 /** Checa se ainda eh possivel continuar o refinamento **/
 
 	   private boolean checkCondicao(Matrix R, double aprox) {
-	       System.out.println("Checando condicoes");
+	       
 		  double eps = aprox;
 		  
 		  // if (X.norm1() == 0. & Y.norm1() < 10*eps) return;
@@ -73,35 +73,7 @@ public class CholeskySolverImpl implements Solver{
 	      return false;
 	   }
 
-	   /**
-	    * Teste para verificar se o mï¿½todo estï¿½ sendo aplicado corretamente.
-	    * @param args argumento do main
-	    */
-	   public static void main(String args[]){
-		   double[][] xvals = {{1.,1.,0.},{1.,2.,-1.},{0.,-1.,3.}};
-		   double[] bvals = {2.,1.,5.};
-		    
-		    Matrix A = new Matrix(xvals);
-		    System.out.println(A.norm2()+" maioOOOOOr valor A");
-
-		  
-		    CholeskySolverImpl ch = new CholeskySolverImpl();
-		    ch.solve(xvals, bvals, 0.000000000000000000000005, 50000, null);
-		   
-		    
-		    /*double[][] xvals1 = {{4.,2.,-4.},{2.,10.,4.},{-4.,4.,9.}};
-		    double[] bvals1 = {2.,16.,9.};
-		    
-		    Matrix A1 = new Matrix(xvals1);
-		    System.out.println();
-		    System.out.println("Segundo teste");
-
-		  
-		    CholeskySolverImpl ch1 = new CholeskySolverImpl();
-		    ch1.solve(xvals1, bvals1, 0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005, 50000, null);*/
-		   
-		   
-	   }
+	   
 
 	@Override
 	public Result solve(double[][] coeficientes, double[] estimativas,
@@ -130,26 +102,21 @@ public class CholeskySolverImpl implements Solver{
 	      }
     	 
 	      double[][] xteste = X.getArray();
-	      // retornando a matriz da iteraï¿½ï¿½o 1.
+	      // retornando a matriz da iteração 1.
 	      resultMsn.addResult(xteste);
-	      R.print(3, 50);
+	      
 	      int iteracoesAtual =1;
 	      while((checkCondicao(R, aprox))&& (iteracoesAtual <= iteracoesMax)){
-	    	  System.out.println("Iteraï¿½ï¿½o "+iteracoesAtual);
-	    	  System.out.println("aproximaï¿½ï¿½o "+aprox);
+	    	  
 	    	  Matrix C = A.solve(R);
 	    	  Matrix Xlinha = X.plus(C);
 	    	  R = B.minus(A.times(Xlinha));
-	    	  R.print(3, 50);
 	    	  xteste = Xlinha.getArray();
-		      // retornando a matriz da iteraï¿½ï¿½o 1.
+		      // retornando a matriz da iteração 1.
 		      resultMsn.addResult(xteste);
 		      iteracoesAtual++;
 	      }
-	      
-	      System.out.println("Resultado desejado =");
-	      X.print(3, 5);
-		
+	      		
 		return resultMsn;
 	}
 }
