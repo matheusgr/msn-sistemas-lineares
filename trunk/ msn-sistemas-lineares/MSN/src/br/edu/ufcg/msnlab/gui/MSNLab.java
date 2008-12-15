@@ -22,10 +22,6 @@ import br.edu.ufcg.msnlab.gui.input.FrameInput;
 import br.edu.ufcg.msnlab.gui.menus.MenuFile;
 import br.edu.ufcg.msnlab.gui.menus.MenuHelp;
 
-/**
- * @author Alfeu Buriti Pereira J�nior.
- * @author Brunno Jos� Guimar�es de Almeida.
- */
 public class MSNLab extends JFrame {
 
     private static final long serialVersionUID = 1L;

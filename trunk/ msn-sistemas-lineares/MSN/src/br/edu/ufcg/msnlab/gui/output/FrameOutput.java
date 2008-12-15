@@ -10,19 +10,13 @@ import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.border.EtchedBorder;
-import javax.swing.table.TableModel;
 
 import br.edu.ufcg.msnlab.gui.MSNLab;
 import br.edu.ufcg.msnlab.methods.Result;
 
-/**
- * @author Alfeu Buriti Pereira J�nior
- * @author Brunno Jos� Guimar�es de Almeida.
- */
 public class FrameOutput extends JInternalFrame {
 
     private static final long serialVersionUID = 1L;

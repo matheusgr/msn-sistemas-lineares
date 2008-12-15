@@ -6,10 +6,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
-/**
- * @author Alfeu Buriti Pereira Júnior.
- * @author Brunno José Guimarães de Almeida.
- */
 public class JDecimalField extends JTextField {
 
     private static final long serialVersionUID = 1L;

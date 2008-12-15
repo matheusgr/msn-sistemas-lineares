@@ -11,10 +11,6 @@ import javax.swing.border.EtchedBorder;
 
 import br.edu.ufcg.msnlab.gui.MSNLab;
 
-/**
- * @author Alfeu Buriti Pereira Júnior.
- * @author Brunno José Guimarães de Almeida.
- */
 public class FrameAbout extends JInternalFrame {
 
     private static final long serialVersionUID = -5319776206787609374L;
@@ -54,27 +50,27 @@ public class FrameAbout extends JInternalFrame {
         listMethoods = new JList();
 
         Vector<String> vetorInterface = new Vector<String>();
-        vetorInterface.add("Alfeu Buriti Pereira Júnior");
-        vetorInterface.add("Brunno José Guimarães de Almeida");
-        vetorInterface.add("Rodrigo Barbosa Lira");
-        vetorInterface.add("Samuel de Barros Florentino");
-        vetorInterface.add("Erick Moreno Marques Almeida");
-        vetorInterface.add("Andrea Alves Nascimento");
+        vetorInterface.add("Dayane Gaudencio");
+        vetorInterface.add("Hugo Marques");
+        vetorInterface.add("Jackson Porciuncula");
+        vetorInterface.add("Matheus Gaudencio");
+        vetorInterface.add("Ricardo AraÃºjo");
+        vetorInterface.add("Roberta Guedes");
+        vetorInterface.add("Theo Alves");
         listInterface.setListData(vetorInterface);
 
         Vector<String> vetorMethods = new Vector<String>();
-        vetorMethods.add("Álvaro Magnum Barbosa Neto");
-        vetorMethods.add("Marcus Vinícius Mesquita Leite");
-        vetorMethods.add("Jaindson Valentim Santana");
-        vetorMethods.add("Edigley Pereira Fraga");
-        vetorMethods.add("Jaluska Rodrigues de Almeida");
-        vetorMethods.add("Eugênia de Sousa Cavalcanti");
-        vetorMethods.add("Davi Oliveira Fernandes");
-        vetorMethods.add("Vinícius Aguiar");
-        vetorMethods.add("Marcus Williams A. de Carvalho");
-        vetorMethods.add("Carla Souza");
-        vetorMethods.add("Gabriel de Lima Feitosa");
-        vetorMethods.add("Raphael Pessoa");
+        vetorMethods.add("Adauto Trigueiro");
+        vetorMethods.add("Alan Farias");
+        vetorMethods.add("Anderson Pablo");
+        vetorMethods.add("Diego Melo GurjÃ£o");
+        vetorMethods.add("Everton Leandro");
+        vetorMethods.add("JoÃ£o Felipe Ouriques");
+        vetorMethods.add("JosÃ© Wilson");
+        vetorMethods.add("JosÃ© Gildo");
+        vetorMethods.add("Leonardo Ribeiro Mendes");
+        vetorMethods.add("Rafael Dantas");
+        vetorMethods.add("Rodrigo Pinheiro");
         listMethoods.setListData(vetorMethods);
     }
 

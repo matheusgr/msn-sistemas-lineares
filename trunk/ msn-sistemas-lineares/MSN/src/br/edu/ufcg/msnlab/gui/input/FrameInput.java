@@ -19,7 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.EtchedBorder;
 
-import br.edu.ufcg.msnlab.exceptions.MSNException;
 import br.edu.ufcg.msnlab.facade.Facade;
 import br.edu.ufcg.msnlab.gui.MSNLab;
 import br.edu.ufcg.msnlab.gui.output.FrameOutput;
