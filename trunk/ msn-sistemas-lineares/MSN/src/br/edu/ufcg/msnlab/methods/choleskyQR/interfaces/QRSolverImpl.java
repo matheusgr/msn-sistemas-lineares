@@ -1,5 +1,6 @@
 package br.edu.ufcg.msnlab.methods.choleskyQR.interfaces;
 
+import interfaces.QRSolverImpl;
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.ResultMSN;
 import br.edu.ufcg.msnlab.methods.Solver;
@@ -49,42 +50,47 @@ public class QRSolverImpl implements Solver{
 		  Matrix B = transformaTermonsEmMatriz(termos);
 	      QR QR = A.qr();
 	      Matrix R = QR.getR();
-	      try {
-	         check(A,QR.getQ().times(R));
+	      check(A,QR.getQ().times(R));
+	     
+	      Matrix X = QR.solve(B);
+	      System.out.println("Sem resíduo");
+	      X.print(3, 50);
+	      Matrix R1 = B.minus(A.times(X));
+	      
 	        
-	      } catch ( java.lang.RuntimeException e ) {
+	    
 	       
-	      }
+	     
 	      if(iteracoesMax < 1){
 	    	  iteracoesMax = NUM_ITERACOES_DEFAULT;
 	      }
 
-	      Matrix R1 = B.minus(A.times(R));
+	      
 	      double[][] xteste = R.getArray();
-	      // retornando a matriz da iteraï¿½ï¿½o 1.
+	      // retornando a matriz da iteração 1.
 	      resultMsn.addResult(xteste);
 	      
 	      int iteracoesAtual =1;
-	      while((checkCondicao(R, aprox))&& (iteracoesAtual <= iteracoesMax)){
-	    	  System.out.println("Iteraï¿½ï¿½o "+iteracoesAtual);
-	    	  System.out.println("aproximaï¿½ï¿½o "+aprox);
-	    	  Matrix C = A.solve(R);
-	    	  Matrix Xlinha = R.plus(C);
-	    	  R = B.minus(A.times(Xlinha));
-	    	  R.print(3, 50);
+	      while((checkCondicao(R1, aprox))&& (iteracoesAtual <= iteracoesMax)){
+	    	  System.out.println("Iteração "+iteracoesAtual);
+	    	  System.out.println("aproximação "+aprox);
+	    	  Matrix C = A.solve(R1);
+	    	  Matrix Xlinha = X.plus(C);
+	    	  R1 = B.minus(A.times(Xlinha));
+	    	  R1.print(3, 50);
 	    	  xteste = Xlinha.getArray();
-		      // retornando a matriz da iteraï¿½ï¿½o 1.
+		      // retornando a matriz da iteração 1.
 		      resultMsn.addResult(xteste);
 		      iteracoesAtual++;
 	      }
 	      
 	      System.out.println("Resultado desejado =");
-	      R.print(3, 5);
+	      R1.print(3, 5);
 		
 		return resultMsn;
 	}
 	
-	/** Checa a diferenï¿½a entre as Matrizes para nï¿½o perfimitir grandes diferencas **/
+	/** Checa a diferença entre as Matrizes para não perfimitir grandes diferencas **/
 
 	   private void check(Matrix X, Matrix Y) {
 	      double eps = Math.pow(BASE_DE_TESTE_DEFAULT,EXPOENTE_DE_TESTE_DEFAULT);
@@ -122,5 +128,30 @@ public class QRSolverImpl implements Solver{
 		      return false;
 		   }
 
-	
+		   public static void main(String args[]){
+			   double[][] xvals = {{1.,1.,0.},{1.,2.,-1.},{0.,-1.,3.}};
+			    double[] bvals = {2.,1.,5.};
+			    
+			    Matrix A = new Matrix(xvals);
+			    System.out.println(A.norm2()+" maioOOOOr valor A");
+
+			  
+			    QRSolverImpl qr = new QRSolverImpl();
+			    qr.solve(xvals, bvals,  0.00000000000000000000000000000000000000000000000000000000000001, 50000, null);
+			   
+			    
+			    /*double[][] xvals1 = {{4.,2.,-4.},{2.,10.,4.},{-4.,4.,9.}};
+			    double[] bvals1 = {2.,16.,9.};
+			    
+			    Matrix A1 = new Matrix(xvals1);
+			    System.out.println();
+			    System.out.println("Segundo teste");
+
+			  
+			    CholeskySolverImpl ch1 = new CholeskySolverImpl();
+			    ch1.solve(xvals1, bvals1, 0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005, 50000, null);*/
+			   
+			   
+		   }
+
 }
