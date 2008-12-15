@@ -177,8 +177,8 @@ public class FrameOutput extends JInternalFrame {
 							} else {
 								resStr += coef + var + " ";
 							}
+							first = false;
 						}
-						first = false;
 					}
 					resStr += "= " + resultArray[i][j] + "\n";
 				}
