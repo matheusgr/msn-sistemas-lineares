@@ -366,7 +366,7 @@ uma matriz triangular superior e $Q$ é uma matriz ortogonal, ou seja, $Q.Q^{T}
 = 1$. Substituindo na equaçào $Ax = b$ temos que:
 
 \begin{gather*}
-Q.R.x = b, ou ainda \\
+Q.R.x = b\\
 R.x = Q^{T}.b\\
 \end{gather*}
 
@@ -393,7 +393,7 @@ com $k$ sendo o contador de iterações. Assim sendo, uma abordagem iterativa pa
 Com o uso dessa equação os termos da matrix na iteração $k+1$ são calculados única e exclusivamente com os valors na iteração $k$. O processo converge quando a matriz é estritamente diagonal dominante, ou seja, o módulo do elemento na diagonal é maior que a soma do módulo de todos os outros elementos (não diagonais) da linha em questão. Mais precisamente:
 
 \begin{equation*}
-|a_{ii}| > \sum_{j \neq i}|a_{ij}| \forall i
+|a_{ii}| > \sum_{j \neq i}|a_{ij}| ,  \forall i
 \end{equation*}
 
 Há alguns casos onde o método converge sem satisfazer a condição anterior, sendo necessário que os elementos na diagonal principal sejam maiores em magnitude que os outros elementos.
