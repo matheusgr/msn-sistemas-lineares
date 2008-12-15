@@ -1,7 +1,5 @@
 package br.edu.ufcg.msnlab.facade;
 
-import java.util.List;
-
 import br.edu.ufcg.msnlab.exceptions.MSNException;
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.util.Config;
