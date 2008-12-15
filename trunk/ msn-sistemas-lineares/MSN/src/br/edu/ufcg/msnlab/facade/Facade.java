@@ -55,7 +55,7 @@ public class Facade {
 	 * @param sistemaEq Sistemas de equações em string.
 	 * @return Objeto intermediário que contém o sistema em formato de matrizes.(para detalhes ver br.edu.ufcg.msnlab.util.SystemTypes).
 	 */
-	public ParsedSystem parse(String sistemaEq) {
+	public ParsedSystem parse(String sistemaEq) throws MSNException {
 		return controlador.parse(sistemaEq);
 	}
 

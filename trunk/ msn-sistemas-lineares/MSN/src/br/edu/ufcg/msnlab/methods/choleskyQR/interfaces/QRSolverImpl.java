@@ -1,6 +1,5 @@
 package br.edu.ufcg.msnlab.methods.choleskyQR.interfaces;
 
-import interfaces.QRSolverImpl;
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.ResultMSN;
 import br.edu.ufcg.msnlab.methods.Solver;
@@ -53,7 +52,7 @@ public class QRSolverImpl implements Solver{
 	      check(A,QR.getQ().times(R));
 	     
 	      Matrix X = QR.solve(B);
-	      System.out.println("Sem resíduo");
+	      System.out.println("Sem resï¿½duo");
 	      X.print(3, 50);
 	      Matrix R1 = B.minus(A.times(X));
 	      
@@ -67,19 +66,19 @@ public class QRSolverImpl implements Solver{
 
 	      
 	      double[][] xteste = R.getArray();
-	      // retornando a matriz da iteração 1.
+	      // retornando a matriz da iteraï¿½ï¿½o 1.
 	      resultMsn.addResult(xteste);
 	      
 	      int iteracoesAtual =1;
 	      while((checkCondicao(R1, aprox))&& (iteracoesAtual <= iteracoesMax)){
-	    	  System.out.println("Iteração "+iteracoesAtual);
-	    	  System.out.println("aproximação "+aprox);
+	    	  System.out.println("Iteraï¿½ï¿½o "+iteracoesAtual);
+	    	  System.out.println("aproximaï¿½ï¿½o "+aprox);
 	    	  Matrix C = A.solve(R1);
 	    	  Matrix Xlinha = X.plus(C);
 	    	  R1 = B.minus(A.times(Xlinha));
 	    	  R1.print(3, 50);
 	    	  xteste = Xlinha.getArray();
-		      // retornando a matriz da iteração 1.
+		      // retornando a matriz da iteraï¿½ï¿½o 1.
 		      resultMsn.addResult(xteste);
 		      iteracoesAtual++;
 	      }
@@ -90,7 +89,7 @@ public class QRSolverImpl implements Solver{
 		return resultMsn;
 	}
 	
-	/** Checa a diferença entre as Matrizes para não perfimitir grandes diferencas **/
+	/** Checa a diferenï¿½a entre as Matrizes para nï¿½o perfimitir grandes diferencas **/
 
 	   private void check(Matrix X, Matrix Y) {
 	      double eps = Math.pow(BASE_DE_TESTE_DEFAULT,EXPOENTE_DE_TESTE_DEFAULT);
