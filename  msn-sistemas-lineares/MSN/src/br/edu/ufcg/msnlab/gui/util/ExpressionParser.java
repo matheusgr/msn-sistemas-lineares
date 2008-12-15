@@ -68,7 +68,7 @@ public class ExpressionParser {
 				HashMap<String, Double> curEquation = new HashMap<String, Double>();
 				equations.add(curEquation);
 				String curValue = "";
-				for (int i = 0; i < eq.length; i++) {
+				for (int i = 0; i < eq.length;) {
 					i = consumeWhiteSpace(eq, i);
 					if (i == eq.length) {
 						pr.errors.add(new ParserError(lnr.getLineNumber(), "Unexpected end of line."));
@@ -190,7 +190,6 @@ public class ExpressionParser {
 				}
 			}
 		}
-		
 		return i;
 
 	}
