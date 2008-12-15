@@ -11,10 +11,6 @@ import javax.swing.JMenuItem;
 import br.edu.ufcg.msnlab.gui.MSNLab;
 import br.edu.ufcg.msnlab.gui.about.FrameAbout;
 
-/**
- * @author Alfeu Buriti Pereira Júnior.
- * @author Brunno José Guimarães de Almeida.
- */
 public class MenuHelp extends JMenu {
 
     private static final long serialVersionUID = 1L;
@@ -41,7 +37,7 @@ public class MenuHelp extends JMenu {
             public void actionPerformed(ActionEvent arg0) {
                 FrameAbout fa = new FrameAbout(msnLab);
                 fa.setLocation(new Point(
-                        (msnLab.getWidth() - fa.getWidth()) / 2, 100));
+                        (msnLab.getWidth() - fa.getWidth()) / 2, 20));
                 msnLab.openComponent(fa);
             }
         });

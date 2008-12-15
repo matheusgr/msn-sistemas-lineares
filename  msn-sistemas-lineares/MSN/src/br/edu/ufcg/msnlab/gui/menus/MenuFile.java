@@ -9,10 +9,6 @@ import javax.swing.JMenuItem;
 
 import br.edu.ufcg.msnlab.gui.MSNLab;
 
-/**
- * @author Alfeu Buriti Pereira Júnior.
- * @author Brunno José Guimarães de Almeida.
- */
 public class MenuFile extends JMenu {
 
     private static final long serialVersionUID = 1L;
