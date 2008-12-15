@@ -332,9 +332,15 @@ TBD SVD
 
 \subsection{Método da Decomposição de Cholesky e QR}
 
-%TODO
+Quando a matriz A é simétrica e positiva definida, ou seja $v.A.v > 0 \forall vetor v$, há uma decomposi,ão triangular mais eficiente. A decomposição de Cholesky constrói uma matriz $L$ diagonal inferior tal que $L^{T}$ serve como matriz U, de modo que $L.L^{T} = A$.
 
-TBD Cholesky
+Dessa forma a equação da decomposição LU torna-se:
+
+\begin{equation*}
+L.L^{T}.x = b
+\end{equation*}
+
+TBD QR
 
 \subsection{Método de Gauss-Jacobi}
 
