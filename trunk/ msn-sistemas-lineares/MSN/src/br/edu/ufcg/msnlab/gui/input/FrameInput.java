@@ -236,7 +236,7 @@ public class FrameInput extends JInternalFrame {
 						.getTerms(), tolerance, iter, method, parserResult
 						.getTerms(), config);
 				FrameOutput fo = new FrameOutput(this.msnlab);
-				fo.setSolution(method, result);
+				fo.setSolution(method, result, parserResult);
                 fo.setLocation(new Point(0, 250));
                 msnlab.openComponent(fo);
 			} catch (Exception e) {
