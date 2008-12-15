@@ -3,8 +3,6 @@ package br.edu.ufcg.msnlab.methods.GaussJordan;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.lsmp.djep.vectorJep.function.Length;
-
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.ResultMSN;
 import br.edu.ufcg.msnlab.methods.Solver;
