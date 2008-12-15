@@ -79,10 +79,10 @@ public class CholeskySolverImpl implements Solver{
 	    */
 	   public static void main(String args[]){
 		   double[][] xvals = {{1.,1.,0.},{1.,2.,-1.},{0.,-1.,3.}};
-		    double[] bvals = {2.,1.,5.};
+		   double[] bvals = {2.,1.,5.};
 		    
 		    Matrix A = new Matrix(xvals);
-		    System.out.println(A.norm2()+" maior valor A");
+		    System.out.println(A.norm2()+" maioOOOOOr valor A");
 
 		  
 		    CholeskySolverImpl ch = new CholeskySolverImpl();
@@ -144,6 +144,7 @@ public class CholeskySolverImpl implements Solver{
 	    	  xteste = Xlinha.getArray();
 		      // retornando a matriz da itera��o 1.
 		      resultMsn.addResult(xteste);
+		      iteracoesAtual++;
 	      }
 	      
 	      System.out.println("Resultado desejado =");
