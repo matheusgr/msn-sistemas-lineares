@@ -64,7 +64,6 @@ public class ExpressionParser {
 		try {
 			String readLine;
 			while ((readLine = lnr.readLine()) != null) {
-				System.out.println(readLine);
 				char[] eq = readLine.toCharArray();
 				HashMap<String, Double> curEquation = new HashMap<String, Double>();
 				equations.add(curEquation);
