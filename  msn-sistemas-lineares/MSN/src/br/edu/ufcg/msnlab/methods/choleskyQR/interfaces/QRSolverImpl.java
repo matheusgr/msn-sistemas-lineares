@@ -75,6 +75,7 @@ public class QRSolverImpl implements Solver{
 	    	  xteste = Xlinha.getArray();
 		      // retornando a matriz da itera��o 1.
 		      resultMsn.addResult(xteste);
+		      iteracoesAtual++;
 	      }
 	      
 	      System.out.println("Resultado desejado =");
