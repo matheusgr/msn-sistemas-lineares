@@ -332,6 +332,22 @@ Dessa forma, a resolução do sistema $A.x = b$ se reduz à resolução de dois 
 
 \subsubsection{Decomposição SVD}
 
+Quando a matriz A é singular, ou seja, não possui inversa (determinante igual a
+0 no teste de Cramer), a decomposição SVD pode ser usada. Matrizes $A (M x N)$
+tal que $M$ seja maior ou igual a $N$, podem ser decompostas no produto de três
+matrizes: $A = U . W . V^{T}$, tal que U é uma matriz coluna ortogonal; W é uma
+matriz diagonal com elementos positivos ou nulos (valores singulares); e V é
+uma matriz ortogonal.
+
+Se A for uma matriz quadradam então U W e V também o serão. Logo, de acordo com
+\cite{press:recipes92} podemos definir x como:
+
+\begin{equation}
+x = V . [diag(1/w_j)].(U^T . b)
+\end{equation}
+
+Caso $w_j$ seja nulo podemos substituir $1/w_j$ por zero. 
+
 \subsection{Método da Decomposição de Cholesky e QR}
 
 \subsubsection{Decomposição de Cholesky}
