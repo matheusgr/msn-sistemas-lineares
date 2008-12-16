@@ -1,12 +1,16 @@
 package br.edu.ufcg.msnlab.methods.jacobi;
 
-import java.util.List;
-
 import br.edu.ufcg.msnlab.exceptions.MSNException;
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.Solver;
 import br.edu.ufcg.msnlab.util.Config;
 
+/**
+ * Type that defines a solver of systems of 
+ * linear equations using the method of Gauss-Jacobi
+ * @author Leonardo
+ * @author Rodrigo
+ */
 public interface JacobiSolver extends Solver {
 
 	/**
