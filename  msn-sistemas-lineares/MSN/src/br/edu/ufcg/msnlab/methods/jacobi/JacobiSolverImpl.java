@@ -9,9 +9,14 @@ import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.ResultMSN;
 import br.edu.ufcg.msnlab.util.Config;
 
+/**
+ * Class that solves systems of linear equations 
+ * using the method of Gauss-Jacobi.
+ *  
+ * @author Leonardo Ribeiro 
+ * @author Rodrigo Pinheiro 
+ */
 public class JacobiSolverImpl implements JacobiSolver {
-	
-	
 
 	/**
 	 * Resolve the system represented by the values passed.
@@ -21,17 +26,18 @@ public class JacobiSolverImpl implements JacobiSolver {
 	 */
 	public Result solve(double[][] coefficients, double[] estimates,
 			double[] terms, double approximation, int maximumNumberIterations, Config config) throws MSNException {
-		double[][] temp = increasedMatrix(coefficients,terms);
-		temp = organizeMatrix(temp);
-		if(!verificaCondicaoConvergencia(temp)){
-			temp = procuraMatrixConvergente(temp);
-		}
-		temZeroDiagonalPrincipal(temp);
-		coefficients = getCoefficients(temp);		
-		terms = getTerms(temp);
-		List<Matrix> jacobi = jacobiMethod(coefficients, estimates, terms, approximation, maximumNumberIterations);
-		return turns(jacobi); 
 		
+		double[][] matrixComplete = increasedMatrix(coefficients,terms);
+		matrixComplete = organizeMatrix(matrixComplete);
+		if(!checkConditionOfConvergence(matrixComplete)){
+			matrixComplete = searchMatrixConvergence(matrixComplete);
+		}
+		if (!diagonalOK(matrixComplete))
+			throw new MSNException("There is no convergence!!");
+		coefficients = getCoefficients(matrixComplete);		
+		terms = getTerms(matrixComplete);
+		List<Matrix> jacobi = jacobiMethod(coefficients, estimates, terms, approximation, maximumNumberIterations);
+		return turns(jacobi); 				
 	}
 	
 	/**
@@ -52,13 +58,6 @@ public class JacobiSolverImpl implements JacobiSolver {
 		
 		return solve(coefficients, estimates, terms, aproximation, maximumNumberIterations, config);
 		
-	}
-	
-	private void temZeroDiagonalPrincipal(double[][] matrix) throws MSNException {
-		for (int i = 0; i < matrix.length; i++) {
-			if (matrix[i][i] == 0)
-				throw new MSNException("O sistema nao possui solucao usando o metodo de Jacobi!!!");
-		}
 	}
 	
 	/**
@@ -112,19 +111,24 @@ public class JacobiSolverImpl implements JacobiSolver {
 	 * @param aproximation The residue of the error in the system.
 	 * @param maximumNumberIterations number maximum of iterations.
 	 * @return The solution of the system by the method of Jacobi.
+	 * @throws MSNException 
+	 * @throws MSNException 
+	 * @throws MSNException 
 	 */
 	private List<Matrix> jacobiMethod(double[][] coefficients, 
 			double[] estimates, double[] terms, double aproximation,
-			int maximumNumberIterations) {
+			int maximumNumberIterations) throws MSNException {
+		List<Matrix> result = new LinkedList<Matrix>();
 		
 		Matrix matrixX = initializeEstimates(estimates);
 		Matrix matrixC = getMatrixConstants(coefficients, terms);
 		Matrix matrixJ = getMatrixJ(coefficients);
 		Matrix matrix_X_previousIteration = matrixX;
+			
 		int quantityIterations = 1;
-		List<Matrix> result = new LinkedList<Matrix>();
+			
 		result.add(matrixX);
-	
+		
 		do{
 			Matrix matrixJC = matrixJ.times(matrixX);
 			matrix_X_previousIteration = matrixX;
@@ -175,31 +179,44 @@ public class JacobiSolverImpl implements JacobiSolver {
 			j++;
 		}
 		if (j == limit)
-			throw new MSNException("Impossivel Diagonalizar a matriz!!");
+			throw new MSNException("Impossível diagonalizar a matriz!!");
 		return matrix;
 	}
 	
-	private double[][] procuraMatrixConvergente(double[][] matrix) throws MSNException {
+	/**
+	 * Change the matrix to find a new matrix that can converge
+	 * @param matrix
+	 * @return convergent matrix
+	 * @throws MSNException
+	 */
+	private double[][] searchMatrixConvergence(double[][] matrix) throws MSNException {
 		boolean isPossible = false;
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix.length; j++) {
 				if (i != j) {
 					matrix = changeLines(i, j, matrix);
-					isPossible = verificaCondicaoConvergencia(matrix); 
+					isPossible = checkConditionOfConvergence(matrix); 
 					if (isPossible) {
 						return matrix;
 					}
 				}
 			}
 		}
-		if (!isPossible) throw new MSNException("O sistema pode nao convergir!!");
+		if (!isPossible) throw new MSNException("The system can not converge!");
 		return matrix;
 	}
 	
-	private boolean verificaCondicaoConvergencia(double[][] matrix) {
+	/**
+	 * Check the conditions for convergence 
+	 * of the method of Gauss-Jacobi
+	 * @param matrix
+	 * @return true if converge and false if not 
+	 */
+	private boolean checkConditionOfConvergence(double[][] matrix) {
 		for (int i = 0; i < matrix.length; i++) {
 			double sumLine = calculateSumLine(matrix[i]);
-			double factor = (sumLine-matrix[i][i])/matrix[i][i];
+			double factor = Math.abs(sumLine-matrix[i][i])/Math.abs(matrix[i][i]);
+			
 			if (factor >= 1)
 				return false;
 		}
@@ -207,9 +224,9 @@ public class JacobiSolverImpl implements JacobiSolver {
 	}
 	
 	/**
-	 * 
+	 * Sum the line of a matrix
 	 * @param line
-	 * @return
+	 * @return sum
 	 */
 	private double calculateSumLine(double[] line) {
 		double sum = 0.0;
@@ -298,7 +315,6 @@ public class JacobiSolverImpl implements JacobiSolver {
 	@SuppressWarnings("unchecked")
 	private ResultMSN turns(List<Matrix> listMatrix) {
 		ResultMSN results = new ResultMSN();
-		
 		for (Matrix matrix : listMatrix) {
 			results.addResult(matrix.getArrayCopy());
 		}
@@ -311,6 +327,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 	 * @param coefficients
 	 * @param terms Independent terms
 	 * @return matrixCte Matrix of the coefficients.
+	 * @throws MSNException 
 	 */
 	private Matrix getMatrixConstants(double[][] coefficients,double[] terms) {
 		Matrix matrixConstants = new Matrix(terms.length,1);
@@ -319,6 +336,8 @@ public class JacobiSolverImpl implements JacobiSolver {
 			matrixConstants.set(i, 0, terms[i]/coefficients[i][i]);
 		}
 		return matrixConstants;
+		
+		
 	}
 	
 	/**
@@ -328,8 +347,9 @@ public class JacobiSolverImpl implements JacobiSolver {
 	 * @param tolerance
 	 * @param matrix_X_previousIteration
 	 * @return true if condition stop. 
+	 * @throws MSNException 
 	 */
-	private boolean verifiesConditionParade(Matrix matrixX, double tolerance, Matrix matrix_X_previousIteration) {
+	private boolean verifiesConditionParade(Matrix matrixX, double tolerance, Matrix matrix_X_previousIteration) throws MSNException {
 		double distanceBetweenTwoIterations = getIncreasedDistanceBetweenTwoIterations(matrixX, matrix_X_previousIteration);
 		double distantRelative = getDistantRelative(matrixX,distanceBetweenTwoIterations);
 		if (distantRelative > tolerance){
@@ -343,8 +363,9 @@ public class JacobiSolverImpl implements JacobiSolver {
 	 * @param matrixX
 	 * @param distanceBetweenTwoIterations
 	 * @return the distance between two iterations.
+	 * @throws MSNException 
 	 */
-	private double getDistantRelative(Matrix matrixX, double distanceBetweenTwoIterations) {
+	private double getDistantRelative(Matrix matrixX, double distanceBetweenTwoIterations) throws MSNException {
 		double largestElement = 0;
 		double higherValue = 0;
 		double distanteRelative = 0;
@@ -357,6 +378,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 			}
 		}
 		distanteRelative = distanceBetweenTwoIterations/largestElement;
+		
 		return distanteRelative;
 	}
 	
@@ -384,6 +406,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 	 * Calculate the Matrix J of method of Jacobi.
 	 * @param coefficients the matrix of the coefficients. 
 	 * @return Matrix J.
+	 * @throws MSNException 
 	 */
 	public Matrix getMatrixJ(double[][] coefficients) {
          int line = coefficients.length;
@@ -418,6 +441,11 @@ public class JacobiSolverImpl implements JacobiSolver {
 		return matrixEstimators;
 	}
 	
+	/**
+	 * Method for printing matrix
+	 * @param matrix
+	 */
+	@SuppressWarnings("unused")
 	private static void print(Matrix matrix) {
 		for (int i = 0; i < matrix.getRowDimension(); i++) {
 			for (int j = 0; j < matrix.getColumnDimension(); j++) 
