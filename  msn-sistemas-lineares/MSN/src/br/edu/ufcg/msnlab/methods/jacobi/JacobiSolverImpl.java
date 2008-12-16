@@ -23,7 +23,11 @@ public class JacobiSolverImpl implements JacobiSolver {
 			double[] terms, double approximation, int maximumNumberIterations, Config config) throws MSNException {
 		double[][] temp = increasedMatrix(coefficients,terms);
 		temp = organizeMatrix(temp);
-		coefficients = getCoefficients(temp);
+		if(!verificaCondicaoConvergencia(temp)){
+			temp = procuraMatrixConvergente(temp);
+		}
+		temZeroDiagonalPrincipal(temp);
+		coefficients = getCoefficients(temp);		
 		terms = getTerms(temp);
 		List<Matrix> jacobi = jacobiMethod(coefficients, estimates, terms, approximation, maximumNumberIterations);
 		return turns(jacobi); 
@@ -48,6 +52,13 @@ public class JacobiSolverImpl implements JacobiSolver {
 		
 		return solve(coefficients, estimates, terms, aproximation, maximumNumberIterations, config);
 		
+	}
+	
+	private void temZeroDiagonalPrincipal(double[][] matrix) throws MSNException {
+		for (int i = 0; i < matrix.length; i++) {
+			if (matrix[i][i] == 0)
+				throw new MSNException("O sistema nao possui solucao usando o metodo de Jacobi!!!");
+		}
 	}
 	
 	/**
@@ -107,7 +118,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 			int maximumNumberIterations) {
 		
 		Matrix matrixX = initializeEstimates(estimates);
-		Matrix matrixC = getMatrixCoefficients(coefficients, terms);
+		Matrix matrixC = getMatrixConstants(coefficients, terms);
 		Matrix matrixJ = getMatrixJ(coefficients);
 		Matrix matrix_X_previousIteration = matrixX;
 		int quantityIterations = 1;
@@ -166,6 +177,46 @@ public class JacobiSolverImpl implements JacobiSolver {
 		if (j == limit)
 			throw new MSNException("Impossivel Diagonalizar a matriz!!");
 		return matrix;
+	}
+	
+	private double[][] procuraMatrixConvergente(double[][] matrix) throws MSNException {
+		boolean isPossible = false;
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				if (i != j) {
+					matrix = changeLines(i, j, matrix);
+					isPossible = verificaCondicaoConvergencia(matrix); 
+					if (isPossible) {
+						return matrix;
+					}
+				}
+			}
+		}
+		if (!isPossible) throw new MSNException("O sistema pode nao convergir!!");
+		return matrix;
+	}
+	
+	private boolean verificaCondicaoConvergencia(double[][] matrix) {
+		for (int i = 0; i < matrix.length; i++) {
+			double sumLine = calculateSumLine(matrix[i]);
+			double factor = (sumLine-matrix[i][i])/matrix[i][i];
+			if (factor >= 1)
+				return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param line
+	 * @return
+	 */
+	private double calculateSumLine(double[] line) {
+		double sum = 0.0;
+		for (int i = 0; i < line.length-1; i++) {
+			sum += line[i];
+		}
+		return sum;
 	}
 	
 	/**
@@ -261,7 +312,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 	 * @param terms Independent terms
 	 * @return matrixCte Matrix of the coefficients.
 	 */
-	private Matrix getMatrixCoefficients(double[][] coefficients,double[] terms) {
+	private Matrix getMatrixConstants(double[][] coefficients,double[] terms) {
 		Matrix matrixConstants = new Matrix(terms.length,1);
 		
 		for (int i = 0; i < terms.length; i++) {
