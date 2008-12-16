@@ -7,6 +7,11 @@ import br.edu.ufcg.msnlab.methods.jacobi.JacobiSolverImpl;
 import br.edu.ufcg.msnlab.util.Config;
 import junit.framework.TestCase;
 
+/**
+ * Class that tests the method of Gauss-Jacobi.
+ * @author Leonardo
+ * @author Rodrigo
+ */
 public class TestJacobiImpl extends TestCase{
 	
 	private JacobiSolver jacobi;
@@ -105,6 +110,24 @@ public class TestJacobiImpl extends TestCase{
 		assertEquals(new double[][] {{0.,-1.},{1.,0.}}, new double[] {0.0,0.0}, new double []{1.0,3.0}, 0.01, 1, null, expectedValue);
 	}
 	
+	public void testSystem14() throws MSNException{
+		double[][] expectedValue = new double[][] {{-4.666666666679688},{-0.6666666666484375}};
+		
+		assertEquals(new double[][] {{1,-10},{-2,-1}}, new double[] {2,-10}, new double []{2,10}, 0.00000000001, 18, null, expectedValue);
+	}
+	
+	public void testSystem15() throws MSNException{
+		double[][] expectedValue = new double[][] {{-8.348348314464802},{-6.028770285383076},{-5.121392284359862}};
+		
+		assertEqualsMessage(new double[][] {{-658.0686662426727, 415.5135327786908, 84.9703649115251},{-695.6886201316934, 439.27971670638857, 89.82610006412517},{91.92867668911276, -58.23948116081249, -11.842368308299763}}, new double[] {-3.880422151629391634,6.14528651733669019394,30.035440267310371032850}, new double []{2553.584229781276,2699.4997204152505,-355.6907459474269}, 0.0001, 1, null, expectedValue);
+	}
+	
+	public void testSystem16() throws MSNException{
+		double[][] expectedValue = new double[][] {{-8.348348314464802},{-6.028770285383076},{-5.121392284359862}};
+		
+		assertEqualsMessage(new double[][] {{-6, 2, 8},{-3, 6, 8},{9, -5, -11}}, new double[] {25,46,-35}, new double []{25,46,-35}, 0.01, 1, null, expectedValue);
+	}
+	
 	private void assertEquals(double[][] coeficientes, 
 			double[] estimativas, double [] termos, double aprox, int iteracoesMax, Config config, double [][] expectedValue) throws MSNException{
 		
@@ -113,6 +136,16 @@ public class TestJacobiImpl extends TestCase{
 		
 		for (int i = 0; i < lastValue.length; i++) {	
 			assertEquals(expectedValue[i][0], lastValue[i][0]);
+		}
+	}	
+	
+	private void assertEqualsMessage(double[][] coeficientes, 
+			double[] estimativas, double [] termos, double aprox, int iteracoesMax, Config config, double [][] expectedValue) throws MSNException{
+		
+		try{
+			jacobi.solve(coeficientes, estimativas, termos, aprox, iteracoesMax, null);
+		}catch(MSNException e){
+			assertEquals("The system can not converge!", e.getMessage());
 		}
 	}	
 }
