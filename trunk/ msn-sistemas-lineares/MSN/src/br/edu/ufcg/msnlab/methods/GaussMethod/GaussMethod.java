@@ -70,8 +70,12 @@ public class GaussMethod implements Solver {
 			diagonalyzeMatrixWithoutPivoting(this.matrix, triangSup);
 		}
 		double[][] vet = backReplacement(this.matrix, triangSup);
-		double[][] mat = fitResidue(this.origMatrix, vet, aprox);
-		this.results.add(copyMatrix(mat));
+		int iterations = 0;
+		boolean resultFit = fitResidue(this.origMatrix, vet, aprox);
+		while(iterations < iteracoesMax && !resultFit){
+			resultFit = fitResidue(this.origMatrix, vet, aprox);
+		}
+		this.results.add(copyMatrix(vet));
 		return new ResultMSN(this.results);
 	}
 
@@ -382,7 +386,7 @@ public class GaussMethod implements Solver {
 	 *            The residue to be compared.
 	 * @return The final vector-answer, adjusted with the residue.
 	 */
-	private double[][] fitResidue(double[][] matrix, double[][] vet,
+	private boolean fitResidue(double[][] matrix, double[][] vet,
 			double residue) {
 		double[] vetResults = new double[vet.length];
 		for (int i = 0; i < matrix.length; i++) {
@@ -392,25 +396,6 @@ public class GaussMethod implements Solver {
 			}
 			vetResults[i] = matrix[i][matrix.length] - currentResult;
 		}
-
-		verifyResidue(matrix, vetResults, residue, vet);
-		return vet;
-	}
-
-	/**
-	 * Verify if the results are ok with the given residue.
-	 * 
-	 * @param matrix
-	 *            The main matrix of the equation system.
-	 * @param vetResults
-	 *            The vector of the residues of each variable.
-	 * @param residue
-	 *            The residue to be compared.
-	 * @param vet
-	 *            The vector-answer.
-	 */
-	private void verifyResidue(double[][] matrix, double[] vetResults,
-			double residue, double[][] vet) {
 		boolean changed = false;
 		for (int j = 0; j < vetResults.length; j++) {
 			if (Math.abs(vetResults[j]) > residue) {
@@ -419,9 +404,8 @@ public class GaussMethod implements Solver {
 			}
 		}
 		if (changed) {
-			this.results.add(vet);
-			fitResidue(matrix, vet, residue);
+			this.results.add(this.copyMatrix(vet));
 		}
-
+		return !changed;
 	}
 }
