@@ -7,10 +7,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
 import br.edu.ufcg.msnlab.gui.MSNLab;
@@ -24,7 +26,6 @@ public class FrameOutput extends JInternalFrame {
 
     protected MSNLab msnlab;
 
-    private JTextArea textArea;
     private JScrollPane scroll;
 
     private Container screen;
@@ -33,8 +34,10 @@ public class FrameOutput extends JInternalFrame {
 
 	private JPanel panelFields;
 
-	private JButton buttonPrevious;
+	private JLabel label;
 
+	private JButton buttonPrevious;
+	
 	private JTextPane buttonHowMany;
 
 	private JButton buttonNext;
@@ -47,9 +50,10 @@ public class FrameOutput extends JInternalFrame {
 
 	private String method;
 
+	private JTable tableResult;
+
     public FrameOutput(MSNLab msnLab) {
         this.msnlab = msnLab;
-        setTitle("Output");
         initialize();
         positions();
         actions();
@@ -61,7 +65,7 @@ public class FrameOutput extends JInternalFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 		    	currentResult++;
-		    	setCurrentResult(currentResult);
+		    	setCurrentResult();
 			}
 
 		});
@@ -70,7 +74,7 @@ public class FrameOutput extends JInternalFrame {
 
 			public void actionPerformed(ActionEvent evt) {
 		    	currentResult--;
-		    	setCurrentResult(currentResult);
+		    	setCurrentResult();
 			}
 
 		});
@@ -80,11 +84,15 @@ public class FrameOutput extends JInternalFrame {
 	private void initialize() {
         setLayout(null);
         screen = getContentPane();
-        setSize(330, 230);
+        setSize(330, 250);
         setClosable(true);
+
+        label = new JLabel("Method");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setVisible(true);
         
-        textArea = new JTextArea();
-        scroll = new JScrollPane(textArea);
+        tableResult = new JTable();
+        scroll = new JScrollPane(tableResult);
         
         panelButtons = new JPanel();
         panelButtons.setLayout(null);
@@ -101,9 +109,10 @@ public class FrameOutput extends JInternalFrame {
     }
 
     private void positions() {
-		panelFields.setBounds(7, 7, 310, 145);
-        scroll.setBounds(7, 7, 295, 130);
-        panelButtons.setBounds(7, 155, 310, 35);
+    	label.setBounds(7, 7, 310, 20);
+		panelFields.setBounds(7, 7, 310, 165);
+        scroll.setBounds(7, 27, 295, 130);
+        panelButtons.setBounds(7, 175, 310, 35);
         buttonHowMany.setBounds(7, 7, 50, 20);
         buttonPrevious.setBounds(60, 7, 80, 20);
         buttonNext.setBounds(150, 7, 80, 20);
@@ -113,81 +122,55 @@ public class FrameOutput extends JInternalFrame {
     }
     
     public void setSolution(String method, Result result, ParserResult parserResult) {
+    	this.setTitle("OUTPUT - " + method);
     	this.method = method;
     	this.result = result;
     	this.parserResult = parserResult;
     	this.currentResult = 1;
-    	setCurrentResult(currentResult);
+    	setCurrentResult();
     }
 
-    private void setCurrentResult(int res) {
-    	if (res == 1) {
+    private void setCurrentResult() {
+        
+    	SolutionTableModel solutionTableModel = new SolutionTableModel();
+    	SystemTableModel systemTableModel = new SystemTableModel();
+
+    	if (currentResult == 1) {
     		buttonPrevious.setEnabled(false);
     	} else {
     		buttonPrevious.setEnabled(true);
     	}
     	
-    	if (res == result.getValues().size()) {
+    	if (currentResult == result.getValues().size()) {
     		buttonNext.setEnabled(false);
     	} else {
     		buttonNext.setEnabled(true);
     	}
-    	
-    	buttonHowMany.setText(res + "/" + result.getValues().size());
+    	buttonHowMany.setText(currentResult + "/" + result.getValues().size());
+
     	double[][] resultArray = (double[][]) result.getValues().get(currentResult - 1);
 
-    	String resStr = "";
-
     	if (Methods.DecomposicaoSVD.equals(this.method)) {
-    		if (currentResult == result.getValues().size()) {
-				resStr = "Solution:\n";
-			} else {
-				resStr = "Refining solution:\n";
-			}
-    		int i = 0;
-    		for (String var : parserResult.getVariables()) {
-				resStr += var + " = " + resultArray[i++][0] + "\n";
-			}
+    		solutionTableModel.setCurrentResult(result, this.currentResult, parserResult.getVariables());
+        	tableResult.setModel(solutionTableModel);
+        	label.setText("Refining Solution");
 		} else {
 			if (resultArray[0].length == 1) {
-				if (currentResult == result.getValues().size()) {
-					resStr = "Solution:\n";
-				} else {
-					resStr = "Refining solution:\n";
-				}
-	    		int i = 0;
-	    		for (String var : parserResult.getVariables()) {
-					resStr += var + " = " + resultArray[i++][0] + "\n";
-				}
+				solutionTableModel.setCurrentResult(result, this.currentResult, parserResult.getVariables());
+		    	tableResult.setModel(solutionTableModel);
+		    	label.setText("Refining Solution");
 			} else {
-				for (int i = 0; i < resultArray.length; i++) {
-					int j = 0;
-					boolean first = true;
-					for (String var : parserResult.getVariables()) {
-						double coef = resultArray[i][j];
-						j++;
-						if (coef != 0) {
-							if (!first && coef > 0) {
-								resStr += "+ ";
-							}
-							if (coef == 1.0) {
-								resStr += var + " ";
-							} else {
-								resStr += coef + var + " ";
-							}
-						}
-						first = false;
-					}
-					resStr += "= " + resultArray[i][j] + "\n";
-				}
+				systemTableModel.setCurrentResult(result, currentResult, parserResult.getVariables());
+				tableResult.setModel(systemTableModel);
+				label.setText("Changing Matrix");
 			}
     	}
-    	textArea.setText(resStr);
     }
     
     private void makeScreen() {
+    	panelFields.add(label);
     	panelFields.add(scroll);
-    	
+
     	panelButtons.add(buttonPrevious);
     	panelButtons.add(buttonHowMany);
     	panelButtons.add(buttonNext);
