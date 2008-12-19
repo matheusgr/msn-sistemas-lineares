@@ -4,8 +4,6 @@ package br.edu.ufcg.msnlab.gui.output;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
@@ -177,8 +175,8 @@ public class FrameOutput extends JInternalFrame {
 							} else {
 								resStr += coef + var + " ";
 							}
-							first = false;
 						}
+						first = false;
 					}
 					resStr += "= " + resultArray[i][j] + "\n";
 				}
