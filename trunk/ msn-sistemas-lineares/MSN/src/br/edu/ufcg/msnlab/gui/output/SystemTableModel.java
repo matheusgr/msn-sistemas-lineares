@@ -2,6 +2,7 @@ package br.edu.ufcg.msnlab.gui.output;
 
 import java.util.Collection;
 
+import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
 import br.edu.ufcg.msnlab.methods.Result;
@@ -16,7 +17,8 @@ public class SystemTableModel extends AbstractTableModel {
 
 	private Collection<String> variables;
 
-	public void setCurrentResult(Result result, int curIter, Collection<String> variables) {		
+	public void setCurrentResult(JLabel label, Result result, int curIter, Collection<String> variables) {
+		label.setText("Changing Matrix");
 		this.result = result;
 		this.curIter = curIter;
 		this.variables = variables;
