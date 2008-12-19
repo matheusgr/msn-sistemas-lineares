@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,11 +23,11 @@ import br.edu.ufcg.msnlab.exceptions.MSNException;
  * termos útil para manipulação e cálculo do sistema linear.
  * 
  * Cada linha do sistema deve ter a forma: 
- * (('+'|'-')? real ('*')? (alpha)+) (('+'|'-') real ('*')? )* '=' ('+'|'-')? real
+ * (('+'|'-')? real ('*')? alpha+ d*) (('+'|'-') real ('*')? alpha+ d*)* '=' ('+'|'-')? real
  * onde real: d+(sep d+)?
  * alpha: [a-zA-Z]
  * d: [0-9]
- * sep: o separador de casas decimais do sistema (iealmente '.' ou ',')
+ * sep: o separador de casas decimais do sistema (idealmente '.' ou ',')
  * @author Hugo Marques e Théo Alves
  *
  */
@@ -42,7 +44,9 @@ public class Parser {
 		//criando um mapa de posições das variaveis em cada linha
 		Map<String, Integer> pos = new HashMap<String, Integer>();
 		int i = 0;
-		for(String k : vars) {
+		List<String> ordenada = new ArrayList<String>(vars);
+		Collections.sort(ordenada);
+		for(String k : ordenada) {
 			pos.put(k, i++);
 		}
 		return pos; 
@@ -72,8 +76,8 @@ public class Parser {
 		double[] termos = new double[lines.size()];
 		
 		String[] variaveis = vars.toArray(new String[vars.size()]);
+		Arrays.sort(variaveis);
 		Map<String, Integer> pos = varPosMap(vars);
-		
 		for(int i = 0; i < lines.size(); i++) {
 			termos[i] = lines.get(i).getTermo();
 			Map<String, Double> tmp = lines.get(i).getIncognitas();
@@ -81,7 +85,6 @@ public class Parser {
 				coeficientes[i][pos.get(k)] = tmp.get(k);
 			}
 		}
-		System.out.println(vars);
 		ParsedSystem out = new ParsedSystem(coeficientes, termos, variaveis);
 		return out;
 	}
@@ -128,6 +131,7 @@ public class Parser {
 			while((line = in.readLine()) != null) {
 				if (line.trim().equals("#")) {
 					ParsedSystem ps = Parser.parse(buffer.toString());
+					System.out.println(ps);
 					buffer = new StringBuffer();
 				} else {
 					buffer.append(line+"\n");
@@ -182,8 +186,8 @@ class ParsedLine implements Comparable<ParsedLine>{
 		this.sep = "\\" + decimalSeparator;
 		this.sinal = "(\\+|-)";
 		this.real = "\\d+("+sep+"\\d+)?";
-		this.head = sinal+"?" + "("+real+")?" + "(\\p{Alpha})+";
-		this.rest = sinal +"(" + real +")?" + "(\\p{Alpha})+";
+		this.head = sinal+"?" + "("+real+")?" + "(\\p{Alpha})+(\\d)*";
+		this.rest = sinal +"(" + real +")?" + "(\\p{Alpha})+(\\d)*";
 		this.exp = head + "(" + rest + ")*=" + sinal+"?"+real;
 	}
 	
@@ -197,7 +201,7 @@ class ParsedLine implements Comparable<ParsedLine>{
 		//TODO Na verdade ele devia receber todo um locale para 
 		//tratar da localização (separados de milhar, separador decimal, etc...)
 		this(decimalSeparator);
-		if(Pattern.matches(this.exp, line)) {
+		if(!Pattern.matches(this.exp, line.trim().replaceAll("\\s", "").replaceAll("\\*", ""))) {
 			throw new MSNException("expressao mal formada: " + line);
 		}
 		this.incognitas = new HashMap<String, Double>();
@@ -219,7 +223,7 @@ class ParsedLine implements Comparable<ParsedLine>{
 	 */
 	private void parse(String line) {
 		//eliminando os espaços
-		String tmp = line.trim().replaceAll("\\s", "");
+		String tmp = line.trim().replaceAll("\\s", "").replaceAll("\\*", "");
 		//quebrando em torno da igualdade 
 		String[] slices = tmp.split("=");
 		//selecionando o termo daquela linha
@@ -230,11 +234,11 @@ class ParsedLine implements Comparable<ParsedLine>{
 		Matcher m = p.matcher(tmp);
 		while(m.find()) {
 			String t = m.group();
-			String fator = t.replaceAll("\\p{Alpha}", "");
+			String fator = t.replaceAll("((\\p{Alpha})+(\\d)*)", "");
 			boolean isOne = fator.equals("+") || fator.equals("-") || fator.equals("");
 			String normal =  isOne ? t.replaceAll("\\p{Alpha}", "")  + "1" + 
 					t.replaceAll("\\p{Punct}", ""): t;
-			String incognita = t.replaceAll(this.sinal+"?"+"("+this.real+")?", "");
+			String incognita = t.replaceFirst(this.sinal+"?"+"("+this.real+")?", "");
 			double coef = Double.parseDouble(normal.replaceAll("\\p{Alpha}", ""));
 			
 			//TODO permitindo essa soma de elementos na mesma linha ele pode zerar o que ferra a linha... 
