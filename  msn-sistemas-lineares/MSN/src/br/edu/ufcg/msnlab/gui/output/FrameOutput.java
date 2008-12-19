@@ -151,18 +151,15 @@ public class FrameOutput extends JInternalFrame {
     	double[][] resultArray = (double[][]) result.getValues().get(currentResult - 1);
 
     	if (Methods.DecomposicaoSVD.equals(this.method)) {
-    		solutionTableModel.setCurrentResult(result, this.currentResult, parserResult.getVariables());
+    		solutionTableModel.setCurrentResult(label, result, this.currentResult, parserResult.getVariables());
         	tableResult.setModel(solutionTableModel);
-        	label.setText("Refining Solution");
 		} else {
 			if (resultArray[0].length == 1) {
-				solutionTableModel.setCurrentResult(result, this.currentResult, parserResult.getVariables());
+				solutionTableModel.setCurrentResult(label, result, this.currentResult, parserResult.getVariables());
 		    	tableResult.setModel(solutionTableModel);
-		    	label.setText("Refining Solution");
 			} else {
-				systemTableModel.setCurrentResult(result, currentResult, parserResult.getVariables());
+				systemTableModel.setCurrentResult(label, result, currentResult, parserResult.getVariables());
 				tableResult.setModel(systemTableModel);
-				label.setText("Changing Matrix");
 			}
     	}
     }

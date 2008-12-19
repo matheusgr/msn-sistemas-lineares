@@ -2,6 +2,7 @@ package br.edu.ufcg.msnlab.gui.output;
 
 import java.util.Collection;
 
+import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
 import br.edu.ufcg.msnlab.methods.Result;
@@ -16,7 +17,10 @@ public class SolutionTableModel extends AbstractTableModel {
 
 	private Collection<String> variables;
 
-	public void setCurrentResult(Result result, int curIter, Collection<String> variables) {		
+	private JLabel label;
+
+	public void setCurrentResult(JLabel label, Result result, int curIter, Collection<String> variables) {
+		this.label = label;
 		this.result = result;
 		this.curIter = curIter;
 		this.variables = variables;
@@ -57,16 +61,19 @@ public class SolutionTableModel extends AbstractTableModel {
 			return "Variables";
 		}
 		if (getColumnCount() == 2) {
-			return "Solution";
+			label.setText("Solution");
+			return "Values";
 		} else {
-			if (result.getValues().size() == curIter) {
-				return "Solution";
-			}
+			label.setText("Finding solution");
 			switch (columnIndex) {
 			case 1:
-				return "Iteration " + (curIter - 1);				
-			case 2:
 				return "Iteration " + (curIter);
+			case 2:
+				if (result.getValues().size() == curIter + 1) {
+					return "Solution";
+				} else {
+					return "Iteration " + (curIter + 1);
+				}
 			}
 			throw new RuntimeException("Unexpect column index");
 		}
