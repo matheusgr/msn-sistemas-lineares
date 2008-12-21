@@ -128,6 +128,20 @@ public class TestJacobiImpl extends TestCase{
 		assertEqualsMessage(new double[][] {{-6, 2, 8},{-3, 6, 8},{9, -5, -11}}, new double[] {25,46,-35}, new double []{25,46,-35}, 0.01, 1, null, expectedValue);
 	}
 	
+	public void testSystem17() throws MSNException {
+		double[][] expectedValue = new double[][] {{2.0},{0.02},{0.99}};
+		
+		assertEqualsMessage(new double[][] {{3., 1., 1.},{1., 4., 2.},{0., 2., 5.}}, new double[] {0.,0.,0.},
+			new double []{7.,4.,5.}, 0.05, 7, null, expectedValue);
+	}
+	
+	public void testSystem18() throws MSNException {
+		double[][] expectedValue = new double[][] {{1.0000926532087282},{1.0001577255253395},{-0.9998254553154178}};
+		
+		assertEquals(new double[][] {{5., 1., 1.},{3., 4., 1.},{3., 3., 6.}}, new double[] {0.,0.,0.},
+			new double []{5.,6.,0.}, 0.0005, 50, null, expectedValue);
+	}
+	
 	private void assertEquals(double[][] coeficientes, 
 			double[] estimativas, double [] termos, double aprox, int iteracoesMax, Config config, double [][] expectedValue) throws MSNException{
 		
