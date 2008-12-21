@@ -32,7 +32,12 @@ public class ResultMSN implements Result {
 		
 	@Override
 	public double[][] getResult(int var) {
-		return this.resultados.get(var);
+		try {
+			return this.resultados.get(var);
+		}catch(IndexOutOfBoundsException i) {
+			return this.resultados.get(this.resultados.size()-1);	
+		}
+		
 	}
 
 	@Override
