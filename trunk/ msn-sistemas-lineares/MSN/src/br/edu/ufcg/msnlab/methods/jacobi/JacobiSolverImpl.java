@@ -194,8 +194,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix.length; j++) {
 				if (i != j) {
-					matrix = changeLines(i, j, matrix);
-					//isPossible = checkConditionOfConvergence(matrix); 
+					matrix = changeLines(i, j, matrix); 
 					isPossible = checkConditionConvergence(matrix);
 					if (isPossible) {
 						return matrix;
