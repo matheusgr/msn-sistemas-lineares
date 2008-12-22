@@ -16,9 +16,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
 import br.edu.ufcg.msnlab.gui.MSNLab;
-import br.edu.ufcg.msnlab.gui.util.ExpressionParser.ParserResult;
 import br.edu.ufcg.msnlab.methods.Methods;
 import br.edu.ufcg.msnlab.methods.Result;
+import br.edu.ufcg.msnlab.util.ParsedSystem;
 
 public class FrameOutput extends JInternalFrame {
 
@@ -46,7 +46,7 @@ public class FrameOutput extends JInternalFrame {
 
 	private int currentResult;
 
-	private ParserResult parserResult;
+	private ParsedSystem parserResult;
 
 	private String method;
 
@@ -121,11 +121,11 @@ public class FrameOutput extends JInternalFrame {
         
     }
     
-    public void setSolution(String method, Result result, ParserResult parserResult) {
+    public void setSolution(String method, Result result, ParsedSystem parse) {
     	this.setTitle("OUTPUT - " + method);
     	this.method = method;
     	this.result = result;
-    	this.parserResult = parserResult;
+    	this.parserResult = parse;
     	this.currentResult = 1;
     	setCurrentResult();
     }
@@ -151,14 +151,14 @@ public class FrameOutput extends JInternalFrame {
     	double[][] resultArray = (double[][]) result.getValues().get(currentResult - 1);
 
     	if (Methods.DecomposicaoSVD.equals(this.method)) {
-    		solutionTableModel.setCurrentResult(label, result, this.currentResult, parserResult.getVariables());
+    		solutionTableModel.setCurrentResult(label, result, this.currentResult, parserResult.getIncognitas());
         	tableResult.setModel(solutionTableModel);
 		} else {
 			if (resultArray[0].length == 1) {
-				solutionTableModel.setCurrentResult(label, result, this.currentResult, parserResult.getVariables());
+				solutionTableModel.setCurrentResult(label, result, this.currentResult, parserResult.getIncognitas());
 		    	tableResult.setModel(solutionTableModel);
 			} else {
-				systemTableModel.setCurrentResult(label, result, currentResult, parserResult.getVariables());
+				systemTableModel.setCurrentResult(label, result, currentResult, parserResult.getIncognitas());
 				tableResult.setModel(systemTableModel);
 			}
     	}

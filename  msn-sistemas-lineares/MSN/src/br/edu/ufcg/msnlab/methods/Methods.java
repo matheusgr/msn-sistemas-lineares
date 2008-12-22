@@ -1,5 +1,7 @@
 package br.edu.ufcg.msnlab.methods;
 
+import java.lang.reflect.Field;
+
 /**
  * @author Hugo Marques.
  */
@@ -27,4 +29,17 @@ public class Methods {
 		return GaussJacobi.equals(method) || GaussSeidel.equals(method);
 	}
 
+	public static String[] getMethods() {
+		Field[] fields = Methods.class.getFields();
+		String[] methods = new String[fields.length];
+		for (int i = 0; i < methods.length; i++) {
+			try {
+				methods[i] = (String) fields[i].get(null);
+			} catch (Exception e) {
+				throw new RuntimeException("Could not get methods.");
+			}
+		}
+		return methods;
+	}
+	
 }

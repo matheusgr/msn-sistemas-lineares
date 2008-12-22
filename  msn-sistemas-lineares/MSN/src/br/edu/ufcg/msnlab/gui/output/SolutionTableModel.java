@@ -1,7 +1,5 @@
 package br.edu.ufcg.msnlab.gui.output;
 
-import java.util.Collection;
-
 import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
@@ -15,15 +13,15 @@ public class SolutionTableModel extends AbstractTableModel {
 	
 	private int curIter;
 
-	private Collection<String> variables;
+	private String[] variables;
 
 	private JLabel label;
 
-	public void setCurrentResult(JLabel label, Result result, int curIter, Collection<String> variables) {
+	public void setCurrentResult(JLabel label, Result result, int curIter, String[] strings) {
 		this.label = label;
 		this.result = result;
 		this.curIter = curIter;
-		this.variables = variables;
+		this.variables = strings;
 		fireTableStructureChanged();
 	}
 
@@ -38,14 +36,14 @@ public class SolutionTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return variables.size();
+		return variables.length;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return this.variables.toArray(new String[] {})[rowIndex];			
+			return this.variables[rowIndex];			
 		case 1:
 			return ((double[][]) result.getValues().get(this.curIter - 1))[rowIndex][0];				
 		case 2:

@@ -1,7 +1,5 @@
 package br.edu.ufcg.msnlab.gui.output;
 
-import java.util.Collection;
-
 import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
@@ -15,13 +13,13 @@ public class SystemTableModel extends AbstractTableModel {
 	
 	private int curIter;
 
-	private Collection<String> variables;
+	private String[] variables;
 
-	public void setCurrentResult(JLabel label, Result result, int curIter, Collection<String> variables) {
+	public void setCurrentResult(JLabel label, Result result, int curIter, String[] strings) {
 		label.setText("Changing Matrix");
 		this.result = result;
 		this.curIter = curIter;
-		this.variables = variables;
+		this.variables = strings;
 		fireTableStructureChanged();
 	}
 
@@ -47,7 +45,7 @@ public class SystemTableModel extends AbstractTableModel {
 		if (columnIndex == getColumnCount() - 1) {
 			return "Terms";
 		}
-		return this.variables.toArray(new String[] {})[columnIndex];					
+		return this.variables[columnIndex];					
 	}
 
 	@Override
