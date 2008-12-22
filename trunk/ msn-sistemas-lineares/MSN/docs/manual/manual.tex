@@ -212,9 +212,9 @@ Assim, considerando $D$ e $D_{k}$, é possível determinar o tipo de resolução
 
 Assim, considerando a limitação da ferramenta em que apenas sistemas homogêneos são verificados, a ferramenta também verifica se o sistema tem solução possível e determinada, possível e indeterminada, ou se é impossível de ser resolvido. Este cálculo é feito a partir das determinantes do sistema, como apresentado anteriormente.
 
-\section{Usando a Ferramenta}
-
-TODO
+% \section{Usando a Ferramenta}
+% 
+% TODO
 
 \section{Métodos de Resolução de Sistemas de Equações Lineares}
 
@@ -481,6 +481,11 @@ O diretório \texttt{src} tem \texttt{br.edu.ufcg.msnlab} como pacote base da fe
 
 O diretório de testes segue uma mesma estrutura de pacotes, colocando as classes de teste no mesmo pacote a qual o teste se refere.
 
+\section{Testes de Unidade}
+
+Todos os métodos do sistema são testados através da classe \texttt{br.edu.ufcg.msnlab.MethodsAutomatedTest} do diretório \texttt{tests}. Esta classe gera matrizes que representam sistemas de maneira aleatória para em seguida realizar algumas manipulações algébricas em cima desse sistema e tentar resolvê-lo, se o resultado do sistema alterado for compatível com o resultado anterior desse sistema então o método obteve sucesso em sua resolução.
+Os testes são executados com diversos números de iterações além de diversos tipos de sistema com o objetivo de tornar a carga de testes mais extensa garantindo assim um funcionamento mais confiável dos métodos.
+
 \section{Arquitetura do Sistema}
 
 Seis componentes básicos descrevem a arquitetura do sistema:
@@ -493,9 +498,9 @@ Seis componentes básicos descrevem a arquitetura do sistema:
  \item[Methods] Componente com os métodos do sistema
  \end{description}
 
-A interação estática destes elementos é descrita na figura~\ref{fig:arquitetura}, enquanto a interação dinâmica dos elementos é representada no diagrama de sequência da figura~\ref{fig:fluxo}.
+A interação estática destes elementos é descrita na figura~\ref{fig:arquitetura}.
 
-\begin{figure}
+\begin{figure}[h]
  \centering
  \includegraphics[width=\textwidth]{MSN1}
  % MSN1.jpg: 709x738 pixel, 72dpi, 25.01x26.03 cm, bb=0 0 709 738
@@ -504,7 +509,18 @@ A interação estática destes elementos é descrita na figura~\ref{fig:arquitet
 \end{figure}
 
 
-\begin{figure}
+\subsection{Comunicação entre os módulos}
+
+Interação dinâmica dos elementos é representada no diagrama de sequência da figura~\ref{fig:fluxo}. Cada elemento atua como as seguintes responsabilidades:
+
+\begin{description}
+ \item[Parser] Recebe como entrada um sistema em formato String, retorna um objeto ParsedSystem que representa o sistema após o parser;
+ \item[Checke] Recebe o sistema representado através de duas matrizes, uma de coeficientes e outra de termos independentes. Retorna uma String que representa a classificação daquele sistema para definição de tipos de resolução;
+ \item[Solver] Recebe as matrizes que compõem o sistema, o número de iterações, o valor estimado pelo usuário, a matriz de estimativas (para os métodos iterativos) e um objeto de Configuração. Este objeto Config contém possíveis configurações que são usados pelos métodos, por exemplo, se o método pode ser feito com ou sem pivoteamento;
+ \item[Facade] A facade retorna um objeto Result que contém o passo a passo da resolução feita pelo método.
+\end{description}
+
+\begin{figure}[h]
  \centering
  \includegraphics[width=\textwidth]{MSNFlow}
  % MSNFlow.jpg: 622x631 pixel, 72dpi, 21.94x22.26 cm, bb=0 0 622 631
@@ -528,8 +544,6 @@ Este guia levanta requisitos a serem usados na interface gráfica na forma de um
  \item Boas mensagens de erro
  \item Evitar erros
 \end{itemize}
-
-\section*{Agradecimentos}
 
 \bibliography{manual}
 
