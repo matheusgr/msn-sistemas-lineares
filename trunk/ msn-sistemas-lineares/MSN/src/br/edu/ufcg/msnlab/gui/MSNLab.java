@@ -18,6 +18,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+import br.edu.ufcg.msnlab.gui.input.FrameInputInterface;
 import br.edu.ufcg.msnlab.gui.menus.MenuFile;
 import br.edu.ufcg.msnlab.gui.menus.MenuHelp;
 
@@ -38,7 +39,7 @@ public class MSNLab extends JFrame {
         makeMenu();
         actions();
         makeScreen();
-        //openComponent(new FrameWizardInput(this));
+        openComponent(new FrameInputInterface(this));
     }
 
     private void initialize() {

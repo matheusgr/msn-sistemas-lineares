@@ -1,23 +1,39 @@
 package br.edu.ufcg.msnlab.gui.controls;
 
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.BevelBorder;
 
+/**
+* This code was edited or generated using CloudGarden's Jigloo
+* SWT/Swing GUI Builder, which is free for non-commercial
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
+* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
+* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
+*/
 public class CtrMatrixTable extends JPanel implements IsMatrixControl {
 
 	private static final long serialVersionUID = 1L;
 
 	private JTable table;
 	private JScrollPane scroll;
+	private JPanel buttonPanel;
 
 	private JButton butSetNames;
 	private JButton butSetNumber;
@@ -28,7 +44,7 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
 	}
 
 	private void initializeComponents(){
-
+		setSize(new Dimension(490, 219));
 		setLayout(null);
 
 		addListeners();
@@ -65,41 +81,17 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
         table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
 
         scroll = new JScrollPane(table);
-        
-        
-       	butSetNames = new JButton("Set variable's names");
-    	butSetNames.setBounds(0,0,130,20);
-		butSetNames.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				showVariablesNameInput();
-			}
-		});    	
-       	butSetNumber = new JButton("Set number of variables");
-    	butSetNumber.setBounds(130,0,130,20);
-		butSetNumber.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				showVariablesNumberInput();
-			}
-		});
-		butClear = new JButton("Clear");
-		butClear.setBounds(260,0,130,20);
-		butClear.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				clearTable();
-			}
-		});
+
 	}
 
 	private void putComponents(){
-		
-		add( butSetNames );
-		add( butSetNumber );
-		add( butClear );
+
 		add(scroll);
+		this.add(getButtonPanel());
 	}
 
 	private void resizeComponents(){
-		scroll.setBounds( 0, 20, getWidth(), getHeight() -20 );
+		scroll.setBounds(6, 51, 478, 161);
 	}
 
 	public String getMatrix() {
@@ -111,7 +103,7 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
 				String value = (String)table.getModel().getValueAt(row,col);
 				
 				if( value == null || value.equals("") ) continue;
-				if( !value.startsWith("+") || !value.startsWith("-") ) value = "+" + value;
+				if( !value.startsWith("+") && !value.startsWith("-") ) value = "+" + value;
 				
 				if( col<table.getColumnCount()-1 )
 					value += table.getColumnName(col);
@@ -200,5 +192,44 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
                 getVariablesNames()
             ));
 		
+	}
+	
+	private JPanel getButtonPanel() {
+		if(buttonPanel == null) {
+			buttonPanel = new JPanel();
+			buttonPanel.setBounds(6, 5, 478, 40);
+			buttonPanel.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+			{
+				butSetNames = new JButton("Set variable's names");
+				buttonPanel.add(butSetNames);
+				butSetNames.setBounds(0,0,130,20);
+				butSetNames.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						showVariablesNameInput();
+					}
+				});    	
+			}
+			{
+				butSetNumber = new JButton("Set number of variables");
+				buttonPanel.add(butSetNumber);
+				butSetNumber.setBounds(130,0,130,20);
+				butSetNumber.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						showVariablesNumberInput();
+					}
+				});
+			}
+			{
+				butClear = new JButton("Clear");
+				buttonPanel.add(butClear);
+				butClear.setBounds(260,0,130,20);
+				butClear.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						clearTable();
+					}
+				});
+			}
+		}
+		return buttonPanel;
 	}
 }
