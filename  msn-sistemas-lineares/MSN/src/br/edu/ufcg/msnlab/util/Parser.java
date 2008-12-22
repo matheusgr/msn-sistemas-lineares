@@ -236,10 +236,10 @@ class ParsedLine implements Comparable<ParsedLine>{
 			String t = m.group();
 			String fator = t.replaceAll("((\\p{Alpha})+(\\d)*)", "");
 			boolean isOne = fator.equals("+") || fator.equals("-") || fator.equals("");
-			String normal =  isOne ? t.replaceAll("\\p{Alpha}", "")  + "1" + 
+			String normal =  isOne ? t.replaceAll("((\\p{Alpha})+(\\d)*)", "")  + "1" + 
 					t.replaceAll("\\p{Punct}", ""): t;
 			String incognita = t.replaceFirst(this.sinal+"?"+"("+this.real+")?", "");
-			double coef = Double.parseDouble(normal.replaceAll("\\p{Alpha}", ""));
+			double coef = Double.parseDouble(normal.replaceAll("((\\p{Alpha})+(\\d)*)", ""));
 			
 			//TODO permitindo essa soma de elementos na mesma linha ele pode zerar o que ferra a linha... 
 			double lastCoef = this.incognitas.get(incognita) == null ? 0 : this.incognitas.get(incognita);
