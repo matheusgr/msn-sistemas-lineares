@@ -1,7 +1,6 @@
 package br.edu.ufcg.msnlab.util;
 
 import Jama.Matrix;
-import br.edu.ufcg.msnlab.exceptions.MSNException;
 
 public class Checker {
 	
