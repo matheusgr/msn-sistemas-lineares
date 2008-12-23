@@ -220,7 +220,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 		for (int i = 0; i < matrix.length; i++) {
 			double sumLine = calculateSumLine(matrix[i]);
 			double factor = Math.abs(sumLine-Math.abs(matrix[i][i]));
-			if (factor > Math.abs(matrix[i][i]))
+			if (Math.abs(matrix[i][i]) <= factor)
 				return false;
 		}
 		return true;
@@ -234,7 +234,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 	private boolean checkCriterionSassenfeld(double[][] matrix) {
 		double[] beta = getValuesBeta(matrix);
 		for (int i = 0; i < beta.length; i++) {
-			if (beta[i] > 1)
+			if (beta[i] >= 1)
 				return false;
 		}
 		return true;
