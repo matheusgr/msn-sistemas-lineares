@@ -168,12 +168,14 @@ public class FrameInputInterface extends JInternalFrame {
 					estimativeButton.setEnabled(false);
 					estimativeTableModel = new DefaultTableModel();
 					estimativeTable.setModel(estimativeTableModel);
+					residualLabel.setText("Max. Residue");
 					validate();
 				} else if (Methods.isIteractive(method)) {
 					textIterations.setVisible(true);
 					fieldIteration.setVisible(true);
 					estimativeTable.setEnabled(true);
 					estimativeButton.setEnabled(true);
+					residualLabel.setText("Tolerance");
 				}
 				buttonSolve.setEnabled(true);
 			}
@@ -340,8 +342,8 @@ public class FrameInputInterface extends JInternalFrame {
 			{
 				residualLabel = new JLabel();
 				optionsPanel.add(residualLabel);
-				residualLabel.setText("Tolerance");
-				residualLabel.setBounds(312, 41, 71, 15);
+				residualLabel.setText("Max. Residue");
+				residualLabel.setBounds(312, 41, 98, 15);
 			}
 			{
 				pivotBox = new JCheckBox();
@@ -362,6 +364,7 @@ public class FrameInputInterface extends JInternalFrame {
 			}
 			{
 				residualEdit = new JDecimalField();
+				residualEdit.setText("0");
 				optionsPanel.add(residualEdit);
 				residualEdit.setBounds(417, 39, 91, 19);
 			}
