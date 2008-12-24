@@ -2,6 +2,7 @@ package br.edu.ufcg.msnlab.gui.output;
 
 
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,6 +21,19 @@ import br.edu.ufcg.msnlab.methods.Methods;
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.util.ParsedSystem;
 
+
+/**
+* This code was edited or generated using CloudGarden's Jigloo
+* SWT/Swing GUI Builder, which is free for non-commercial
+* use. If Jigloo is being used commercially (ie, by a corporation,
+* company or business for any purpose whatever) then you
+* should purchase a license for each developer using Jigloo.
+* Please visit www.cloudgarden.com for details.
+* Use of Jigloo implies acceptance of these licensing terms.
+* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
+* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
+* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
+*/
 public class FrameOutput extends JInternalFrame {
 
     private static final long serialVersionUID = 1L;
@@ -95,7 +109,8 @@ public class FrameOutput extends JInternalFrame {
         scroll = new JScrollPane(tableResult);
         
         panelButtons = new JPanel();
-        panelButtons.setLayout(null);
+        FlowLayout panelButtonsLayout = new FlowLayout();
+        panelButtons.setLayout(panelButtonsLayout);
         panelButtons.setBorder(new EtchedBorder());
 
         panelFields = new JPanel();
@@ -112,11 +127,8 @@ public class FrameOutput extends JInternalFrame {
     	label.setBounds(7, 7, 310, 20);
 		panelFields.setBounds(7, 7, 310, 165);
         scroll.setBounds(7, 27, 295, 130);
-        panelButtons.setBounds(7, 175, 310, 35);
-        buttonHowMany.setBounds(7, 7, 50, 20);
-        buttonPrevious.setBounds(60, 7, 80, 20);
-        buttonNext.setBounds(150, 7, 80, 20);
-        
+        panelButtons.setBounds(7, 175, 310, 39);
+
         buttonHowMany.setAlignmentX(JTextPane.CENTER_ALIGNMENT);
         
     }
