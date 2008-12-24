@@ -41,6 +41,7 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
 
 	public CtrMatrixTable(){
 		initializeComponents();
+		setVariables( new String[]{"X","Y","Z"} );
 	}
 
 	private void initializeComponents(){
@@ -96,23 +97,25 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
 
 	public String getMatrix() {
 		
+		String[] vars = getVariablesNames();
+		
 		String result = "";
 		for( int row=0; row<table.getRowCount(); row++ ){
-			for( int col=0; col<table.getColumnCount(); col++ ){
+			for( int col=0; col<table.getColumnCount()-4; col++ ){
 
 				String value = (String)table.getModel().getValueAt(row,col);
 				
 				if( value == null || value.equals("") ) continue;
 				if( !value.startsWith("+") && !value.startsWith("-") ) value = "+" + value;
 				
-				if( col<table.getColumnCount()-1 )
-					value += table.getColumnName(col);
-				else
-					value = "=" + value;
+				value += vars[col];
 				
 				result += value;
 				
 			}
+
+			result += "=" + (String)table.getModel().getValueAt(row,table.getColumnCount()-1);
+
 			result += "\n";
 		}
 		return result;
@@ -147,7 +150,7 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
 	    try{
 	        
 	        String result = JOptionPane.showInputDialog(null,"Enter the number of desired amount of variables\nThey will get names in this pattern: Xk, k>=1");
-	        if( result.length() == 0 ){ throw new Exception("You didn't entered any number name"); }
+	        if( result.length() == 0 ){ throw new Exception("You didn't entered any number"); }
 	
 	        int number = Integer.parseInt( result );
 
@@ -164,33 +167,45 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
 
 	public void setVariables( String[] vars ){
 
-        String[] headers = new String[vars.length+1];
+        String[] headers = new String[vars.length+4];
         for( int k=0; k<vars.length; k++ ){
-            headers[k] = vars[k];
+            headers[k] = "col " + (k+1);
         }
+        
+        headers[headers.length-4] = "";
+        headers[headers.length-3] = "Incog.";
+        headers[headers.length-2] = "";
         headers[headers.length-1] = "Term";
         
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [vars.length][headers.length],
             headers
         ));
+        
+        for( int k=0; k<vars.length; k++ ){
+            table.getModel().setValueAt("*",k,headers.length-4);
+            table.getModel().setValueAt(vars[k],k,headers.length-3);
+            table.getModel().setValueAt("=",k,headers.length-2);
+        }
+        table.getColumnModel().getColumn(headers.length-4).setMaxWidth(10);
+        table.getColumnModel().getColumn(headers.length-4).setResizable(false);
+        
+        table.getColumnModel().getColumn(headers.length-2).setMaxWidth(10);
+        table.getColumnModel().getColumn(headers.length-2).setResizable(false);
 
     }
 	
 	public String[] getVariablesNames(){
-		String[] headers = new String[table.getColumnCount()];
-		for( int k=0; k<table.getColumnCount(); k++ ){
-			headers[k] = table.getColumnName(k);
+		String[] headers = new String[table.getRowCount()];
+		for( int k=0; k<headers.length; k++ ){
+			headers[k] = (String)table.getValueAt(k, table.getColumnCount()-3);
 		}
 		return headers;
 	}
 	
 	public void clearTable(){
 
-		table.setModel(new javax.swing.table.DefaultTableModel(
-                new Object [table.getRowCount()][table.getColumnCount()],
-                getVariablesNames()
-            ));
+		setVariables( getVariablesNames() );
 		
 	}
 	
