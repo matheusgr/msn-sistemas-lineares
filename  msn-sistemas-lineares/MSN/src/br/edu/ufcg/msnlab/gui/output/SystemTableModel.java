@@ -13,13 +13,10 @@ public class SystemTableModel extends AbstractTableModel {
 	
 	private int curIter;
 
-	private String[] variables;
-
 	public void setCurrentResult(JLabel label, Result result, int curIter, String[] strings) {
 		label.setText("Changing Matrix");
 		this.result = result;
 		this.curIter = curIter;
-		this.variables = strings;
 		fireTableStructureChanged();
 	}
 
@@ -43,9 +40,9 @@ public class SystemTableModel extends AbstractTableModel {
 	@Override
 	public String getColumnName(int columnIndex) {
 		if (columnIndex == getColumnCount() - 1) {
-			return "Terms";
+			return "Term";
 		}
-		return this.variables[columnIndex];					
+		return "col " + (columnIndex + 1);					
 	}
 
 	@Override
