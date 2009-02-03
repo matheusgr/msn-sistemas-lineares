@@ -28,7 +28,7 @@
 
 A ferramenta \ferramenta foi desenvolvida para a disciplina de \textit{Métodos de Software Numérico} ministrada pelo professor Eustáquio Rangel na \textit{Universidade Federal de Campina Grande} pelo \textit{Departamento de Sistemas e Computação}. Tendo como desenvolvedores toda a equipe de alunos da disciplina, e usando a linguagem de programação Java, a ferramenta busca resolver sistemas de equações lineares usando diversos métodos pesquisados e discutidos em sala de aula.
 
-Este documento descreve um manual de uso da ferramenta. No capítulo~\ref{instalacao}, é descrita a instalação e uso inicial da ferramenta. O capítulo\ref{resolucao} descreve o funcionamento da ferramenta: como usá-la para a resolução de sistemas lineares, incluindo um embasamento teórico dos procedimentos realizados. Por fim, o capítulo~\ref{desenvolvedor} descreve um pequeno manual para o desenvolvedor, com as decisões arquiteturais do projeto e uma descrição do funcionamento e organização do código da mesma.
+Este documento descreve um manual de uso da ferramenta. No capítulo~\ref{instalacao}, é descrita a instalação e uso geral da ferramenta. O capítulo\ref{resolucao} dá um breve embasamento teórico dos procedimentos realizados para a solução de sistemas de equações lineares. Por fim, o capítulo~\ref{desenvolvedor} descreve um pequeno manual para o desenvolvedor, com as decisões arquiteturais do projeto e uma descrição do funcionamento e organização do código desta aplicação.
 
 \section{Licença}
 
@@ -40,27 +40,33 @@ O acesso ao código fonte, documentação e informações sobre o projeto podem 
 
 \section{Equipe de Desenvolvedores}
 
+\subsection{Métodos}
 \begin{itemize}
  \item Adauto Trigueiro
  \item Alan Farias
  \item Anderson Pablo
- \item Dayane Gaudencio
  \item Diego Melo Gurjão
  \item Everton Leandro
- \item Hugo Marques
- \item Jackson Porciuncula
  \item João Felipe Ouriques
  \item José Wilson
  \item José Gildo
  \item Leonardo Ribeiro Mendes
  \item Rafael Dantas
+ \item Rodrigo Pinheiro
+\end{itemize}
+
+\subsection{Interface}
+\begin{itemize}
+ \item Dayane Gaudencio
+ \item Hugo Marques
+ \item Jackson Porciuncula
+ \item Matheus Gaudencio
  \item Ricardo Araújo
  \item Roberta Guedes
- \item Rodrigo Pinheiro
  \item Theo Alves
 \end{itemize}
 
-\chapter{Instalação}
+\chapter{Usando a ferramenta}
 \label{instalacao}
 
 \section{Dependências}
@@ -73,10 +79,192 @@ exista uma máquina virtual compatível com tal sistema.
 
 Utilizando o jar disponibilizado, para executar o usuário necessita do comando:
 
-\texttt{java -jar nome\_do\_jar.jar}
+\texttt{java -jar MSN-Sistemas-Lineares-0.1.jar}
 
 Dessa forma a ferramenta não necessita de instalação, trazendo uma vantagem ao
 usuário que não tem permissões para instalar aplicativos.
+
+A figura~\ref{fig:intro} mostra um exemplo do programa em execução.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.5, bb=0 0 538 377]{screen-1-intro.png}
+ % screen-1-intro.png: 800x560 pixel, 107dpi, 18.99x13.29 cm, bb=0 0 538 377
+ \caption{Aplicativo em execução}
+ \label{fig:intro}
+\end{figure}
+
+\section{Definindo o Sistema de Equações Lineares}
+
+Ao iniciar o aplicativo, a janela da figura~\ref{fig:input} é exibida. Nela, é possível ver três formas de entrada para o sistema de equações lineares:
+
+\begin{description}
+ \item[Text Mode] Permite que o sistema seja inserido como texto (este é o modo inicial).
+ \item[Equation Mode] Insere equação por equação do sistema.
+ \item[Matrix Mode] Trabalha com o sistema na forma de uma matriz.
+\end{description}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 363 323]{screen-2-text.png}
+ % screen-2-text.png: 540x480 pixel, 107dpi, 12.82x11.39 cm, bb=0 0 363 323
+ \caption{Janela inicial (Text Mode)}
+ \label{fig:input}
+\end{figure}
+
+\subsection{Text Mode}
+
+O modo de inserção textual permite que o sistema seja descrito em um texto onde cada linha representa uma equação. Note que as variáveis tanto podem assumir valores como $x$, $y$, $z$ como $x1$, $x2$, $x3$, etc. Um exemplo de entrada permitida:
+
+\begin{verbatim}
+10x + y = 10
+x - y = 5
+\end{verbatim} 
+
+\subsection{Equation Mode}
+
+Neste modo, representado na figura~\ref{fig:eq}, cada linha representa uma equação a ser inserida. Assim é possível ao usuário 3 opções de controle quanto ao número de equações de entrada:
+
+\begin{description}
+ \item[Add Equation] Adiciona uma nova equação no sistema.
+ \item[Remove Equation] Remove uma equação do sistema (elimina a última equação).
+ \item[Set Number of Equations] Define o número de equações, adicionando ou removendo o número necessário de equações de sistema.
+ \end{description}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 355 197]{screen-3-eq.png}
+ % screen-3-eq.png: 527x293 pixel, 107dpi, 12.51x6.95 cm, bb=0 0 355 197
+ \caption{Equation Mode}
+ \label{fig:eq}
+\end{figure}
+
+\subsection{Matrix Mode}
+
+O último modo de entrada de sistemas de equações lineares, se dá na forma de matriz. A figura~\ref{fig:matrix} mostra a tela que representa este modo. Nela, o usuário entrará com o sistema na forma de matriz podendo, caso necessário: alterar o nome das variáveis (\texttt{Set variable's name}), definir o número de variáveis (\texttt{Set number of variables}) ou limpar a matriz (\texttt{Clear}).
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 354 196]{screen-4-matrix.png}
+ % screen-4-matrix.png: 526x291 pixel, 107dpi, 12.49x6.91 cm, bb=0 0 354 196
+ \caption{Matrix Mode}
+ \label{fig:matrix}
+\end{figure}
+
+\section{Métodos}
+
+Ao entrar com a matriz, o campo \verb|methods| torna-se disponível. Nele, é possível selecionar o método a ser utilizado, como mostra a figura~\ref{fig:metodos}. Cada método tem um conjunto de parâmetros associado, de acordo com o método selecionado.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 363 118]{screen-5-methods.png}
+ % screen-5-methods.png: 540x176 pixel, 107dpi, 12.82x4.18 cm, bb=0 0 363 118
+ \caption{Seleção dos Métodos}
+ \label{fig:metodos}
+\end{figure}
+
+A figura~\ref{fig:elim} mostra os parâmetros a serem configurados no método de resolução de sistemas de equações lineares através da eliminação de Gauss.
+\begin{description}
+ \item[Pivot] Determina se o método usará ou não um pivot;
+ \item[Max. Iterations] Define o número máximo de iterações para refinar a solução;
+ \item[Max. Residue] Valor máximo do resíduo encontrado para determinar que uma solução é válida;
+ \item[Triang. Sup/Inf] Determina se a eliminação usará triangularização superior ou inferior.
+ \end{description}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 353 99]{screen-6-elim.png}
+ % screen-6-elim.png: 525x147 pixel, 107dpi, 12.46x3.49 cm, bb=0 0 353 99
+ \caption{Método de Eliminação de Gauss}
+ \label{fig:elim}
+\end{figure}
+
+Enquanto \verb|Pivot| é uma seleção comum ao método de eliminação de Gauss e o método de Gauss-Jacobi, a opção de escolher o modo de triangularização é uma opção apenas do método de eliminação de Gauss. As demais opções são comuns a todos os métodos diretos, como o de decomposição QR (como mostra a figura~\ref{fig:qr}).
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 353 100]{screen-7-decomp.png}
+ % screen-7-decomp.png: 525x148 pixel, 107dpi, 12.46x3.51 cm, bb=0 0 353 100
+ \caption{Método de Decomposição QR}
+ \label{fig:qr}
+\end{figure}
+
+Ao resolver um sistema de equações lineares, os métodos iniciam uma janela de saída mostrando o passo-a-passo da resolução do sistema. A figura~\ref{fig:elimchang} exibe um dos passos da resolução através do método de Eliminação de Gauss. Para exibir o próximo passo, é preciso selecionar o botão \verb|->|. Intuitivamente, para exibir um passo anterior, basta selecionar o botão \verb|<-|.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-8-elim-changing.png}
+ % screen-8-elim-changing.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Eliminação de Gauss: Alterando a Matriz}
+ \label{fig:elimchang}
+\end{figure}
+
+Nem todos os métodos apresentam uma etapa de alteração de matriz, entretanto, todos os métodos diretos exibem uma etapa de refinamento de solução (\verb|Finding Solution|) que pode ser visto na figura~\ref{fig:elimfinding}.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-A-gauss-finding.png}
+ % screen-A-gauss-finding.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Eliminação de Gauss: Refinando a Solução}
+ \label{fig:elimfinding}
+\end{figure}
+
+Terminada esta etapa, o método exibe a solução encontrada para o sistema de equações lineares (figura~\ref{fig:elimsolution}).
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-B-gauss-solution.png}
+ % screen-B-gauss-solution.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Eliminação de Gauss: Exibindo a Solução}
+ \label{fig:elimsolution}
+\end{figure}
+
+Os métodos iterativos (Gauss-Seidel e Gauss-Jacobi), por sua vez, apresentam três parâmetros configuráveis:
+
+\begin{description}
+ \item[Max. Iterations] Número máximo de iterações que o método pode realizar (critério de parada);
+ \item[Tolerance] Tolerância da solução para que ela seja aceita como válida;
+ \item[Estimatives] Valores iniciais (estimativas) de cada variável.
+\end{description}
+
+A figura~\ref{fig:seidelestim1} mostra um exemplo dos parâmetros no método de Gauss-Seidel. Note que ao selecionar o método, as estimativas ainda não são possíveis de serem definidas. Para definir as estimativas iniciais, pressione o botão \verb|Get Estimative Variables|.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 354 100]{screen-C-seidel-before-estim.png}
+ % screen-C-seidel-before-estim.png: 526x148 pixel, 107dpi, 12.49x3.51 cm, bb=0 0 354 100
+ \caption{Gauss-Seidel}
+ \label{fig:seidelestim1}
+\end{figure}
+
+É possível ver na figura~\ref{fig:seidelafterestim} os parâmetros de estimativas a serem definidas pelo usuário. Por padrão, todas as estimativas são definidas como zero.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 354 100]{screen-D-seidel-after-estim.png}
+ % screen-D-seidel-after-estim.png: 526x149 pixel, 107dpi, 12.49x3.54 cm, bb=0 0 354 100
+ \caption{Gauss-Seidel: Definindo as Estimativas}
+ \label{fig:seidelafterestim}
+\end{figure}
+
+Quando o comando de resolver o sistema é chamado, e se faz uso de um método iterativo, uma janela exibe os valores de cada iteração que o método define para as variáveis (figura~\ref{fig:elimfinding}). Como último passo, a janela exibe a solução encontrada (figura~\ref{fig:elimsolution}).
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-E-seidel-finding.png}
+ % screen-E-seidel-finding.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Gauss-Seidel: Iterações}
+ \label{fig:seidelfinding}
+\end{figure}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-F-seidel-solution.png}
+ % screen-F-seidel-solution.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Gauss-Seidel: Solução}
+ \label{fig:seidelsolution}
+\end{figure}
+
 
 \chapter{Resolução de Sistemas de Equações Lineares}
 \label{resolucao}
@@ -102,7 +290,6 @@ a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
 a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
 \vdots  & \vdots & \ddots & \vdots \\
 a_{m,1} & a_{m,2} & \cdots & a_{m,n}
-\label{arr:coeficientes}
 \end{array}\right]
 \]
 
@@ -145,7 +332,6 @@ a_{1,1} & a_{1,2} & \cdots & a_{1,n} & \vline & b_{1} \\
 a_{2,1} & a_{2,2} & \cdots & a_{2,n} & \vline & b_{2} \\
 \vdots  & \vdots & \ddots & \vdots & \vline & \vdots \\
 a_{m,1} & a_{m,2} & \cdots & a_{m,n} & \vline & b_{m} 
-\label{arr:coeficientes}
 \end{array}\right]
 \]
 
@@ -153,7 +339,7 @@ Visualizando o sistema como uma operação matricial, é possível identificar p
 
 Durante a resolução de tal sistema, três possibilidades de resultados estão descritos na tabela~\ref{tab:sistemas}.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{Possíveis Resultados de um Sistema}
         \begin{tabular}{|c|p{2in}|}
@@ -197,7 +383,7 @@ a_{n,1} & \cdots & b_{n} & a_{n,k+1} & \cdots & a_{n,n}
 
 Assim, considerando $D$ e $D_{k}$, é possível determinar o tipo de resolução do sistema, como mostra as condições da tabela~\ref{tab:sistemad}.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{Condições para Indentificação das Soluções de um Sistema}
         \begin{tabular}{|c|c|}
@@ -211,10 +397,6 @@ Assim, considerando $D$ e $D_{k}$, é possível determinar o tipo de resolução
 \end{table} 
 
 Assim, considerando a limitação da ferramenta em que apenas sistemas homogêneos são verificados, a ferramenta também verifica se o sistema tem solução possível e determinada, possível e indeterminada, ou se é impossível de ser resolvido. Este cálculo é feito a partir das determinantes do sistema, como apresentado anteriormente.
-
-% \section{Usando a Ferramenta}
-% 
-% TODO
 
 \section{Métodos de Resolução de Sistemas de Equações Lineares}
 
@@ -285,7 +467,6 @@ A_{expand} = \left[ \begin{array}{cccccc}
 0 & \delta_{2,2} & \cdots & \delta_{2,n} & \vline & b_{2} \\
 \vdots  & \vdots & \ddots & \vdots & \vline & \vdots \\
 0 & 0 & \cdots & \delta_{m,n} & \vline & b_{m} 
-\label{arr:triangular}
 \end{array}\right]
 \]
 
@@ -295,7 +476,6 @@ Para se obter esta matriz, considere-se este exemplo trivial:
 Exemplo_{expand} = \left[ \begin{array}{cccc}
 a_{1,1} & a_{1,2} & \vline & b_{1} \\
 a_{2,1} & a_{2,2} & \vline & b_{2}
-\label{arr:triangularexemplo}
 \end{array}\right]
 \]
 
@@ -315,7 +495,6 @@ A_{expand} = \left[ \begin{array}{cccccc}
 0 & \delta_{2,2} & \cdots & 0 & \vline & \beta_{2} \\
 \vdots  & \vdots & \ddots & \vdots & \vline & \vdots \\
 0 & 0 & \cdots & \delta_{m,n} & \vline & \beta_{m} 
-\label{arr:triangular}
 \end{array}\right]
 \]
 
@@ -449,7 +628,7 @@ Para executar qualquer uma destas tarefas, basta executar \texttt{ant tarefa} no
 
 Todo o código segue a codificação UTF-8, permitindo maior compatibilidade entre os sistemas existentes. O sistema disponibiliza uma estrutura de diretórios para os recursos adequados referentes ao projeto:
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{Estrutura de Diretórios}
         \begin{tabular}{|c|p{2in}|}
@@ -465,7 +644,7 @@ Todo o código segue a codificação UTF-8, permitindo maior compatibilidade ent
 
 O diretório \texttt{src} tem \texttt{br.edu.ufcg.msnlab} como pacote base da ferramenta, apresentando os seguintes sub-pacotes:
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{Estrutura de Pacotes}
         \begin{tabular}{|c|p{2in}|}
@@ -500,7 +679,7 @@ Seis componentes básicos descrevem a arquitetura do sistema:
 
 A interação estática destes elementos é descrita na figura~\ref{fig:arquitetura}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
  \centering
  \includegraphics[width=\textwidth]{MSN1}
  % MSN1.jpg: 709x738 pixel, 72dpi, 25.01x26.03 cm, bb=0 0 709 738
@@ -520,7 +699,7 @@ Interação dinâmica dos elementos é representada no diagrama de sequência da
  \item[Facade] A facade retorna um objeto Result que contém o passo a passo da resolução feita pelo método.
 \end{description}
 
-\begin{figure}[h]
+\begin{figure}[ht]
  \centering
  \includegraphics[width=\textwidth]{MSNFlow}
  % MSNFlow.jpg: 622x631 pixel, 72dpi, 21.94x22.26 cm, bb=0 0 622 631
