@@ -96,7 +96,6 @@
 				<include name="**/*.java" />
 				<include name="**/*.jpg" />
 			</fileset>
-			<zipfileset src="${cli.jar}" />
 			<zipfileset src="${jama.jar}" />
 		</jar>
 	</target>
@@ -144,9 +143,9 @@
 			<zipfileset dir="${project.docs}" prefix="docs"/>
 			<zipfileset dir="${project.src}" prefix="src" />
 			<zipfileset dir="${project.src-teste}" prefix="src-testes" />
-			<zipfileset dir="${project.base}/resource-testes" prefix="resources" />
 			<zipfileset file="${project.jar}" />
 			<zipfileset file="build.xml" />
+ 			<zipfileset file="manual.pdf" />
 			<zipfileset file="build.properties" />
 		</zip>
 		<checksum file="${project.release}/project.zip" />
