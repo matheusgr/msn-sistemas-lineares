@@ -31,59 +31,111 @@ public class MethodsAutomatedTest extends TestCase {
 	}
 
 	public void test3Variables100OperationsLarge10Times() throws Exception {
+		this.ps.println("3Variables100OperationsLarge10Times");
 		for (int i = 0; i < 10; i++) {
 			genericTestMethods(5, 10, 100);			
 		}
 	}
 	
 	public void test3Variables100Operations10Times() throws Exception {
+		this.ps.println("3Variables100Operations10Times");
 		for (int i = 0; i < 10; i++) {
 			genericTestMethods(3, 1, 100);			
 		}
 	}
 	
 	public void test5Variables100Operations3Times() throws Exception {
-		for (int i = 0; i < 3; i++) {
+		this.ps.println("5Variables100Operations10Times");
+		for (int i = 0; i < 10; i++) {
 			genericTestMethods(5, 1, 100);
 		}
 	}
 	
 	public void test1Variables10Operations10Times() throws Exception {
+		this.ps.println("1Variables100Operations10Times");
 		for (int i = 0; i < 10; i++) {
 			genericTestMethods(1, 1, 10);
 		}
 	}
 	
 	public void test3Variables0Operations10Times() throws Exception {
+		this.ps.println("3Variables0Operations10Times");
 		for (int i = 0; i < 10; i++) {
 			genericTestMethods(3, 1, 0);			
+		}
+	}
+	
+	public void testGaussAndJordan3Variables0Operations10Times() throws Exception {
+		this.ps.println("GaussAndJordan3Variables0Operations10Times - Pivot and Triang Sup");
+		int variables = 3;
+		int factor = 1;
+		int operations = 10;
+		for (int i = 0; i < 10; i++) {
+			SysEquations sys = createSystem(variables, factor, operations);			
+			Config c = new Config();
+			c.set(Config.pivoteamento, true);
+			c.set(Config.triangularizacao, true);
+			genericTestOneMethod(Methods.EliminacaoGauss, sys.clone(), variables, factor, operations, c);			
+		}
+		this.ps.println("GaussAndJordan3Variables0Operations10Times - Pivot and Triang Inf");
+		for (int i = 0; i < 10; i++) {
+			SysEquations sys = createSystem(variables, factor, operations);			
+			Config c = new Config();
+			c.set(Config.pivoteamento, true);
+			c.set(Config.triangularizacao, false);
+			genericTestOneMethod(Methods.EliminacaoGauss, sys.clone(), variables, factor, operations, c);			
+		}
+		this.ps.println("GaussAndJordan3Variables0Operations10Times - No Pivot and Triang Sup");
+		for (int i = 0; i < 10; i++) {
+			SysEquations sys = createSystem(variables, factor, operations);			
+			Config c = new Config();
+			c.set(Config.pivoteamento, false);
+			c.set(Config.triangularizacao, true);
+			genericTestOneMethod(Methods.EliminacaoGauss, sys.clone(), variables, factor, operations, c);			
+		}
+		this.ps.println("GaussAndJordan3Variables0Operations10Times - No Pivot and Triang Inf");
+		for (int i = 0; i < 10; i++) {
+			SysEquations sys = createSystem(variables, factor, operations);			
+			Config c = new Config();
+			c.set(Config.pivoteamento, false);
+			c.set(Config.triangularizacao, false);
+			genericTestOneMethod(Methods.EliminacaoGauss, sys.clone(), variables, factor, operations, c);			
+		}
+	}
+
+	public void genericTestOneMethod(String method, SysEquations sys, int variables, int factor, int operations, Config c) throws Exception {
+		try {
+			ps.println("Testing... " + method);
+			Result resolve = facade.resolve(sys.coef, sys.terms, 0.001, 1000, method, sys.estim, c);
+			compare(method, resolve, sys, 0.001);
+		} catch (Exception e) {
+			ps.println("Exception - " + method);
+			e.printStackTrace(ps);
 		}
 	}
 	
 	public void genericTestMethods(int variables, int factor, int operations) throws Exception {
 		String[] methods = getMethods();
 		
-		Checker ch;
 		SysEquations sys;
-		SysEquations sys1;
-		do {
-			sys1 = createEquation(variables, -10.0, 10.0, factor, operations);
-			ch = new Checker(sys1.coef, sys1.terms);
-		} while (! SystemTypes.POSSIVELDET.equals(ch.hasSolution()));
+		SysEquations sys1 = createSystem(variables, factor, operations);
 		
 		Config c = new Config();
 		
 		for (int i = 0; i < methods.length; i++) {
-			try {
-				sys = sys1.clone();
-				ps.println("Testing... " + methods[i]);
-				Result resolve = facade.resolve(sys.coef, sys.terms, 0.001, 1000, methods[i], sys.estim, c);
-				compare(methods[i], resolve, sys, 0.001);
-			} catch (Exception e) {
-				ps.println("Exception - " + methods[i]);
-				e.printStackTrace(ps);
-			}
+			sys = sys1.clone();
+			genericTestOneMethod(methods[i], sys, variables, factor, operations, c);
 		}
+	}
+
+	private SysEquations createSystem(int variables, int factor, int operations) {
+		Checker ch;
+		SysEquations sys;
+		do {
+			sys = createEquation(variables, -10.0, 10.0, factor, operations);
+			ch = new Checker(sys.coef, sys.terms);
+		} while (! SystemTypes.POSSIVELDET.equals(ch.hasSolution()));
+		return sys;
 	}
 
 	private void compare(String method, Result resolve, SysEquations sys, double est) {
