@@ -1,4 +1,4 @@
-package br.edu.ufcg.msnlab.methods;
+package br.edu.ufcg.msnlab.methods.svd;
 
    /** 
     * Class that implements the SVD Decomposition using Golub-Reinsch method.
