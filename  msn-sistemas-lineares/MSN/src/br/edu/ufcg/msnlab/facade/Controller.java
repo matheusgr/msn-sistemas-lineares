@@ -7,7 +7,7 @@ import br.edu.ufcg.msnlab.methods.Solver;
 import br.edu.ufcg.msnlab.methods.GaussJordan.GaussJordan;
 import br.edu.ufcg.msnlab.methods.GaussMethod.GaussMethod;
 import br.edu.ufcg.msnlab.methods.GaussSeidel.GaussSeidelSolverImpl;
-import br.edu.ufcg.msnlab.methods.LU.LU;
+import br.edu.ufcg.msnlab.methods.LU.LU.LU;
 import br.edu.ufcg.msnlab.methods.SVD.SVD;
 import br.edu.ufcg.msnlab.methods.choleskyQR.interfaces.CholeskySolverImpl;
 import br.edu.ufcg.msnlab.methods.choleskyQR.interfaces.QRSolverImpl;
