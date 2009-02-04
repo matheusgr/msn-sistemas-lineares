@@ -1,4 +1,4 @@
-package br.edu.ufcg.msnlab.methods.LU;
+package br.edu.ufcg.msnlab.methods;
 
 
 import java.math.BigDecimal;
