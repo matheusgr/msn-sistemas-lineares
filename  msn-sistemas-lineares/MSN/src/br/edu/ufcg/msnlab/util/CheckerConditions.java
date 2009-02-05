@@ -33,7 +33,7 @@ public class CheckerConditions {
 	 * @param line
 	 * @return sum
 	 */
-	private  double calculateSumLine(double[] line) {
+	public double calculateSumLine(double[] line) {
 		double sum = 0.0;
 		for (int i = 0; i < line.length-1; i++) {
 			sum += line[i];
