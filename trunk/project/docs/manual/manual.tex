@@ -1,0 +1,729 @@
+\documentclass[a4paper,10pt]{report}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx,url}
+\usepackage[brazil]{babel}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{subfigure}
+\usepackage{amsmath}
+\usepackage{xspace}
+
+\newcommand{\ferramenta}{\texttt{MSN - Resolução de Sistemas de Equações Lineares}\xspace}
+
+\begin{document}
+
+\title{Manual da ferramenta \ferramenta}
+\author{MSN 2008.2}
+
+\bibliographystyle{plain}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Introdução}
+\label{intro}
+
+A ferramenta \ferramenta foi desenvolvida para a disciplina de \textit{Métodos de Software Numérico} ministrada pelo professor Eustáquio Rangel na \textit{Universidade Federal de Campina Grande} pelo \textit{Departamento de Sistemas e Computação}. Tendo como desenvolvedores toda a equipe de alunos da disciplina, e usando a linguagem de programação Java, a ferramenta busca resolver sistemas de equações lineares usando diversos métodos pesquisados e discutidos em sala de aula.
+
+Este documento descreve um manual de uso da ferramenta. No capítulo~\ref{instalacao}, é descrita a instalação e uso geral da ferramenta. O capítulo\ref{resolucao} dá um breve embasamento teórico dos procedimentos realizados para a solução de sistemas de equações lineares. Por fim, o capítulo~\ref{desenvolvedor} descreve um pequeno manual para o desenvolvedor, com as decisões arquiteturais do projeto e uma descrição do funcionamento e organização do código desta aplicação.
+
+\section{Licença}
+
+Esta ferramenta está liberada sob a licença GPL 2.0\cite{gpl}.
+
+\section{Código Fonte}
+
+O acesso ao código fonte, documentação e informações sobre o projeto podem ser acessadas no site: \texttt{http://code.google.com/p/msn-sistemas-lineares/}. Para acessar o código fonte, basta usar o SVN~\cite{svn}, localizado no endereço: \texttt{http://msn-sistemas-lineares.googlecode.com/svn/trunk/}.
+
+\section{Equipe de Desenvolvedores}
+
+\subsection{Métodos}
+\begin{itemize}
+ \item Adauto Trigueiro
+ \item Alan Farias
+ \item Anderson Pablo
+ \item Diego Melo Gurjão
+ \item Everton Leandro
+ \item João Felipe Ouriques
+ \item José Wilson
+ \item José Gildo
+ \item Leonardo Ribeiro Mendes
+ \item Rafael Dantas
+ \item Rodrigo Pinheiro
+\end{itemize}
+
+\subsection{Interface}
+\begin{itemize}
+ \item Dayane Gaudencio
+ \item Hugo Marques
+ \item Jackson Porciuncula
+ \item Matheus Gaudencio
+ \item Ricardo Araújo
+ \item Roberta Guedes
+ \item Theo Alves
+\end{itemize}
+
+\chapter{Usando a ferramenta}
+\label{instalacao}
+
+\section{Dependências}
+
+A ferramenta executa sobre a plataforma Java, aproveitando todas as suas
+vantagens como, por exemplo, a independência de sistema operacional, desde que
+exista uma máquina virtual compatível com tal sistema.
+
+\section{Execução}
+
+Utilizando o jar disponibilizado, para executar o usuário necessita do comando:
+
+\texttt{java -jar MSN-Sistemas-Lineares-0.1.jar}
+
+Dessa forma a ferramenta não necessita de instalação, trazendo uma vantagem ao
+usuário que não tem permissões para instalar aplicativos.
+
+A figura~\ref{fig:intro} mostra um exemplo do programa em execução.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.5, bb=0 0 538 377]{screen-1-intro.png}
+ % screen-1-intro.png: 800x560 pixel, 107dpi, 18.99x13.29 cm, bb=0 0 538 377
+ \caption{Aplicativo em execução}
+ \label{fig:intro}
+\end{figure}
+
+\section{Definindo o Sistema de Equações Lineares}
+
+Ao iniciar o aplicativo, a janela da figura~\ref{fig:input} é exibida. Nela, é possível ver três formas de entrada para o sistema de equações lineares:
+
+\begin{description}
+ \item[Text Mode] Permite que o sistema seja inserido como texto (este é o modo inicial).
+ \item[Equation Mode] Insere equação por equação do sistema.
+ \item[Matrix Mode] Trabalha com o sistema na forma de uma matriz.
+\end{description}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 363 323]{screen-2-text.png}
+ % screen-2-text.png: 540x480 pixel, 107dpi, 12.82x11.39 cm, bb=0 0 363 323
+ \caption{Janela inicial (Text Mode)}
+ \label{fig:input}
+\end{figure}
+
+\subsection{Text Mode}
+
+O modo de inserção textual permite que o sistema seja descrito em um texto onde cada linha representa uma equação. Note que as variáveis tanto podem assumir valores como $x$, $y$, $z$ como $x1$, $x2$, $x3$, etc. Um exemplo de entrada permitida:
+
+\begin{verbatim}
+10x + y = 10
+x - y = 5
+\end{verbatim} 
+
+\subsection{Equation Mode}
+
+Neste modo, representado na figura~\ref{fig:eq}, cada linha representa uma equação a ser inserida. Assim é possível ao usuário 3 opções de controle quanto ao número de equações de entrada:
+
+\begin{description}
+ \item[Add Equation] Adiciona uma nova equação no sistema.
+ \item[Remove Equation] Remove uma equação do sistema (elimina a última equação).
+ \item[Set Number of Equations] Define o número de equações, adicionando ou removendo o número necessário de equações de sistema.
+ \end{description}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 355 197]{screen-3-eq.png}
+ % screen-3-eq.png: 527x293 pixel, 107dpi, 12.51x6.95 cm, bb=0 0 355 197
+ \caption{Equation Mode}
+ \label{fig:eq}
+\end{figure}
+
+\subsection{Matrix Mode}
+
+O último modo de entrada de sistemas de equações lineares, se dá na forma de matriz. A figura~\ref{fig:matrix} mostra a tela que representa este modo. Nela, o usuário entrará com o sistema na forma de matriz podendo, caso necessário: alterar o nome das variáveis (\texttt{Set variable's name}), definir o número de variáveis (\texttt{Set number of variables}) ou limpar a matriz (\texttt{Clear}).
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 354 196]{screen-4-matrix.png}
+ % screen-4-matrix.png: 526x291 pixel, 107dpi, 12.49x6.91 cm, bb=0 0 354 196
+ \caption{Matrix Mode}
+ \label{fig:matrix}
+\end{figure}
+
+\section{Métodos}
+
+Ao entrar com a matriz, o campo \verb|methods| torna-se disponível. Nele, é possível selecionar o método a ser utilizado, como mostra a figura~\ref{fig:metodos}. Cada método tem um conjunto de parâmetros associado, de acordo com o método selecionado.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 363 118]{screen-5-methods.png}
+ % screen-5-methods.png: 540x176 pixel, 107dpi, 12.82x4.18 cm, bb=0 0 363 118
+ \caption{Seleção dos Métodos}
+ \label{fig:metodos}
+\end{figure}
+
+A figura~\ref{fig:elim} mostra os parâmetros a serem configurados no método de resolução de sistemas de equações lineares através da eliminação de Gauss.
+\begin{description}
+ \item[Pivot] Determina se o método usará ou não um pivot;
+ \item[Max. Iterations] Define o número máximo de iterações para refinar a solução;
+ \item[Max. Residue] Valor máximo do resíduo encontrado para determinar que uma solução é válida;
+ \item[Triang. Sup/Inf] Determina se a eliminação usará triangularização superior ou inferior.
+ \end{description}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 353 99]{screen-6-elim.png}
+ % screen-6-elim.png: 525x147 pixel, 107dpi, 12.46x3.49 cm, bb=0 0 353 99
+ \caption{Método de Eliminação de Gauss}
+ \label{fig:elim}
+\end{figure}
+
+Enquanto \verb|Pivot| é uma seleção comum ao método de eliminação de Gauss e o método de Gauss-Jacobi, a opção de escolher o modo de triangularização é uma opção apenas do método de eliminação de Gauss. As demais opções são comuns a todos os métodos diretos, como o de decomposição QR (como mostra a figura~\ref{fig:qr}).
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 353 100]{screen-7-decomp.png}
+ % screen-7-decomp.png: 525x148 pixel, 107dpi, 12.46x3.51 cm, bb=0 0 353 100
+ \caption{Método de Decomposição QR}
+ \label{fig:qr}
+\end{figure}
+
+Ao resolver um sistema de equações lineares, os métodos iniciam uma janela de saída mostrando o passo-a-passo da resolução do sistema. A figura~\ref{fig:elimchang} exibe um dos passos da resolução através do método de Eliminação de Gauss. Para exibir o próximo passo, é preciso selecionar o botão \verb|->|. Intuitivamente, para exibir um passo anterior, basta selecionar o botão \verb|<-|.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-8-elim-changing.png}
+ % screen-8-elim-changing.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Eliminação de Gauss: Alterando a Matriz}
+ \label{fig:elimchang}
+\end{figure}
+
+Nem todos os métodos apresentam uma etapa de alteração de matriz, entretanto, todos os métodos diretos exibem uma etapa de refinamento de solução (\verb|Finding Solution|) que pode ser visto na figura~\ref{fig:elimfinding}.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-A-gauss-finding.png}
+ % screen-A-gauss-finding.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Eliminação de Gauss: Refinando a Solução}
+ \label{fig:elimfinding}
+\end{figure}
+
+Terminada esta etapa, o método exibe a solução encontrada para o sistema de equações lineares (figura~\ref{fig:elimsolution}).
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-B-gauss-solution.png}
+ % screen-B-gauss-solution.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Eliminação de Gauss: Exibindo a Solução}
+ \label{fig:elimsolution}
+\end{figure}
+
+Os métodos iterativos (Gauss-Seidel e Gauss-Jacobi), por sua vez, apresentam três parâmetros configuráveis:
+
+\begin{description}
+ \item[Max. Iterations] Número máximo de iterações que o método pode realizar (critério de parada);
+ \item[Tolerance] Tolerância da solução para que ela seja aceita como válida;
+ \item[Estimatives] Valores iniciais (estimativas) de cada variável.
+\end{description}
+
+A figura~\ref{fig:seidelestim1} mostra um exemplo dos parâmetros no método de Gauss-Seidel. Note que ao selecionar o método, as estimativas ainda não são possíveis de serem definidas. Para definir as estimativas iniciais, pressione o botão \verb|Get Estimative Variables|.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 354 100]{screen-C-seidel-before-estim.png}
+ % screen-C-seidel-before-estim.png: 526x148 pixel, 107dpi, 12.49x3.51 cm, bb=0 0 354 100
+ \caption{Gauss-Seidel}
+ \label{fig:seidelestim1}
+\end{figure}
+
+É possível ver na figura~\ref{fig:seidelafterestim} os parâmetros de estimativas a serem definidas pelo usuário. Por padrão, todas as estimativas são definidas como zero.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 354 100]{screen-D-seidel-after-estim.png}
+ % screen-D-seidel-after-estim.png: 526x149 pixel, 107dpi, 12.49x3.54 cm, bb=0 0 354 100
+ \caption{Gauss-Seidel: Definindo as Estimativas}
+ \label{fig:seidelafterestim}
+\end{figure}
+
+Quando o comando de resolver o sistema é chamado, e se faz uso de um método iterativo, uma janela exibe os valores de cada iteração que o método define para as variáveis (figura~\ref{fig:elimfinding}). Como último passo, a janela exibe a solução encontrada (figura~\ref{fig:elimsolution}).
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-E-seidel-finding.png}
+ % screen-E-seidel-finding.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Gauss-Seidel: Iterações}
+ \label{fig:seidelfinding}
+\end{figure}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.8, bb=0 0 222 168]{screen-F-seidel-solution.png}
+ % screen-F-seidel-solution.png: 330x250 pixel, 107dpi, 7.83x5.93 cm, bb=0 0 222 168
+ \caption{Gauss-Seidel: Solução}
+ \label{fig:seidelsolution}
+\end{figure}
+
+
+\chapter{Resolução de Sistemas de Equações Lineares}
+\label{resolucao}
+Esta seção descreve como a ferramenta trabalha para a resolução de sistemas de equações lineares. Para contextualizar o leitor, é importante enteder como são definidos tais sistemas. Esta base é usada posteriormente na explicação dos métodos de resolução de sistemas de equações lineares.
+
+Todo sistema de equações lineares representa uma composição de equações lineares, como mostra o exemplo a seguir:
+
+\[
+\begin{array}{cccccccc}
+a_{1,1}x_{1} & + & a_{1,2}x_{2} & \cdots & + & a_{1,n}x_{n} & = & b_{1}\\
+a_{2,1}x_{1} & + & a_{2,2}x_{2} & \cdots & + & a_{2,n}x_{n} & = & b_{2}\\
+\vdots  & & \vdots  &  \ddots & & \vdots &  & \vdots  \\
+a_{m,1}x_{1} & + & a_{m,2}x_{2} & \cdots & + & a_{m,n}x_{n} & = & b_{m}
+\label{arr:sistema}
+\end{array}
+\]
+
+É possível obter uma matriz representando os coeficientes das equações lineares que compõe o sistema. Esta matriz é da forma:
+
+\[
+A = \left[ \begin{array}{cccc}
+a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+\vdots  & \vdots & \ddots & \vdots \\
+a_{m,1} & a_{m,2} & \cdots & a_{m,n}
+\end{array}\right]
+\]
+
+Dois outros vetores também são obtidos a partir das equações lineares do sistema inicial. O primeiro vetor representa as incógnitas do sistema:
+
+\[
+x = \left[ \begin{array}{c}
+x_{1} \\
+x_{2} \\
+\vdots \\
+x_{m}
+\label{arr:icognitas}
+\end{array}\right]
+\]
+
+E o segundo vetor composto pelos termos independentes do sistema:
+
+\[
+b = \left[ \begin{array}{c}
+b_{1} \\
+b_{2} \\
+\vdots \\
+b_{m}
+\label{arr:termos}
+\end{array}\right]
+\]
+
+Observe que ao multiplicar cada linha de $A$, ou seja, da \textit{matriz dos coeficientes}, pelo vetor \textit{x} (incógnitas do sistema), obtêm-se como resultado cada valor do vetor dos termos independentes, $b$. Assim, o sistema original pode ser representado por $A$, $x$ e $b$ como descrito na equação~\ref{eqn:sistemas}.
+
+\begin{equation}
+Ax = b
+\label{eqn:sistemas}
+\end{equation} 
+
+Uma representação útil do sistema, a ser usado em alguns métodos a serem apresentados é a da matriz expandida do sistema. Esta matriz $A_{expand}$ é definida como a matriz dos coeficientes acrescida ao vetor dos termos $b$. Ou seja:
+
+\[
+A_{expand} = \left[ \begin{array}{cccccc}
+a_{1,1} & a_{1,2} & \cdots & a_{1,n} & \vline & b_{1} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,n} & \vline & b_{2} \\
+\vdots  & \vdots & \ddots & \vdots & \vline & \vdots \\
+a_{m,1} & a_{m,2} & \cdots & a_{m,n} & \vline & b_{m} 
+\end{array}\right]
+\]
+
+Visualizando o sistema como uma operação matricial, é possível identificar propriedades do sistema a partir das proriedades da matriz de coeficientes da equação. Em especial, a matriz $A$ de tamanho $m \times n$, apresenta $m$ incógnitas e $n$ equações lineares.
+
+Durante a resolução de tal sistema, três possibilidades de resultados estão descritos na tabela~\ref{tab:sistemas}.
+
+\begin{table}[ht]
+\centering
+\caption{Possíveis Resultados de um Sistema}
+        \begin{tabular}{|c|p{2in}|}
+        \hline
+        \textbf{Tipo} & \textbf{Descrição} \\ \hline
+        \textbf{Possível e Determinado} & O sistema é possível e apresenta uma única solução \\ \hline
+        \textbf{Possível e Indeterminado} & O sistema é possível, mas não apresenta uma única solução \\ \hline
+        \textbf{Impossível} & O sistema não tem solução \\ \hline
+        \end{tabular}
+\label{tab:sistemas}
+\end{table} 
+
+Num sistema onde $m > n$, ou seja, há mais incógnitas do que equações, não é possível determinar uma solução única para o sistema: cada equação representa um vetor no espaço de $m$ dimensões, e a solução única só é possível quando a intereseção de todas as equações forma um ponto no espaço. Note que tal sistema também poderia não ter solução: basta considerar o exemplo de quando dois vetores são paralelos no espaço, assim, não apresentando pontos comuns de interseção.
+
+Quando $m < n$, o sistema possivelmente não apresenta soluções. Fazendo um análogo com a interpretação espacial de um sistema de equações lineares, $m$ equações possivelmente apresentará como intereseção um único ponto no espaço. A adição de uma nova equação pode não interceptar este mesmo ponto, fazendo com o que o sistema se torne impossível de ser solucionado. Observe que é possível que a nova equação ainda permita que o sistema tenha uma única solução: basta que este vetor intercepte o mesmo único ponto que os demais vetores no espaço.
+
+Devido as possíveis interpretações de um sistema em que $m \neq n$, a ferramenta limita-se apenas em explorar os sistemas homogêneos. Nestes sistemas $m = n$. Esta restrição permite explorar a matriz de entrada do sistema, verificado ao usuário qual a classificação do tipo do sistema (possível e determinado, possível e indeterminado ou impossível).
+
+Para realizar esta verificação, utiliza-se de parte da regra de Cramer~\cite{cramer}. Em especial, considerando que a matriz $A$ tem tamanho $n \times n$, então:
+
+\[
+D \equiv \left| \begin{array}{cccc}
+a_{1,1} & a_{1,2} & \cdots & a_{1,n} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,n} \\
+\vdots  & \vdots & \ddots & \vdots \\
+a_{n,1} & a_{n,2} & \cdots & a_{n,n}
+\label{arr:detcoeficientes}
+\end{array}\right|
+\]
+
+Ainda, pra cada incógnita existe um $D_{k}$ tal que:
+
+\[
+D_{k} \equiv \left| \begin{array}{ccccccc}
+a_{1,1} & \cdots & b_{1} & a_{1,k+1} & \cdots & a_{1,n}\\
+\vdots  & \ddots & \vdots & \vdots  & \ddots & \vdots \\
+a_{n,1} & \cdots & b_{n} & a_{n,k+1} & \cdots & a_{n,n}
+\label{arr:detcoeficientesk}
+\end{array}\right|
+\]
+
+Assim, considerando $D$ e $D_{k}$, é possível determinar o tipo de resolução do sistema, como mostra as condições da tabela~\ref{tab:sistemad}.
+
+\begin{table}[ht]
+\centering
+\caption{Condições para Indentificação das Soluções de um Sistema}
+        \begin{tabular}{|c|c|}
+        \hline
+        \textbf{Tipo} & \textbf{Condição} \\ \hline
+        \textbf{Possível e Determinado} & $D \neq 0$ \\ \hline
+        \textbf{Possível e Indeterminado} & $D = 0$, $\forall k, D_{k} = 0$ \\ \hline
+        \textbf{Impossível} & $D = 0$, $\exists k | D_{k} \neq 0$ \\ \hline
+        \end{tabular}
+\label{tab:sistemad}
+\end{table} 
+
+Assim, considerando a limitação da ferramenta em que apenas sistemas homogêneos são verificados, a ferramenta também verifica se o sistema tem solução possível e determinada, possível e indeterminada, ou se é impossível de ser resolvido. Este cálculo é feito a partir das determinantes do sistema, como apresentado anteriormente.
+
+\section{Métodos de Resolução de Sistemas de Equações Lineares}
+
+Os métodos usados pela ferramenta podem ser classificados como diretos ou iterativos. Nos métodos diretos, são conhecidos os números de passos e o procedimento para se obter um vetor de solução do sistema. Enquanto nos métodos iterativos, a solução é refinada até que seja obtido um vetor que satisfaça à precisão definida.
+
+São métodos diretos:
+\begin{itemize}
+ \item Método da Eliminação de Gauss
+ \item Método da Eliminação de Gauss-Jordan
+ \item Método da Decomposição LU e SVD
+ \item Método da Decomposição de Cholesky e QR
+\end{itemize}
+
+São métodos iterativos:
+\begin{itemize}
+ \item Método de Gauss-Jacobi
+ \item Método de Gauss-Siedel
+\end{itemize}
+
+As soluções obtidas pelos métodos diretos são refinadas até atingirem um critério definido pelo usuário. Considerando que $x$ representa um vetor de soluções, idealmente:
+
+\[
+b - Ax = 0
+\]
+
+Entretanto, pelos erros associados as operações numéricas do software, é possível que se obtenha um resíduo $r$ no cálculo desta solução:
+
+\begin{equation}
+b - Ax = r
+\label{residuo}
+\end{equation}
+
+Para amenizar o resíduo, procura-se um vetor de correção $c$ tal que:
+
+\[
+\begin{array}{c}
+A(x+c) - b = 0 \\
+Ax + Ac - b = 0 \\
+Ax - b + Ac = 0 \\
+Ac = b - Ax \\
+\end{array}
+\]
+
+Aplicando a equação~\ref{residuo}:
+
+\begin{equation}
+Ac = r
+\label{residuofinal}
+\end{equation}
+
+Basta resolver a equação\ref{residuofinal} para obter um novo vetor de soluções $x^{1}$ tal que $x^{1} = x + c$. Esta nova solução pode ser novamente refinada até que o vetor de resíduo satisfaça os critérios definidos pelo usuário.
+
+\subsection{Método da Eliminação de Gauss com e sem pivoteamento}
+
+O método da eliminação de Gauss faz uso de três operações básicas sobre a matriz expandida do sistema que não altera a solução do mesmo:
+
+\begin{itemize}
+ \item Multiplicação de uma equação (linha) por uma constante não nula
+ \item Soma do múltiplo de uma equação a outra
+ \item Troca de posição de duas ou mais equações
+\end{itemize}
+
+O método utiliza de tais operações na busca de uma matriz triangular, isto é, na forma:
+
+\[
+A_{expand} = \left[ \begin{array}{cccccc}
+\delta_{1,1} & \delta_{1,2} & \cdots & \delta_{1,n} & \vline & b_{1} \\
+0 & \delta_{2,2} & \cdots & \delta_{2,n} & \vline & b_{2} \\
+\vdots  & \vdots & \ddots & \vdots & \vline & \vdots \\
+0 & 0 & \cdots & \delta_{m,n} & \vline & b_{m} 
+\end{array}\right]
+\]
+
+Para se obter esta matriz, considere-se este exemplo trivial:
+
+\[
+Exemplo_{expand} = \left[ \begin{array}{cccc}
+a_{1,1} & a_{1,2} & \vline & b_{1} \\
+a_{2,1} & a_{2,2} & \vline & b_{2}
+\end{array}\right]
+\]
+
+Para anular o elemento $a_{2,1}$, a segunda linha ($L_{2}$) é susbtituída por $a_{2,1}/a_{1,1} \times L_{1} - L_{2}$, onde $L_{1}$ representa a primeira linha. Ao realizar tal operação o termo $a_{2,1}$ na matriz  $Exemplo_{expand}$ é anulado. O algoritmo de triangularização da matriz irá operar em diagonal, trocando as linhas que apresentem um valor nulo na diagonal por alguma linha abaixo que possua um valor não-nulo na mesma coluna, e, a partir disto, anulando todos os coeficientes abaixo do elemento da diagonal atual.
+
+A partir da matriz resultante de tal operação, o cálculo da solução é direto: basta resolver recursivamente da última linha para primeira o valor de cada incógnita.
+
+O uso de um pivô determina que o sistema fará a escolha da linha de referência para triangularizar a matriz de acordo com o maior elemento existente da coluna. A linha com o maior elemento, passa a ser a linha cuja diagonal da matriz irá possuir tal elemento nesta coluna. Ao escolher tal pivô, as operações usam como referência um valor maior, o que permite diminuir os erros gerados pelas operações de ponto flutuante do software.
+
+\subsection{Método da Eliminação de Gauss-Jordan com e sem pivoteamento}
+
+No método de Gauss-Jordan, deseja-se obter uma matriz expandida equivalente ao sistema original, onde os coeficientes apresentam em toda diagonal elementos não-nulos. Este método complementa o método de eliminação de Gauss apresentado anteriormente, eliminando a etapa da resolução recursiva da matriz triangular, pois o sistema estará na forma:
+
+\[
+A_{expand} = \left[ \begin{array}{cccccc}
+\delta_{1,1} & 0 & \cdots & 0 & \vline & \beta_{1} \\
+0 & \delta_{2,2} & \cdots & 0 & \vline & \beta_{2} \\
+\vdots  & \vdots & \ddots & \vdots & \vline & \vdots \\
+0 & 0 & \cdots & \delta_{m,n} & \vline & \beta_{m} 
+\end{array}\right]
+\]
+
+Onde a solução é imediata: $x_{1} = \beta_{1}/\delta_{1,1}$.
+
+Para obter esta matriz, o método inicia triangularizando a matriz e, em seguida, tomando a última linha, como referência elimina todos os elementos da última coluna dos coeficientes da matriz. Em seguida, repete o processo para a penúltima linha e assim sucessivamente.
+
+\subsection{Método da Decomposição LU e SVD}
+
+\subsubsection{Decomposição LU}
+
+A resolução do método da decomposição LU se baseia na decomposição da matriz $A$ de $A.x = b$ em duas outras matrizes $L$ e $U$:
+
+\begin{equation*}
+A = L.U
+\end{equation*}
+
+Onde $L$ é uma matriz triagular inferior com diagonal unitária, ou seja, todos elementos acima da diagonal são nulos e os da diagonal são iguais a 1; e $U$ é uma matriz triangular superior, onde todos os elementos abaixo da diagonal principal são nulos, de forma que: 
+
+\begin{equation*}
+LU.x = b
+\end{equation*}
+
+Dessa forma, a resolução do sistema $A.x = b$ se reduz à resolução de dois sistemas triangulares: $U.x = y$ e $L.y = b$ . As matrizes L e U podem ser obtidas usando o processo de Gauss, onde a matriz U é a matriz resultante do processo e a matris L é composta dos índices usados para multiplicar as linhas no processo e uma diagonal principal unitária.
+
+\subsubsection{Decomposição SVD}
+
+Quando a matriz A é singular, ou seja, não possui inversa (determinante igual a
+0 no teste de Cramer), a decomposição SVD pode ser usada. Matrizes $A (M x N)$
+tal que $M$ seja maior ou igual a $N$, podem ser decompostas no produto de três
+matrizes: $A = U . W . V^{T}$, tal que U é uma matriz coluna ortogonal; W é uma
+matriz diagonal com elementos positivos ou nulos (valores singulares); e V é
+uma matriz ortogonal.
+
+Se A for uma matriz quadradam então U W e V também o serão. Logo, de acordo com
+\cite{press:recipes92} podemos definir x como:
+
+\begin{equation}
+x = V . [diag(1/w_j)].(U^T . b)
+\end{equation}
+
+Caso $w_j$ seja nulo podemos substituir $1/w_j$ por zero. 
+
+\subsection{Método da Decomposição de Cholesky e QR}
+
+\subsubsection{Decomposição de Cholesky}
+Quando a matriz A é simétrica e positiva definida, ou seja $v.A.v > 0 \forall vetor v$, há uma decomposi,ão triangular mais eficiente. A decomposição de Cholesky constrói uma matriz $L$ diagonal inferior tal que $L^{T}$ serve como matriz U, de modo que $L.L^{T} = A$.
+
+Dessa forma a equação da decomposição LU torna-se:
+
+\begin{equation*}
+L.L^{T}.x = b
+\end{equation*}
+
+\subsubsection{Decomposição QR}
+
+A decomposição QR consiste em decompor a matriz $A$ no produto $QR$ onde R é
+uma matriz triangular superior e $Q$ é uma matriz ortogonal, ou seja, $Q.Q^{T}
+= 1$. Substituindo na equaçào $Ax = b$ temos que:
+
+\begin{gather*}
+Q.R.x = b\\
+R.x = Q^{T}.b\\
+\end{gather*}
+
+\subsection{Método de Gauss-Jacobi}
+
+O método de Gauss-Jacobi fundamenta-se em resolver a equação:
+
+\begin{equation*}
+Ax = b
+\end{equation*}
+
+Sabendo que a matriz A pode ser escrita na forma $ A = D + (L + U) $ onde $D$ representa a diagonal, $L$ a matriz estritamente inferior e $U$ a matriz estritamente superior. Substituindo o resultado na equação e isolando a variável $x$ no primeiro membro, temos que:
+
+\begin{equation*}
+x^{(k+1)}=D^{-1}[b-(L+U)x^{(k)}]
+\end{equation*}
+
+com $k$ sendo o contador de iterações. Assim sendo, uma abordagem iterativa para a equação acima seria:
+
+\begin{equation*}
+ x^{(k+1)}_{i}=\dfrac{1}{a_{ii}}(b-\sum_{j \neq i} a_{ij}x^{(k)}_{j})
+\end{equation*}
+
+Com o uso dessa equação os termos da matrix na iteração $k+1$ são calculados única e exclusivamente com os valors na iteração $k$. O processo converge quando a matriz é estritamente diagonal dominante, ou seja, o módulo do elemento na diagonal é maior que a soma do módulo de todos os outros elementos (não diagonais) da linha em questão. Mais precisamente:
+
+\begin{equation*}
+|a_{ii}| > \sum_{j \neq i}|a_{ij}| ,  \forall i
+\end{equation*}
+
+Há alguns casos onde o método converge sem satisfazer a condição anterior, sendo necessário que os elementos na diagonal principal sejam maiores em magnitude que os outros elementos.
+
+\subsection{Método de Gauss-Seidel}
+
+O método de Gauss-Seidel é uma melhora no método de Gauss-Jacobi, logo se baseia nos mesmos princípios. A principal diferença é que enquanto o método de Gauss-Jacobi usa única e exclusivamete os elementos da matriz da iteraçào anterior, o método de Gauss-Seidel utiliza os elementos já calculados na iteração corrente. Dessa forma a iteração de Gauss-Seidel é definida como sendo:
+
+\begin{equation*}
+ x^{(k+1)}_{i}=\dfrac{1}{a_{ii}}(b-\sum_{j < i} a_{ij}x^{(k+1)}_{j}-\sum_{j > i} a_{ij}x^{(k)}_{j})
+\end{equation*}
+
+Assim como o método de Gauss-Jacobi, o método de Gauss-Seidel também converge para uma matriz A tal que A é estritamente diagonais dominantes. O método também converge para matrizes definidas positivas.
+
+\chapter{Manual do Desenvolvedor}
+\label{desenvolvedor}
+
+A ferramenta \ferramenta foi feita em Java seguindo princípios básicos de desenvolvimento. Foram requisitos de desenvolvimento:
+
+\begin{itemize}
+ \item Codificação de testes para os métodos
+ \item Separação da lógica de negócio da lógica de interface
+ \item Compatibilidade com o código da ferramenta desenvolvida no semestre anterior\cite{msnlab}
+ \item Codificação em inglês
+ \item Facilidade na instalação e uso
+\end{itemize}
+
+O código disponibiliza um arquivo \texttt{build.xml} a ser usado pelo Ant\cite{ant} para realizar tarefas comuns de desenvolvimento como:
+
+\begin{description}
+ \item[clean] Limpa o código gerado automaticamente pelo projeto (classes e documentação);
+ \item[prepare] Prepara o código para uso, criando os diretórios necessários;
+ \item[javadoc] Cria a documentação associada as classes do sistema;
+ \item[make-jar] Prepara um arquivo JAR executável;
+ \item[test] Testa o sistema;
+ \item[release] Prepara uma versão para uso contendo documentação e JAR.
+ \end{description}
+
+Para executar qualquer uma destas tarefas, basta executar \texttt{ant tarefa} no diretório do projeto. Como pré-requisito o \texttt{ant} precisa estar devidamente configurado.
+
+\section{Organização do Código}
+
+Todo o código segue a codificação UTF-8, permitindo maior compatibilidade entre os sistemas existentes. O sistema disponibiliza uma estrutura de diretórios para os recursos adequados referentes ao projeto:
+
+\begin{table}[ht]
+\centering
+\caption{Estrutura de Diretórios}
+        \begin{tabular}{|c|p{2in}|}
+        \hline
+        \textbf{Diretório} & \textbf{Descrição} \\ \hline
+        \textbf{src} & Código fonte da aplicação \\ \hline
+        \textbf{tests} & Código de teste da aplicação \\ \hline
+        \textbf{lib} & Bibliotecas utilizadas no desenvolvimento da ferramenta \\ \hline
+        \textbf{docs} & Diretório com a documentação da ferramenta \\ \hline
+        \end{tabular}
+\label{tab:diretorios}
+\end{table} 
+
+O diretório \texttt{src} tem \texttt{br.edu.ufcg.msnlab} como pacote base da ferramenta, apresentando os seguintes sub-pacotes:
+
+\begin{table}[ht]
+\centering
+\caption{Estrutura de Pacotes}
+        \begin{tabular}{|c|p{2in}|}
+        \hline
+        \textbf{Pacote} & \textbf{Descrição} \\ \hline
+        \textbf{br.edu.ufcg.msnlab.exceptions} & Exceções dos métodos \\ \hline
+        \textbf{br.edu.ufcg.msnlab.facade} & Facade para comunicação da interface e métodos de resolução \\ \hline
+        \textbf{br.edu.ufcg.msnlab.methods} & Pacote para armazenar os métodos de resolução de sistemas \\ \hline
+        \textbf{br.edu.ufcg.msnlab.util} & Pacote com classes utilitárias comuns ao projeto \\ \hline
+        \end{tabular}
+\label{tab:pacotes}
+\end{table} 
+
+O diretório de testes segue uma mesma estrutura de pacotes, colocando as classes de teste no mesmo pacote a qual o teste se refere.
+
+\section{Testes de Unidade}
+
+Todos os métodos do sistema são testados através da classe \texttt{br.edu.ufcg.msnlab.MethodsAutomatedTest} do diretório \texttt{tests}. Esta classe gera matrizes que representam sistemas de maneira aleatória para em seguida realizar algumas manipulações algébricas em cima desse sistema e tentar resolvê-lo, se o resultado do sistema alterado for compatível com o resultado anterior desse sistema então o método obteve sucesso em sua resolução.
+Os testes são executados com diversos números de iterações além de diversos tipos de sistema com o objetivo de tornar a carga de testes mais extensa garantindo assim um funcionamento mais confiável dos métodos.
+
+\section{Arquitetura do Sistema}
+
+Seis componentes básicos descrevem a arquitetura do sistema:
+\begin{description}
+ \item[GUI] Componente responsável pela interface gráfica com o usuário
+ \item[SystemLogic] Lógica do sistema, responsável por invocar os métodos, fazer a checagem inicial e executar o \textit{parser} das equações recebidas
+ \item[SystemParser] Componente para \textit{parser} das equações recebidas pela interface
+ \item[Checker] Componente para a avaliação das soluções das matrizes de acordo com a regra de Cramer
+ \item[Solver] Componente de interface para invocação dos métodos do sistema
+ \item[Methods] Componente com os métodos do sistema
+ \end{description}
+
+A interação estática destes elementos é descrita na figura~\ref{fig:arquitetura}.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[width=\textwidth]{MSN1}
+ % MSN1.jpg: 709x738 pixel, 72dpi, 25.01x26.03 cm, bb=0 0 709 738
+ \caption{Arquitetura do Sistema}
+ \label{fig:arquitetura}
+\end{figure}
+
+
+\subsection{Comunicação entre os módulos}
+
+Interação dinâmica dos elementos é representada no diagrama de sequência da figura~\ref{fig:fluxo}. Cada elemento atua como as seguintes responsabilidades:
+
+\begin{description}
+ \item[Parser] Recebe como entrada um sistema em formato String, retorna um objeto ParsedSystem que representa o sistema após o parser;
+ \item[Checke] Recebe o sistema representado através de duas matrizes, uma de coeficientes e outra de termos independentes. Retorna uma String que representa a classificação daquele sistema para definição de tipos de resolução;
+ \item[Solver] Recebe as matrizes que compõem o sistema, o número de iterações, o valor estimado pelo usuário, a matriz de estimativas (para os métodos iterativos) e um objeto de Configuração. Este objeto Config contém possíveis configurações que são usados pelos métodos, por exemplo, se o método pode ser feito com ou sem pivoteamento;
+ \item[Facade] A facade retorna um objeto Result que contém o passo a passo da resolução feita pelo método.
+\end{description}
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[width=\textwidth]{MSNFlow}
+ % MSNFlow.jpg: 622x631 pixel, 72dpi, 21.94x22.26 cm, bb=0 0 622 631
+ \caption{Fluxo de Execução do Sistema}
+ \label{fig:fluxo}
+\end{figure}
+
+\section{Guia de Usabilidade da Interface}
+
+Este guia levanta requisitos a serem usados na interface gráfica na forma de uma lista de fatores de usabilidade a serem adotados na construção da interface. 
+
+\begin{itemize}
+ \item Diálogo simples e claro 
+ \item Linguagem do usuário
+ \item Minimizar carga de memória
+ \item Consistência
+ \item Feedback
+ \item Atalhos
+ \item Documentação e ajuda
+ \item Saídas claras
+ \item Boas mensagens de erro
+ \item Evitar erros
+\end{itemize}
+
+\bibliography{manual}
+
+\end{document}
