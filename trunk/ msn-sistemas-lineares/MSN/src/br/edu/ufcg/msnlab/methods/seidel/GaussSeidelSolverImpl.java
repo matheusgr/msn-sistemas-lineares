@@ -85,7 +85,7 @@ public class GaussSeidelSolverImpl implements GaussSeidelSolver {
 		double[][] matrixTMP = increasedMatrix(coeficientes, termos);
 		matrixTMP = checker.organizeMatrix(matrixTMP);
 
-		if (!checker.checkConditionOfConvergence(matrixTMP)) {
+		if (!checker.checkConditionConvergence(matrixTMP)) {
 			matrixTMP = checker.searchMatrixConvergence(matrixTMP);
 		}
 		if (!checker.diagonalOK(matrixTMP))
