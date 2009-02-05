@@ -7,6 +7,7 @@ import Jama.Matrix;
 import br.edu.ufcg.msnlab.exceptions.MSNException;
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.ResultMSN;
+import br.edu.ufcg.msnlab.util.CheckerConditions;
 import br.edu.ufcg.msnlab.util.Config;
 
 /**
@@ -18,6 +19,12 @@ import br.edu.ufcg.msnlab.util.Config;
  */
 public class JacobiSolverImpl implements JacobiSolver {
 
+	private CheckerConditions checkerConditions;
+	
+	public JacobiSolverImpl() {
+		checkerConditions = new CheckerConditions();
+	}
+	
 	/**
 	 * Resolve the system represented by the values passed.
 	 * @param coefficients The matrix that contains the coefficients of the system.
@@ -28,11 +35,14 @@ public class JacobiSolverImpl implements JacobiSolver {
 			double[] terms, double approximation, int maximumNumberIterations, Config config) throws MSNException {
 		
 		double[][] matrixComplete = increasedMatrix(coefficients,terms);
-		matrixComplete = organizeMatrix(matrixComplete);
+		//matrixComplete = organizeMatrix(matrixComplete);
+		matrixComplete = checkerConditions.organizeMatrix(matrixComplete);
 		if(!checkConditionConvergence(matrixComplete)){
-			matrixComplete = searchMatrixConvergence(matrixComplete);
+			//matrixComplete = searchMatrixConvergence(matrixComplete);
+			matrixComplete = checkerConditions.searchMatrixConvergence(matrixComplete);
 		}
-		if (!diagonalOK(matrixComplete))
+		//if (!diagonalOK(matrixComplete))
+		if (!checkerConditions.diagonalOK(matrixComplete))
 			throw new MSNException("There is no convergence!!");
 		coefficients = getCoefficients(matrixComplete);		
 		terms = getTerms(matrixComplete);
@@ -52,8 +62,8 @@ public class JacobiSolverImpl implements JacobiSolver {
 	public Result solve(double[][] coefficients, double[] terms, double aproximation,
 			int maximumNumberIterations, Config config) throws MSNException {
 		
-		coefficients = organizeMatrix(coefficients);
-		
+		//coefficients = organizeMatrix(coefficients);
+		coefficients = checkerConditions.organizeMatrix(coefficients);
 		double[] estimates = initializeEstimates(coefficients.length-1);
 		
 		return solve(coefficients, estimates, terms, aproximation, maximumNumberIterations, config);
@@ -163,49 +173,6 @@ public class JacobiSolverImpl implements JacobiSolver {
 		return mat;
 	}
 	
-	/**
-	 * Try to manipulate the matrix to avoid zeros in the main diagonal.
-	 * @param matrix The increased matrix of the equation system.
-	 * @throws MSNException Thrown if the matrix cannot be diagonalyzed.
-	 */
-	private double[][] organizeMatrix(double[][] matrix) throws MSNException {
-		int limit = matrix.length * matrix.length;
-		int j = 0;
-		while (!diagonalOK(matrix) && j < limit) {
-			for (int i = 0; i < matrix.length; i++) {
-				if (matrix[i][i] == 0)
-					changeLines(i, findLineToChange(i, matrix), matrix);
-			}
-			j++;
-		}
-		if (j == limit)
-			throw new MSNException("Impossível diagonalizar a matriz!!");
-		return matrix;
-	}
-	
-	/**
-	 * Change the matrix to find a new matrix that can converge
-	 * @param matrix
-	 * @return convergent matrix
-	 * @throws MSNException
-	 */
-	private double[][] searchMatrixConvergence(double[][] matrix) throws MSNException {
-		boolean isPossible = false;
-		for (int i = 0; i < matrix.length; i++) {
-			for (int j = 0; j < matrix.length; j++) {
-				if (i != j) {
-					matrix = changeLines(i, j, matrix); 
-					isPossible = checkConditionConvergence(matrix);
-					if (isPossible) {
-						return matrix;
-					}
-				}
-			}
-		}
-		if (!isPossible) throw new MSNException("The system can not converge!");
-		return matrix;
-	}
-	
 	private boolean checkConditionConvergence(double[][] matrix) {
 		return checkConditionOfLines(matrix) || checkCriterionSassenfeld(matrix);
 	}
@@ -218,7 +185,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 	 */
 	private boolean checkConditionOfLines(double[][] matrix) {
 		for (int i = 0; i < matrix.length; i++) {
-			double sumLine = calculateSumLine(matrix[i]);
+			double sumLine = checkerConditions.calculateSumLine(matrix[i]);
 			double factor = Math.abs(sumLine-Math.abs(matrix[i][i]));
 			if (Math.abs(matrix[i][i]) <= factor)
 				return false;
@@ -247,7 +214,7 @@ public class JacobiSolverImpl implements JacobiSolver {
 	 */
 	private double[] getValuesBeta(double[][] matrix) {
 		double[] beta = new double[matrix.length];
-		beta[0] = (1/Math.abs(matrix[0][0]))*Math.abs(calculateSumLine(matrix[0])-Math.abs(matrix[0][0]));
+		beta[0] = (1/Math.abs(matrix[0][0]))*Math.abs(checkerConditions.calculateSumLine(matrix[0])-Math.abs(matrix[0][0]));
 		for (int i = 1; i < matrix.length; i++) {
 			for (int j = 0; j < beta.length; j++) {
 				if (i != j && beta[j] != 0.) 
@@ -257,91 +224,6 @@ public class JacobiSolverImpl implements JacobiSolver {
 			beta[i] = beta[i]/(Math.abs(matrix[i][i]));
 		}
 		return beta;
-	}
-	
-	/**
-	 * Sum the line of a matrix
-	 * @param line
-	 * @return sum
-	 */
-	private double calculateSumLine(double[] line) {
-		double sum = 0.0;
-		for (int i = 0; i < line.length-1; i++) {
-			sum += Math.abs(line[i]);
-			
-		}
-		return sum;
-	}
-	
-	/**
-	 * Swap two lines of the given matrix.
-	 * @param line1 Line to be swapped.
-	 * @param line2 Line to be swapped.
-	 * @param matrix The matrix where will be happen the swap.
-	 */
-	private double[][] changeLines(int line1, int line2, double[][] matrix) {
-		double[] aux = new double[matrix.length + 1];
-		for (int i = 0; i < matrix.length + 1; i++) {
-			aux[i] = matrix[line2][i];
-			matrix[line2][i] = matrix[line1][i];
-		}
-		for (int i = 0; i < matrix.length + 1; i++) {
-			matrix[line1][i] = aux[i];
-		}
-		return matrix;
-	}
-	
-	/**
-	 * Search for a line that can be swapped.
-	 * @param line Line when there is a zero on the main diagonal.
-	 * @param matrix
-	 *            The main matrix of the equation system.
-	 * @return The line found.
-	 */
-	private int findLineToChange(int line, double[][] matrix) {
-		int numMaxZeros = -1;
-		int lineToChange = -1;
-		for (int i = 0; i < matrix.length; i++) {
-			if (i != line) {
-				if (matrix[i][line] != 0) {
-					int zeros = countZerosLine(i, matrix);
-					if (zeros > numMaxZeros) {
-						numMaxZeros = zeros;
-						lineToChange = i;
-					}
-				}
-			}
-		}
-		return lineToChange;
-	}
-	
-	/**
-	 * Count the number of zeros in the main diagonal.
-	 * @param line The line to be analyzed.
-	 * @param matrix The matrix in question.
-	 * @return The number of zeros in the given line.
-	 */
-	private int countZerosLine(int line, double[][] matrix) {
-		int zeros = 0;
-		for (int i = 0; i < matrix.length; i++) {
-			if (matrix[line][i] == 0)
-				zeros++;
-		}
-		return zeros;
-	}
-
-	/**
-	 * Verify if in the main diagonal there isn't zeros.
-	 * @param matrix The main matrix of the equation system.
-	 * @return A boolean value indicating if the there is any zero in the main
-	 *         diagonal of the given matrix.
-	 */
-	private boolean diagonalOK(double[][] matrix) {
-		for (int i = 0; i < matrix.length; i++) {
-			if (matrix[i][i] == 0)
-				return false;
-		}
-		return true;
 	}
 	
 	/**
