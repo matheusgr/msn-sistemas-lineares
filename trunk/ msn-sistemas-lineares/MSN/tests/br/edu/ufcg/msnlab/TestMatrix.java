@@ -10,12 +10,12 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.Cholesky;
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.EigenvalueDecomposition;
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.LUDecomposition;
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.Matrix;
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.QR;
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.SingularValueDecomposition;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.Cholesky;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.EigenvalueDecomposition;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.LUDecomposition;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.Matrix;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.QR;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.SingularValueDecomposition;
 
 /**
  * Matriz de testes retirado da internet para testar os m�todos e as implementacoes. 

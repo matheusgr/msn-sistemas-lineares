@@ -1,10 +1,10 @@
-package br.edu.ufcg.msnlab.methods.choleskyQR.interfaces;
+package br.edu.ufcg.msnlab.methods.choleskyqr.interfaces;
 
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.ResultMSN;
 import br.edu.ufcg.msnlab.methods.Solver;
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.Cholesky;
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.Matrix;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.Cholesky;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.Matrix;
 import br.edu.ufcg.msnlab.util.Config;
 /**
  * Esta classe tem como objetivo solucionar 
@@ -47,14 +47,14 @@ public class CholeskySolverImpl implements Solver{
 		return B;
 	}
 
-	 /** Checa a diferença entre as Matrizes para não perfimitir grandes diferencas **/
+	 /** Checa a diferenï¿½a entre as Matrizes para nï¿½o perfimitir grandes diferencas **/
 
 	   private void check(Matrix X, Matrix Y) {
 	      double eps = Math.pow(BASE_DE_TESTE_DEFAULT,EXPOENTE_DE_TESTE_DEFAULT);
 	      if (X.norm1() == 0. & Y.norm1() < 10*eps) return;
 	      if (Y.norm1() == 0. & X.norm1() < 10*eps) return;
 	      if (X.minus(Y).norm1() > 1000*eps*Math.max(X.norm1(),Y.norm1())) {
-	         throw new RuntimeException("A diferença entre as matrizes eh muito grande: " +  Double.toString(X.minus(Y).norm1()));
+	         throw new RuntimeException("A diferenï¿½a entre as matrizes eh muito grande: " +  Double.toString(X.minus(Y).norm1()));
 	      }
 	   }
 	   
@@ -102,7 +102,7 @@ public class CholeskySolverImpl implements Solver{
 	      }
     	 
 	      double[][] xteste = X.getArray();
-	      // retornando a matriz da iteração 1.
+	      // retornando a matriz da iteraï¿½ï¿½o 1.
 	      resultMsn.addResult(xteste);
 	      
 	      int iteracoesAtual =1;
@@ -112,7 +112,7 @@ public class CholeskySolverImpl implements Solver{
 	    	  Matrix Xlinha = X.plus(C);
 	    	  R = B.minus(A.times(Xlinha));
 	    	  xteste = Xlinha.getArray();
-		      // retornando a matriz da iteração 1.
+		      // retornando a matriz da iteraï¿½ï¿½o 1.
 		      resultMsn.addResult(xteste);
 		      iteracoesAtual++;
 	      }

@@ -1,10 +1,10 @@
-package br.edu.ufcg.msnlab.methods.choleskyQR.interfaces;
+package br.edu.ufcg.msnlab.methods.choleskyqr.interfaces;
 
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.ResultMSN;
 import br.edu.ufcg.msnlab.methods.Solver;
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.Matrix;
-import br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods.QR;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.Matrix;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.QR;
 import br.edu.ufcg.msnlab.util.Config;
 
 /**
@@ -65,7 +65,7 @@ public class QRSolverImpl implements Solver{
 
 	      
 	      double[][] xteste = X.getArray();
-	      // retornando a matriz da iteração 1.
+	      // retornando a matriz da iteraï¿½ï¿½o 1.
 	      resultMsn.addResult(xteste);
 	      
 	      int iteracoesAtual =1;
@@ -74,14 +74,14 @@ public class QRSolverImpl implements Solver{
 	    	  Matrix Xlinha = X.plus(C);
 	    	  R1 = B.minus(A.times(Xlinha));
 	    	  xteste = Xlinha.getArray();
-		      // retornando a matriz da iteração 1.
+		      // retornando a matriz da iteraï¿½ï¿½o 1.
 		      resultMsn.addResult(xteste);
 		      iteracoesAtual++;
 	      }
 		return resultMsn;
 	}
 	
-	/** Checa a diferença entre as Matrizes para não perfimitir grandes diferencas **/
+	/** Checa a diferenï¿½a entre as Matrizes para nï¿½o perfimitir grandes diferencas **/
 
 	   private void check(Matrix X, Matrix Y) {
 	      double eps = Math.pow(BASE_DE_TESTE_DEFAULT,EXPOENTE_DE_TESTE_DEFAULT);
