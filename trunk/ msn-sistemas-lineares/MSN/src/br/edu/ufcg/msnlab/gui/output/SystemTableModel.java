@@ -47,7 +47,7 @@ public class SystemTableModel extends AbstractTableModel {
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		return Double.class;
+		return Number.class;
 	}
 
 }
