@@ -271,8 +271,6 @@ public class GaussJordan implements Solver {
 		double[][] lastResp = resultList.get(resultList.size()-1);
 	
 		resultList.add(parseSolution(lastResp));
-//		ResultMSN resp = new ResultMSN(this.resultList);
-		
 		return new ResultMSN(this.resultList);
 	}
 
@@ -300,7 +298,5 @@ public class GaussJordan implements Solver {
 	public List<double[][]> getResultList() {
 		return resultList;
 	}
-	
-	
 	
 }
