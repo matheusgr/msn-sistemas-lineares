@@ -1,4 +1,4 @@
-package br.edu.ufcg.msnlab.methods.choleskyQR.logic_methods;
+package br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
