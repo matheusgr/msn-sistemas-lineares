@@ -35,15 +35,23 @@ public class JacobiSolverImpl implements JacobiSolver {
 			double[] terms, double approximation, int maximumNumberIterations, Config config) throws MSNException {
 		
 		double[][] matrixComplete = increasedMatrix(coefficients,terms);
-		//matrixComplete = organizeMatrix(matrixComplete);
-		matrixComplete = checkerConditions.organizeMatrix(matrixComplete);
-		if(!checkConditionConvergence(matrixComplete)){
-			//matrixComplete = searchMatrixConvergence(matrixComplete);
-			matrixComplete = checkerConditions.searchMatrixConvergence(matrixComplete);
+		
+		try {
+			matrixComplete = checkerConditions.organizeMatrix(matrixComplete);
+	
+			if(!checkerConditions.checkConditionConvergence(matrixComplete)){
+				matrixComplete = checkerConditions.searchMatrixConvergence(matrixComplete);
+			}
+			
+			if (!checkerConditions.diagonalOK(matrixComplete))
+				throw new MSNException("There is no convergence!!");
+			
+		} catch (MSNException e) {
+			if ((Boolean) config.get(Config.dryrun)) {
+				throw e;
+			}
 		}
-		//if (!diagonalOK(matrixComplete))
-		if (!checkerConditions.diagonalOK(matrixComplete))
-			throw new MSNException("There is no convergence!!");
+		
 		coefficients = getCoefficients(matrixComplete);		
 		terms = getTerms(matrixComplete);
 		List<Matrix> jacobi = jacobiMethod(coefficients, estimates, terms, approximation, maximumNumberIterations);
@@ -173,58 +181,6 @@ public class JacobiSolverImpl implements JacobiSolver {
 		return mat;
 	}
 	
-	private boolean checkConditionConvergence(double[][] matrix) {
-		return checkConditionOfLines(matrix) || checkCriterionSassenfeld(matrix);
-	}
-	
-	/**
-	 * Check condition of convergence of the lines
-	 * of the method of Gauss-Jacobi
-	 * @param matrix
-	 * @return true if converge and false if not 
-	 */
-	private boolean checkConditionOfLines(double[][] matrix) {
-		for (int i = 0; i < matrix.length; i++) {
-			double sumLine = checkerConditions.calculateSumLine(matrix[i]);
-			double factor = Math.abs(sumLine-Math.abs(matrix[i][i]));
-			if (Math.abs(matrix[i][i]) <= factor)
-				return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Check the condition of Sassenfeld
-	 * @param matrix - Matrix to be verified by the method of Sassenfeld
-	 * @return true if the criterion of Sassenfeld go true, false otherwise.
-	 */
-	private boolean checkCriterionSassenfeld(double[][] matrix) {
-		double[] beta = getValuesBeta(matrix);
-		for (int i = 0; i < beta.length; i++) {
-			if (beta[i] >= 1)
-				return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Calculate the values of the betas needful to the method of Sassenfeld.
-	 * @param matrix - Matrix to be calculated the values of beta.
-	 * @return - The values of beta.
-	 */
-	private double[] getValuesBeta(double[][] matrix) {
-		double[] beta = new double[matrix.length];
-		beta[0] = (1/Math.abs(matrix[0][0]))*Math.abs(checkerConditions.calculateSumLine(matrix[0])-Math.abs(matrix[0][0]));
-		for (int i = 1; i < matrix.length; i++) {
-			for (int j = 0; j < beta.length; j++) {
-				if (i != j && beta[j] != 0.) 
-					beta[i] += Math.abs(beta[j])*Math.abs(matrix[i][j]);
-				else if (i != j) beta[i] += Math.abs(matrix[i][j]); 
-			}
-			beta[i] = beta[i]/(Math.abs(matrix[i][i]));
-		}
-		return beta;
-	}
 	
 	/**
 	 * Calculate the result of each iteration
@@ -371,13 +327,6 @@ public class JacobiSolverImpl implements JacobiSolver {
 				System.out.print("["+ matrix.get(i, j));
 			System.out.println("]");
 		}
-	}
-	
-	public static void main(String[] args) {
-		JacobiSolverImpl jacobi = new JacobiSolverImpl();
-		double[][] matrix = {{5.,1.,1.,5.},{3.,4.,1.,6.},{3.,3.,6.,0.}};
-		//jacobi.checkCriterionSassenfeld(matrix);
-		//jacobi.checkConditionOfConvergence(matrix);
 	}
 
 }

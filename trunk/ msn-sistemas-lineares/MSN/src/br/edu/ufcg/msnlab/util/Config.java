@@ -13,6 +13,7 @@ public class Config {
 	private Map<String,Object> param;
 	public static final String pivoteamento = "PIVOTEAMENTO";
 	public static final String triangularizacao = "TRIANGULARIZACAO";
+	public static final String dryrun = "DRYRUN";
 	
 	/**
 	 * Criação do config com seus valores default.
@@ -20,7 +21,8 @@ public class Config {
 	public Config() {
 		 this.param = new HashMap<String, Object>();
 		 this.param.put(pivoteamento,new Boolean(false));
-		 this.param.put(triangularizacao,new Boolean(false));		 
+		 this.param.put(triangularizacao,new Boolean(false));
+		 this.param.put(dryrun, new Boolean(false));
 	}
 	
 	/**
