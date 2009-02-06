@@ -269,8 +269,9 @@ public class GaussJordan implements Solver {
 			gaussJodanNoPivoting(matrix);
 		}
 		double[][] lastResp = resultList.get(resultList.size()-1);
+	
 		resultList.add(parseSolution(lastResp));
-		ResultMSN resp = new ResultMSN(this.resultList);
+//		ResultMSN resp = new ResultMSN(this.resultList);
 		
 		return new ResultMSN(this.resultList);
 	}
@@ -299,5 +300,7 @@ public class GaussJordan implements Solver {
 	public List<double[][]> getResultList() {
 		return resultList;
 	}
+	
+	
 	
 }
