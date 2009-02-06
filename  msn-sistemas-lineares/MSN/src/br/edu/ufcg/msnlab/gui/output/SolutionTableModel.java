@@ -84,7 +84,7 @@ public class SolutionTableModel extends AbstractTableModel {
 		case 0:
 			return String.class;
 		default:
-			return Double.class;
+			return Number.class;
 		}
 	}
 
