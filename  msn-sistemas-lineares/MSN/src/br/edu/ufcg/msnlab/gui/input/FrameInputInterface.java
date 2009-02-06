@@ -20,6 +20,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -258,6 +259,7 @@ public class FrameInputInterface extends JInternalFrame {
 				.showError("Please, set estimatives first.");
 				return;
 			}
+
 			Map<String, Integer> varMap = new HashMap<String, Integer>();
 			int j = 0;
 			for (String v : parse.getIncognitas()) {
@@ -279,7 +281,27 @@ public class FrameInputInterface extends JInternalFrame {
 			Config config = new Config();
 			config.set(Config.pivoteamento, pivot);
 			config.set(Config.triangularizacao, triangComboBox.getSelectedItem().toString() == "Triang Sup");
-			Result result = f.resolve(parse.getCoeficientes(), parse.getTermos(), tolerance, iter, method, estimatives, config);
+			
+			
+			Result result = null;
+			
+			if (Methods.isIteractive(method)) {
+				config.set(Config.dryrun, true);
+				try {
+					result = f.resolve(parse.getCoeficientes(), parse.getTermos(), tolerance, iter, method, estimatives, config);
+				} catch (MSNException e) {
+					int confirmDialog = JOptionPane.showConfirmDialog(null, e.getMessage() + " Continue?", "Warning", JOptionPane.YES_NO_OPTION);
+					if (confirmDialog == JOptionPane.YES_OPTION) {
+						config.set(Config.dryrun, false);
+						result = f.resolve(parse.getCoeficientes(), parse.getTermos(), tolerance, iter, method, estimatives, config);
+					} else {
+						return;
+					}
+				}
+			} else {
+				result = f.resolve(parse.getCoeficientes(), parse.getTermos(), tolerance, iter, method, estimatives, config);
+			}
+			
 			FrameOutput fo = new FrameOutput(this.msnlab);
 			fo.setSolution(method, result, parse);
             fo.setLocation(new Point(0, 250));

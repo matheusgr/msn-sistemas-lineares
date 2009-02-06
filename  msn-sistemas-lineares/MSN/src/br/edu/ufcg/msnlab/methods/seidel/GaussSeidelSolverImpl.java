@@ -25,7 +25,7 @@ public class GaussSeidelSolverImpl implements GaussSeidelSolver {
 	public Result solve(double[][] coeficients, double[] estimates,
 			double[] terms, double approximation, int maximumNumberIterations, Config config)
 			throws MSNException {
-		return seidel(coeficients, estimates, terms, approximation, maximumNumberIterations);
+		return seidel(coeficients, estimates, terms, approximation, maximumNumberIterations, (Boolean) config.get(Config.dryrun));
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class GaussSeidelSolverImpl implements GaussSeidelSolver {
 			int maximumNumberIterations, Config config) throws MSNException {
 		
 		return seidel(coeficients, createInitMatrix(coeficients.length),
-				terms, approximation, maximumNumberIterations);
+				terms, approximation, maximumNumberIterations, (Boolean) config.get(Config.dryrun));
 	}
 
 	/**
@@ -49,11 +49,12 @@ public class GaussSeidelSolverImpl implements GaussSeidelSolver {
 	 * @param terms The independent terms of the system.
 	 * @param aproximation The residue of the error in the system.
 	 * @param maximumNumberIterations number maximum of iterations.
+	 * @param dryrun Parameter to verify if an exception needed to be thrown.
 	 * @return The solution of the system by the method of Seidel.
 	 * @throws MSNException 
 	 */
 	private Result seidel(double[][] coefficients, double[] estimates,
-			double[] terms, double aproximation, int maximumNumberIterations)
+			double[] terms, double aproximation, int maximumNumberIterations, Boolean dryrun)
 			throws MSNException {
 
 		int numIteracoes = 1;
@@ -61,14 +62,20 @@ public class GaussSeidelSolverImpl implements GaussSeidelSolver {
 		CheckerConditions checker = new CheckerConditions();
 
 		double[][] matrixTMP = increasedMatrix(coefficients, terms);
-		matrixTMP = checker.organizeMatrix(matrixTMP);
-
-		if (!checker.checkConditionConvergence(matrixTMP)) {
-			matrixTMP = checker.searchMatrixConvergence(matrixTMP);
+		
+		try {
+			matrixTMP = checker.organizeMatrix(matrixTMP);
+	
+			if (!checker.checkConditionConvergence(matrixTMP)) {
+				matrixTMP = checker.searchMatrixConvergence(matrixTMP);
+			}
+			if (!checker.diagonalOK(matrixTMP))
+				throw new MSNException("There is no convergence!!");
+		} catch (MSNException e) {
+			if (dryrun) {
+				throw e;
+			}
 		}
-		if (!checker.diagonalOK(matrixTMP))
-			throw new MSNException("There is no convergence!!");
-
 		coefficients = getCoefficients(matrixTMP);
 		terms = getTerms(matrixTMP);
 
