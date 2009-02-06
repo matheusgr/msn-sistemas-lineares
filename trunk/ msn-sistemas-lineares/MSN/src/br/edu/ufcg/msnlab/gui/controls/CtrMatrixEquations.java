@@ -147,6 +147,9 @@ public class CtrMatrixEquations extends JPanel implements IsMatrixControl{
 						
 						try{
 							String input = JOptionPane.showInputDialog("Type the number of desired fields");
+							if (input == null) {
+								return;
+							}
 							int number = Integer.parseInt(input);
 							setNumberOfFields(number);
 						}catch( Exception e ){
