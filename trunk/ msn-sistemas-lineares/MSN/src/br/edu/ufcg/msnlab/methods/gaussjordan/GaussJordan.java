@@ -260,7 +260,7 @@ public class GaussJordan implements Solver {
 	public Result solve(double[][] coefficients, double[] terms, double aprox,
 			int maxIterations, Config config) {
 		matrix = buildMatrix(coefficients, terms);
-		
+		double[][] initMatrix = copyMatrix(matrix);
 		boolean withPivoting = (Boolean) config.get(Config.pivoteamento);
 		
 		if (withPivoting) {
@@ -269,9 +269,29 @@ public class GaussJordan implements Solver {
 			gaussJodanNoPivoting(matrix);
 		}
 		double[][] lastResp = resultList.get(resultList.size()-1);
-	
+		// -inicio- calculo de residuos 
+		double[][] vet = getRespTerms(lastResp);
+		int iterations = 0;
+		boolean resultFit = fitResidue(initMatrix, vet, aprox);
+		while(iterations < maxIterations && !resultFit){
+			resultFit = fitResidue(initMatrix, vet, aprox);
+			iterations++;
+		}
+		// -fim- calculo de residuos
 		resultList.add(parseSolution(lastResp));
 		return new ResultMSN(this.resultList);
+	}
+	
+	/**
+	 * Gets the terms of the system 
+	 * @param lastResp The last step from the Gauss Jordan method
+	 * @return The matrix containing all the terms.
+	 */
+	private double[][] getRespTerms(double[][] lastResp) {
+		double[][] aux = new double[lastResp.length][lastResp.length];
+		for (int i = 0; i < aux.length; i++) 
+			aux[i][0] = lastResp[i][lastResp.length];
+		return aux;
 	}
 
 	/**
@@ -298,5 +318,57 @@ public class GaussJordan implements Solver {
 	public List<double[][]> getResultList() {
 		return resultList;
 	}
+
+	//used from the gauss Method
+	/**
+	 * Calculate the residue of the answer calculated by this method.
+	 * 
+	 * @param matrix
+	 *            The main matrix of the equation system.
+	 * @param vet
+	 *            The vector-answer.
+	 * @param residue
+	 *            The residue to be compared.
+	 * @return The final vector-answer, adjusted with the residue.
+	 */
+	private boolean fitResidue(double[][] matrix, double[][] vet,
+			double residue) {
+		double[] vetResults = new double[vet.length];
+		for (int i = 1; i < matrix.length-1; i++) {
+			double currentResult = 0;
+			for (int j = 1; j < matrix.length-1; j++) {
+				currentResult += matrix[i][j] * vet[j][0];
+			}
+			vetResults[i] = matrix[i][matrix.length-1] - currentResult;
+		}
+		boolean changed = false;
+		for (int j = 0; j < vetResults.length; j++) {
+			if (Math.abs(vetResults[j]) > residue) {
+				vet[j][1] += vetResults[j];
+				changed = true;
+			}
+		}
+		if (changed) {
+			this.resultList.add(this.copyMatrix(vet));
+		}
+		return !changed;
+	}
 	
+	//used from the gauss Method
+	/**
+	 * Copy all the terms of one matrix in another one.
+	 * @param matrix The matrix to be copied.
+	 * @return The matrix copy.
+	 */
+	private double[][] copyMatrix(double[][] matrix) {
+		double[][] copy = new double[matrix.length][matrix[0].length];
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				copy[i][j] = matrix[i][j];
+			}
+		}
+		return copy;
+	}
+
+
 }
