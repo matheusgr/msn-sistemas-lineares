@@ -4,7 +4,7 @@ import br.edu.ufcg.msnlab.exceptions.MSNException;
 import br.edu.ufcg.msnlab.methods.Methods;
 import br.edu.ufcg.msnlab.methods.Result;
 import br.edu.ufcg.msnlab.methods.Solver;
-import br.edu.ufcg.msnlab.methods.GaussMethod.GaussMethod;
+import br.edu.ufcg.msnlab.methods.gauss.GaussMethod;
 import br.edu.ufcg.msnlab.methods.choleskyQR.interfaces.CholeskySolverImpl;
 import br.edu.ufcg.msnlab.methods.choleskyQR.interfaces.QRSolverImpl;
 import br.edu.ufcg.msnlab.methods.gaussjordan.GaussJordan;

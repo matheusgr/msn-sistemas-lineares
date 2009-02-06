@@ -1,4 +1,4 @@
-package br.edu.ufcg.msnlab.methods.GaussMethod;
+package br.edu.ufcg.msnlab.methods.gauss;
 
 import java.util.ArrayList;
 import java.util.List;
