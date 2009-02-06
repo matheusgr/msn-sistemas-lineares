@@ -126,6 +126,7 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
 	    try{
 	        
 	        String result = JOptionPane.showInputDialog(null,"Enter the variables names", "X Y Z");
+	        if( result == null ) { return; } // Cancel
 	        if( result.length() == 0 ){ throw new Exception("You didn't entered any variable name"); }
 	
 	        String[] rs = result.split(" ");
@@ -150,6 +151,7 @@ public class CtrMatrixTable extends JPanel implements IsMatrixControl {
 	    try{
 	        
 	        String result = JOptionPane.showInputDialog(null,"Enter the number of desired amount of variables\nThey will get names in this pattern: Xk, k>=1");
+	        if(result == null ) { return; } // Cancel
 	        if( result.length() == 0 ){ throw new Exception("You didn't entered any number"); }
 	
 	        int number = Integer.parseInt( result );
