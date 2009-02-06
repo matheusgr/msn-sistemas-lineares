@@ -27,7 +27,6 @@ public class Controller {
 	public Result resolve(double[][] coeficientes, double[] termos,
 			double[] estimativas, double aprox, int iteracoesMax,
 			String metodo, Config config) throws MSNException{
-		//TODO FALTA O PESSOAL ME PASSAR AS CLASSES DOS METODOS PARA FAZER A INSTANCIA E USAR O SOLVER.
 		Solver method = null;
 		Result r = null;
 		if (metodo.equals(Methods.EliminacaoGauss)) {
