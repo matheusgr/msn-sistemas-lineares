@@ -1,39 +1,40 @@
 package br.edu.ufcg.msnlab.util;
 
 import br.edu.ufcg.msnlab.exceptions.MSNException;
+import br.edu.ufcg.msnlab.methods.choleskyqr.logic_methods.Matrix;
 
 public class CheckerConditions {
 
+	public CheckerConditions() {
 
-	
-	public CheckerConditions(){
-		
 	}
-	
-	
+
 	public boolean checkConditionConvergence(double[][] matrix) {
-		return checkConditionOfLines(matrix) || checkCriterionSassenfeld(matrix);
+		return checkConditionOfLines(matrix)
+				|| checkCriterionSassenfeld(matrix);
 	}
-	
+
 	/**
-	 * Check condition of convergence of the lines
-	 * of the method of Gauss-Jacobi
+	 * Check condition of convergence of the lines of the method of Gauss-Jacobi
+	 * 
 	 * @param matrix
-	 * @return true if converge and false if not 
+	 * @return true if converge and false if not
 	 */
 	private boolean checkConditionOfLines(double[][] matrix) {
 		for (int i = 0; i < matrix.length; i++) {
 			double sumLine = calculateSumLine(matrix[i]);
-			double factor = Math.abs(sumLine-Math.abs(matrix[i][i]));
+			double factor = Math.abs(sumLine - Math.abs(matrix[i][i]));
 			if (Math.abs(matrix[i][i]) <= factor)
 				return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Check the condition of Sassenfeld
-	 * @param matrix - Matrix to be verified by the method of Sassenfeld
+	 * 
+	 * @param matrix
+	 *            - Matrix to be verified by the method of Sassenfeld
 	 * @return true if the criterion of Sassenfeld go true, false otherwise.
 	 */
 	private boolean checkCriterionSassenfeld(double[][] matrix) {
@@ -44,52 +45,58 @@ public class CheckerConditions {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Calculate the values of the betas needful to the method of Sassenfeld.
-	 * @param matrix - Matrix to be calculated the values of beta.
+	 * 
+	 * @param matrix
+	 *            - Matrix to be calculated the values of beta.
 	 * @return - The values of beta.
 	 */
 	private double[] getValuesBeta(double[][] matrix) {
 		double[] beta = new double[matrix.length];
-		beta[0] = (1/Math.abs(matrix[0][0]))*Math.abs(calculateSumLine(matrix[0])-Math.abs(matrix[0][0]));
+		beta[0] = (1 / Math.abs(matrix[0][0]))
+				* Math.abs(calculateSumLine(matrix[0]) - Math.abs(matrix[0][0]));
 		for (int i = 1; i < matrix.length; i++) {
 			for (int j = 0; j < beta.length; j++) {
-				if (i != j && beta[j] != 0.) 
-					beta[i] += Math.abs(beta[j])*Math.abs(matrix[i][j]);
-				else if (i != j) beta[i] += Math.abs(matrix[i][j]); 
+				if (i != j && beta[j] != 0.)
+					beta[i] += Math.abs(beta[j]) * Math.abs(matrix[i][j]);
+				else if (i != j)
+					beta[i] += Math.abs(matrix[i][j]);
 			}
-			beta[i] = beta[i]/(Math.abs(matrix[i][i]));
+			beta[i] = beta[i] / (Math.abs(matrix[i][i]));
 		}
 		return beta;
 	}
 
-	
 	/**
 	 * Sum the line of a matrix
+	 * 
 	 * @param line
 	 * @return sum
 	 */
-	public  double calculateSumLine(double[] line) {
+	public double calculateSumLine(double[] line) {
 		double sum = 0.0;
-		for (int i = 0; i < line.length-1; i++) {
+		for (int i = 0; i < line.length - 1; i++) {
 			sum += line[i];
 		}
 		return sum;
 	}
-	
+
 	/**
 	 * Change the matrix to find a new matrix that can converge
+	 * 
 	 * @param matrix
 	 * @return convergent matrix
 	 * @throws MSNException
 	 */
-	public double[][] searchMatrixConvergence(double[][] matrix) throws MSNException {
+	public double[][] searchMatrixConvergence(double[][] matrix)
+			throws MSNException {
 		boolean isPossible = false;
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix.length; j++) {
 				if (i != j) {
-					matrix = changeLines(i, j, matrix); 
+					matrix = changeLines(i, j, matrix);
 					isPossible = checkConditionConvergence(matrix);
 					if (isPossible) {
 						return matrix;
@@ -97,17 +104,22 @@ public class CheckerConditions {
 				}
 			}
 		}
-		if (!isPossible) throw new MSNException("The system can not converge!");
+		if (!isPossible)
+			throw new MSNException("The system can not converge!");
 		return matrix;
 	}
-	
+
 	/**
 	 * Swap two lines of the given matrix.
-	 * @param line1 Line to be swapped.
-	 * @param line2 Line to be swapped.
-	 * @param matrix The matrix where will be happen the swap.
+	 * 
+	 * @param line1
+	 *            Line to be swapped.
+	 * @param line2
+	 *            Line to be swapped.
+	 * @param matrix
+	 *            The matrix where will be happen the swap.
 	 */
-	private  double[][] changeLines(int line1, int line2, double[][] matrix) {
+	private double[][] changeLines(int line1, int line2, double[][] matrix) {
 		double[] aux = new double[matrix.length + 1];
 		for (int i = 0; i < matrix.length + 1; i++) {
 			aux[i] = matrix[line2][i];
@@ -119,13 +131,15 @@ public class CheckerConditions {
 		return matrix;
 	}
 
-	
 	/**
 	 * Try to manipulate the matrix to avoid zeros in the main diagonal.
-	 * @param matrix The increased matrix of the equation system.
-	 * @throws MSNException Thrown if the matrix cannot be diagonalyzed.
+	 * 
+	 * @param matrix
+	 *            The increased matrix of the equation system.
+	 * @throws MSNException
+	 *             Thrown if the matrix cannot be diagonalyzed.
 	 */
-	public  double[][] organizeMatrix(double[][] matrix) throws MSNException {
+	public double[][] organizeMatrix(double[][] matrix) throws MSNException {
 		int limit = matrix.length * matrix.length;
 		int j = 0;
 		while (!diagonalOK(matrix) && j < limit) {
@@ -139,25 +153,28 @@ public class CheckerConditions {
 			throw new MSNException("Impossível diagonalizar a matriz!!");
 		return matrix;
 	}
-	
+
 	/**
 	 * Verify if in the main diagonal there isn't zeros.
-	 * @param matrix The main matrix of the equation system.
+	 * 
+	 * @param matrix
+	 *            The main matrix of the equation system.
 	 * @return A boolean value indicating if the there is any zero in the main
 	 *         diagonal of the given matrix.
 	 */
-	public  boolean diagonalOK(double[][] matrix) {
+	public boolean diagonalOK(double[][] matrix) {
 		for (int i = 0; i < matrix.length; i++) {
 			if (matrix[i][i] == 0)
 				return false;
 		}
 		return true;
 	}
-	
-	
+
 	/**
 	 * Search for a line that can be swapped.
-	 * @param line Line when there is a zero on the main diagonal.
+	 * 
+	 * @param line
+	 *            Line when there is a zero on the main diagonal.
 	 * @param matrix
 	 *            The main matrix of the equation system.
 	 * @return The line found.
@@ -178,14 +195,17 @@ public class CheckerConditions {
 		}
 		return lineToChange;
 	}
-	
+
 	/**
 	 * Count the number of zeros in the main diagonal.
-	 * @param line The line to be analyzed.
-	 * @param matrix The matrix in question.
+	 * 
+	 * @param line
+	 *            The line to be analyzed.
+	 * @param matrix
+	 *            The matrix in question.
 	 * @return The number of zeros in the given line.
 	 */
-	private  int countZerosLine(int line, double[][] matrix) {
+	private int countZerosLine(int line, double[][] matrix) {
 		int zeros = 0;
 		for (int i = 0; i < matrix.length; i++) {
 			if (matrix[line][i] == 0)
@@ -193,5 +213,35 @@ public class CheckerConditions {
 		}
 		return zeros;
 	}
-	
+
+	public boolean isHadamardMatrix(double[][] coefficients) {
+		return isMMatrix(createComparisonMatrix(coefficients));
+	}
+
+	private boolean isMMatrix(double[][] matrix) {
+		double[][] invMatrix = new Matrix(matrix).inverse().getArrayCopy();
+		for (int i = 0; i < invMatrix.length; i++) {
+			for (int j = 0; j < invMatrix[0].length; j++) {
+				if (invMatrix[i][j] <= 0.0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private double[][] createComparisonMatrix(double[][] matrix) {
+		double[][] comparisonMatrix = new double[matrix.length][matrix[0].length];
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[0].length; j++) {
+				if (i == j) {
+					comparisonMatrix[i][j] = Math.abs(matrix[i][j]);
+				} else {
+					comparisonMatrix[i][j] = -Math.abs(matrix[i][j]);
+				}
+			}
+		}
+		return comparisonMatrix;
+	}
+
 }

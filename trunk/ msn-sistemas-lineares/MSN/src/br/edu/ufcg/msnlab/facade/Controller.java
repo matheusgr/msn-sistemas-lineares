@@ -11,6 +11,7 @@ import br.edu.ufcg.msnlab.methods.gaussjordan.GaussJordan;
 import br.edu.ufcg.msnlab.methods.jacobi.JacobiSolverImpl;
 import br.edu.ufcg.msnlab.methods.lu.LU;
 import br.edu.ufcg.msnlab.methods.seidel.GaussSeidelSolverImpl;
+import br.edu.ufcg.msnlab.methods.seidel.precond.GaussSeidelWithPreconditioningForHMatricesSolverImpl;
 import br.edu.ufcg.msnlab.methods.svd.SVD;
 import br.edu.ufcg.msnlab.util.Checker;
 import br.edu.ufcg.msnlab.util.Config;
@@ -53,7 +54,10 @@ public class Controller {
 		} else if (metodo.equals(Methods.GaussSeidel)) {
 			method = new GaussSeidelSolverImpl();
 			r = method.solve(coeficientes, estimativas, termos, aprox, iteracoesMax, config);
-		} 
+		} else if (metodo.equals(Methods.GaussSeidelWPreconditioning)) {
+			method = new GaussSeidelWithPreconditioningForHMatricesSolverImpl();
+			r = method.solve(coeficientes, estimativas, termos, aprox, iteracoesMax, config);
+		}
 		return r;
 	}
 
