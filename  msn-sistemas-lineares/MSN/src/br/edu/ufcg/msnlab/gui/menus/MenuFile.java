@@ -13,7 +13,6 @@ public class MenuFile extends JMenu {
 
     private static final long serialVersionUID = 1L;
 
-    @SuppressWarnings("unused")
     private MSNLab msnLab;
 
     private JMenuItem newInstance;

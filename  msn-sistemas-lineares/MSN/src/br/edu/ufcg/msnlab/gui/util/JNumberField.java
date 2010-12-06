@@ -8,35 +8,33 @@ import javax.swing.text.PlainDocument;
 
 public class JNumberField extends JTextField {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public JNumberField() {
-        super();
-    }
+	public JNumberField() {
+		super();
+	}
 
-    public JNumberField(int cols) {
-        super(cols);
-    }
+	public JNumberField(int cols) {
+		super(cols);
+	}
 
-    protected Document createDefaultModel() {
-        return new NumberDocument();
-    }
+	protected Document createDefaultModel() {
+		return new NumberDocument();
+	}
 
-    static class NumberDocument extends PlainDocument {
+	static class NumberDocument extends PlainDocument {
 
-        private static final long serialVersionUID = 1L;
+		private static final long serialVersionUID = 1L;
 
-        public void insertString(int offs, String str, AttributeSet a)
-                throws BadLocationException {
-            String entrada = "";
-            for (int i = 0; i < str.length(); i++) {
-                if (((str.charAt(i) >= 48) && (str.charAt(i) <= 57))
-                        || (str.charAt(i) == 45))
-                    entrada += str.charAt(i);
-            }
-            if (entrada == null)
-                return;
-            super.insertString(offs, entrada, a);
-        }
-    }
+		public void insertString(int offs, String str, AttributeSet a)
+				throws BadLocationException {
+			String entrada = "";
+			for (int i = 0; i < str.length(); i++) {
+				if (((str.charAt(i) >= 48) && (str.charAt(i) <= 57))
+						|| (str.charAt(i) == 45))
+					entrada += str.charAt(i);
+			}
+			super.insertString(offs, entrada, a);
+		}
+	}
 }

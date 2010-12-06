@@ -8,40 +8,38 @@ import javax.swing.text.PlainDocument;
 
 public class JDecimalField extends JTextField {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public JDecimalField() {
-        super();
-    }
+	public JDecimalField() {
+		super();
+	}
 
-    public JDecimalField(int cols) {
-        super(cols);
-    }
+	public JDecimalField(int cols) {
+		super(cols);
+	}
 
-    public JDecimalField(String texto) {
-        super(texto);
-    }
+	public JDecimalField(String texto) {
+		super(texto);
+	}
 
-    protected Document createDefaultModel() {
-        return new NumberDocument();
-    }
+	protected Document createDefaultModel() {
+		return new NumberDocument();
+	}
 
-    static class NumberDocument extends PlainDocument {
-        private static final long serialVersionUID = 1L;
+	static class NumberDocument extends PlainDocument {
+		private static final long serialVersionUID = 1L;
 
-        public void insertString(int offs, String str, AttributeSet a)
-                throws BadLocationException {
-            String entrada = "";
-            for (int i = 0; i < str.length(); i++) {
-                if (((str.charAt(i) >= 48) && (str.charAt(i) <= 57))
-                        || (str.charAt(i) == 46) || (str.charAt(i) == 45))
-                    entrada += str.charAt(i);
-                else if ((str.charAt(i) == 44))
-                    entrada += ".";
-            }
-            if (entrada == null)
-                return;
-            super.insertString(offs, entrada, a);
-        }
-    }
+		public void insertString(int offs, String str, AttributeSet a)
+				throws BadLocationException {
+			String entrada = "";
+			for (int i = 0; i < str.length(); i++) {
+				if (((str.charAt(i) >= 48) && (str.charAt(i) <= 57))
+						|| (str.charAt(i) == 46) || (str.charAt(i) == 45))
+					entrada += str.charAt(i);
+				else if ((str.charAt(i) == 44))
+					entrada += ".";
+			}
+			super.insertString(offs, entrada, a);
+		}
+	}
 }
